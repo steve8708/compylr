@@ -1,0 +1,16 @@
+{
+  "author": "Steve Sewell",
+  "name": "angular-templates",
+  "version": "0.0.1",
+  "bugs": " ** TODO ** ",
+  "repository": {
+    "type": "git",
+    "url": " ** TODO ** "
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "optimist": "~0.6.0"
+  }
+}

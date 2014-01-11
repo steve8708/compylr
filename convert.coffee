@@ -29,7 +29,8 @@ beautify = (str) ->
   pretty = beautifyHtml str
 
   pretty = pretty
-    .replace /<(\/?)#(.*)>/g, (match, modifier, body) ->
+    .replace /<(\/?#)(.*)>/g, (match, modifier, body) ->
+      modifier = '/' if modifier is '/#'
       "{{#{modifier}#{body}}}"
 
   pretty
@@ -81,10 +82,13 @@ getCloseTag = (string) ->
 interpolated = file
   .replace(/<[^>]*?ng\-repeat="(.*?)">([\S\s]+)/gi, (match, text, post) ->
     varName = text
+    varNameSplit = varName.split ' '
+    varNameSplit[0] = "'#{varNameSplit[0]}'"
+    varName = varNameSplit.join ' '
     # varName = text.split(' in ')[1]
     close = getCloseTag match
     if close
-      "{{#each #{varName}}}\n#{close.before}\n{{/each}}\n#{close.after}"
+      "{{#forEach #{varName}}}\n#{close.before}\n{{/forEach}}\n#{close.after}"
     else
       throw new Error 'Parse error! Could not find close tag for ng-repeat'
   )

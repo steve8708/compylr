@@ -5,24 +5,31 @@ fs = require 'fs'
 file = fs.readFileSync argv.file, 'utf8'
 
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
-keygen, link, meta, param, source, track, wbr'.split ', '
+keygen, link, meta, param, source, track, wbr'.split /,\s*/
 
 getCloseTag = (string) ->
   index = 0
   depth = 0
+  open = string.match(/<.*?>/)[0]
+  string = string.replace open, ''
+
   for char, index in string
     # Close tag
     if char is '<' and string[index + 1] is '/'
       if not depth
         after = string.substr index
         close = after.match(/<\/.*?>/)[0]
-        return
+        afterWithTag = after + close
+        afterWithoutTag = after.substring close.length
+
+        return (
           index: index
           closeTag: close
-          after: after
+          after: afterWithoutTag
           startIndex: index
-          endIndex: index + after.length
-          before: string.substr 0, index
+          endIndex: index + afterWithTag.length
+          before: open + '\n' + string.substr(0, index) + close
+        )
       else
         depth--
     # Open tag
@@ -40,46 +47,44 @@ getCloseTag = (string) ->
       else
         depth++
 
-flat = file
-  .replace(/<[^>]*?ng\-repeat="(.*)".*?>(.|\s)*?<\/.*?>/g, (match, text) ->
-    varName = text.split(' in ')[1]
-    "{{##{varName}}}\n#{match}\n{{/#{varName}}}"
-  )
-  .replace(/<[^>]*?ng\-if="(.*)".*?>(.|\s)*?<\/.*?>/, (match, varName) ->
-    # Unless
-    if varName.indexOf('!') is 0
-      varName = varName.substr 1
-      "{{^#{varName}}}\n#{match}\n{{/#{varName}}}"
-    else
-      "{{##{varName}}}\n#{match}\n{{/#{varName}}}"
-  )
-  .replace(/<[^>]*?ng\-show="(.*)".*?>(.|\s)*?<\/.*?>/g, (match, varName) ->
-
-    "{{##{varName}}}\n#{match}\n{{/#{varName}}}"
-  )
-  .replace(/<[^>]*?ng\-hide="(.*)".*?>(.|\s)*?<\/.*?>/g, (match, varName) ->
-    "{{^#{varName}}}\n#{match}\n{{/#{varName}}}"
-  )
-
 interpolated = file
-  .replace(/<[^>]*?ng\-repeat="(.*)".*?>(.|\s)*/g, (match, text, post) ->
+  .replace(/<[^>]*?ng\-repeat="(.*?)">([\S\s]+)/gi, (match, text, post) ->
     varName = text.split(' in ')[1]
-    "{{##{varName}}}\n#{match}\n{{/#{varName}}}"
+    close = getCloseTag match
+    if close
+      "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
+    else
+      throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
   )
-  .replace(/<[^>]*?ng\-if="(.*)".*?>(.|\s)*?<\/.*?>/, (match, varName) ->
+  .replace(/<[^>]*?ng\-if="(.*)".*?>([\S\s]+)/, (match, varName, post) ->
     # Unless
     if varName.indexOf('!') is 0
       varName = varName.substr 1
-      "{{^#{varName}}}\n#{match}\n{{/#{varName}}}"
+      close = getCloseTag match
+      if close
+        "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
+      else
+        throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
     else
-      "{{##{varName}}}\n#{match}\n{{/#{varName}}}"
+      close = getCloseTag match
+      if close
+        "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
+      else
+        throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
   )
-  .replace(/<[^>]*?ng\-show="(.*)".*?>(.|\s)*?<\/.*?>/g, (match, varName) ->
-    "{{##{varName}}}\n#{match}\n{{/#{varName}}}"
+  .replace(/<[^>]*?ng\-show="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
+    close = getCloseTag match
+    if close
+      "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
+    else
+      throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
   )
-  .replace(/<[^>]*?ng\-hide="(.*)".*?>(.|\s)*?<\/.*?>/g, (match, varName) ->
-    "{{^#{varName}}}\n#{match}\n{{/#{varName}}}"
+  .replace(/<[^>]*?ng\-hide="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
+    close = getCloseTag match
+    if close
+      "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
+    else
+      throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
   )
 
-console.log 'interpolated:', interpolated
-console.log 'flat:', flat
+console.log '\n\n\n\n\n\n\NINTERPOLATED:\n\n', interpolated

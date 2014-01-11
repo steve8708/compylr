@@ -1,0 +1,278 @@
+<div class="search-page-container">
+  <div ng-class="{ show: activeProduct.product && !hideModal }" class="modal-container" ng-click="$event.target == $event.currentTarget ? closeModal() : null">
+    <div class="modal-body selectable">
+      <a ng-click="closeModal()" class="close-modal-button">+</a>
+      <div class="preview-image-container">
+        <img ng-if="activeProduct.product" load-animation="fade" class="preview-image" ng-src="{{activeProduct.product.image.sizes.Original.url}}">
+        <!-- <img load-animation="fade" class="preview-image" ng-src="{{activeProduct.product.image.sizes.Original.url}}"> -->
+      </div>
+
+      <div class="product-info">
+        <h3 class="name">
+          {{activeProduct.product.name}}
+        </h3>
+        <span class="price">
+          <b>{{activeProduct.product.salePriceLabel || activeProduct.product.priceLabel}}</b>
+        </span>
+        <span class="brand">
+          by <b>{{activeProduct.product.brand.name}}</b>
+        </span>
+        <span class="retailer">
+          at <b>{{activeProduct.product.retailer.name}}</b>
+        </span>
+
+        <div class="share-container">
+          <div class="share-buttons">
+            <a ng-click="productShare('facebook', activeProduct.product)" class="fa fa-facebook social-icon"></a>
+            <a ng-click="productShare('twitter', activeProduct.product)" class="fa fa-twitter social-icon"></a>
+            <a ng-click="productShare('tumblr', activeProduct.product)" class="fa fa-tumblr social-icon"></a>
+            <!-- <a ng-click="productShare('blogger')" class="social-icon"><img class="social-icon-image" src="assets/images/blogger-logo.png"></a>
+            <a ng-click="productShare('wordpress')" class="social-icon"><img class="social-icon-image" src="assets/images/wordpress-logo.png"></a>
+            <a ng-click="productShare('squarespace')" class="social-icon"><img class="social-icon-image" src="assets/images/squarespace-logo.png"></a> -->
+            <a ng-click="productShare('pinterest', activeProduct.product)" class="fa fa-pinterest social-icon"></a>
+            <a ng-click="productShare('mail', activeProduct.product)" class="fa fa-envelope social-icon"></a>
+          </div>
+        </div>
+
+        <input value="{{activeProduct.product.clickUrl}}" class="link-input" ng-keypress="keypressProductLinkInput($event)" ng-click="clickProductLinkInput($event)">
+
+        <div>
+          <a ng-click="toggleFavorite(activeProduct.product)" ng-class="{'fa-heart': activeProduct.product.favorite, 'fa-heart-o': !activeProduct.product.favorite}" class="favorite favorite-large fa fa-heart-o"></a>
+          <select ng-change="toggleList(activeProduct.product)" ng-model="activeProduct.product.list" ng-show="activeProduct.product.favorite" class="favorite-text input-sm" ng-options="list.name for list in lists | orderBy:'-sort'">
+            <option value="">-- Add to List --</option>
+          </select>
+          <a ng-class="{ active: !productSelected(activeProduct.product) }" ng-click="toggleSelectedProduct(activeProduct.product)" class="btn btn-basic add-to-widget-btn">
+            {{productSelected(activeProduct.product) ? 'Remove From Quicklist' : 'Add to Quicklist' }}
+          </a>
+        </div>
+
+        <div class="description" ng-bind-html="activeProduct.product.description"></div>
+        <div class="sizes">
+          <b>Available Sizes:</b>
+          <span class="available-size" ng-repeat="size in activeProduct.product.sizes">{{size.name}}<span class="comma">, </span></span>
+        </div>
+        <div class="colors">
+          <b>Available Colors:</b>
+          <span class="available-color" ng-repeat="color in activeProduct.product.colors">{{color.name}}<span class="comma">, </span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div ng-class="{ blur: activeProduct.product && !hideModal, 'no-blur': !(activeProduct.product && !hideModal) }" class="search-page-content"> -->
+  <!-- <div ng-class="{ grayscale: activeProduct.product && !hideModal, 'no-grayscale': !(activeProduct.product && !hideModal) }" class="search-page-content"> -->
+  <div class="search-page-content">
+    <div hm-swipe-left="filterBarActive = false" class="filter-bar" ng-class="{ active: filterBarActive }">
+      <div class="search-feed-buttons">
+        <div class="btn-group">
+          <button ng-model="mode.name" btn-radio="'search'" class="btn">Search</button>
+          <button ng-model="mode.name" btn-radio="'feed'" class="btn">My Feed</button>
+        </div>
+      </div>
+      <div class="filter-bar-content">
+        <div class="search-content" ng-show="mode.name == 'search'">
+          <div class="search-input-container">
+            <!-- <div class="loading-icon" ng-class="{ show: searchState.loading }">✪</div> -->
+            <input tabindex="1" id="search-products" ng-model="query.value" ng-keyup="searchKeypress($event)" type="search" results="5" placeholder=" Search products..." class="search-input">
+          </div>
+
+          <div ng-show="activeFilters.length" class="active-filters-container">
+            <a ng-click="removeFilter(filter)" class="active-filter {{filter.type}}" ng-repeat="filter in activeFilters">
+              {{filter.name}}
+              <i class="fa fa-times"></i>
+            </a>
+          </div>
+
+          <div class="sort-container">
+            Sort <select dir="rtl" class="sort-select" ng-model="query.sort" ng-options="key as value for (key, value) in sortOptions"></select>
+          </div>
+
+          <div class="filter-groups-container">
+            <div ng-class="{ active: activeFilterPanel == 'category', large: visibleCategoryLength > 15, medium: visibleCategoryLength > 5 }" class="filter-group search-categories" >
+              <a ng-click="togglePanel('category')" class="accordion-label">Category <i class="fa fa-caret-left label-caret"></i></a>
+              <div ng-class="{ fade: !categoryHierarchy.length }" class="accordion-content">
+                <div class="accordion-wrapper">
+                  <!-- <a class="category-choice" ng-click="toggleFilter(category)" ng-repeat="category in categories" ng-class="{ active: category.active }">
+                    {{category.name}}
+                    <i class="fa fa-check check-icon" ng-show="category.active"></i>
+                  </a> -->
+
+                  <ul class="list-unstyled tree-ul tree-container">
+                    <li ng-if="data.visible" ng-repeat="data in categoryHierarchy" ng-include="'treeView.html'"></li>
+                  </ul>
+
+                  <script type="text/ng-template" id="treeView.html">
+                    <a class="category-name" ng-class="{ active: data.active }"  ng-click="clickCategory( data )">{{data.name}}</a>
+                    <i class="fa fa-check check-icon" ng-if="data.active"></i>
+                    <ul class="list-unstyled tree-ul">
+                      <li ng-if="data.visible" ng-repeat="data in data.children" ng-include="'treeView.html'"></li>
+                    </ul>
+                  </script>
+                </div>
+              </div>
+            </div>
+
+            <div ng-class="{ active: activeFilterPanel == 'brand' }" class="filter-group search-brands">
+              <a ng-click="togglePanel('brand')" class="accordion-label">Brand <i class="fa fa-caret-left label-caret"></i></a>
+
+              <input ng-model="input.brand" type="search" results="5" class="search-brands-input" placeholder="Search Brands...">
+              <div class="accordion-content">
+                <a ng-click="toggleFilter(brand)" class="brand-choice" ng-click="brand.active = !brand.active" ng-class="{ active: brand.active }" ng-repeat="brand in brands | limitTo: 150">
+                  {{brand.name}}
+                  <i ng-if="brand.active" class="fa fa-check check-icon"></i>
+                </a>
+              </div>
+
+            </div>
+
+            <div ng-class="{ active: activeFilterPanel == 'price' }" class="filter-group search-price">
+              <a ng-click="togglePanel('price')" class="accordion-label">Price <i class="fa fa-caret-left label-caret"></i></a>
+              <div class="accordion-content">
+                <slider floor="0" ceiling="29" ng-model-low="price.min" ng-model-high="price.max"></slider>
+                <span class="min-price">${{priceMap[price.min]}}</span>
+                <span class="max-price">${{priceMap[price.max]}}</span>
+              </div>
+            </div>
+
+            <div ng-class="{ active: activeFilterPanel == 'color' }" class="filter-group search-color">
+              <a ng-click="togglePanel('color')" class="accordion-label">Color <i class="fa fa-caret-left label-caret"></i></a>
+              <div class="accordion-content">
+                <a ng-click="toggleFilter(color)" class="color-choice" ng-repeat="color in colors" ng-style="{ backgroundColor: color.name }" ng-class="{ active: color.active }">
+                  <i ng-if="color.active" class="fa fa-check-circle color-check-icon"></i>
+                </a>
+              </div>
+            </div>
+
+<!--
+            <div ng-class="{ active: activeFilterPanel == 'size' }" class="filter-group search-size">
+              <a ng-click="togglePanel('size')" class="accordion-label">Size <i class="fa fa-caret-left label-caret"></i></a>
+              Size....
+            </div>
+ -->
+<!--
+            <div ng-class="{ active: activeFilterPanel == 'deal' }" class="filter-group search-deal">
+              <a ng-click="togglePanel('deal')" class="accordion-label">Deal <i class="fa fa-caret-left label-caret"></i></a>
+              <div class="accordion-content">
+                <slider floor="0" ceiling="29" ng-model="deal"></slider>
+              </div>
+            </div>
+ -->
+
+            <div ng-class="{ active: activeFilterPanel == 'store' }" class="filter-group search-stores">
+              <a ng-click="togglePanel('store')" class="accordion-label">Store <i class="fa fa-caret-left label-caret"></i></a>
+              <input ng-model="input.store" type="search" results="5" placeholder="Search Stores..." class="search-stores-input">
+
+              <div class="accordion-content">
+                <a ng-click="toggleFilter(store)" ng-model="store.query" class="store-choice" ng-click="store.active = !store.active" ng-class="{ active: store.active }" ng-repeat="store in stores | limitTo: 150">
+                  {{store.name}}
+                  <i ng-if="store.active" class="fa fa-check check-icon"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-buttons">
+            <!-- <a class="btn btn-primary create-sale-alert" ng-click="">Create Sale Alert</a> -->
+            <!-- <a class="btn btn-primary create-update-alert" ng-click="">Update Alert</a> -->
+            <a class="btn btn-basic clear-all-filters" ng-click="clearFilters(true)">Clear All Filters</a>
+            <a class="btn btn-basic save-search" ng-click="saveSearch()">Save Search</a>
+          </div>
+        </div>
+
+        <div class="follow-content" ng-show="mode.name == 'feed'">
+          <div class="following-container">
+            <div ng-click="activeFollow.name = 'following'" ng-class="{ active: activeFollow.name == 'following' }" class="following"><a>Following</a></div>
+            <ul class="list-unstyled">
+              <li ng-class="{ active: activeFollow.name == follow }" class="follow" ng-click="activeFollow.name = ( activeFollow.name === follow ? 'following' : follow )" ng-repeat="follow in following"><a>{{follow.name}}</a></li>
+              <li class="follow"><a tooltip="Follow More" tooltip-placement="right" class="add-button fa fa-plus-circle"></a></li>
+            </ul>
+          </div>
+
+          <div class="collections">
+            <div class="collections-title">My Lists</div>
+            <ul class="list-unstyled">
+              <li ng-click="activateSearch(collection)" ng-class="{ active: activeFollow.name == collection }" class="saved-collection" ng-repeat="collection in collections">
+                <a>{{collection.name}}</a>
+              </li>
+              <li class="follow"><a tooltip="New Collection" tooltip-placement="right" class="add-button fa fa-plus-circle"></a></li>
+            </ul>
+          </div>
+
+          <div class="saved-searches">
+            <div class="saved-searches-title">Saved Searches</div>
+            <ul class="list-unstyled">
+              <li ng-click="activateSearch(search)" ng-class="{ active: activeFollow.name == search }" class="saved-search" ng-repeat="search in savedSearches">
+                <a>{{search.name}}</a>
+              </li>
+              <li class="follow"><a tooltip="New Saved Search" tooltip-placement="right" class="add-button fa fa-plus-circle"></a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <a hm-swipe-right="filterBarActive = true" hm-swipe-left="filterBarActive = false" ng-class="{ active: filterBarActive }" class="toggle-filter-bar visible-xs" ng-click="filterBarActive = !filterBarActive">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+
+    <div ng-class="{ 'widgets-open': widgets.active }" class="search-and-widgets-container">
+      <div outlet="resultsContainer" class="search-results-container" infinite-scroll="paginate($event)" threshold="400">
+        <div class="loading-icon" ng-class="{ show: searchState.loading }">✪</div>
+        <div class="search-results-wrapper" ng-style="{ height:  containerHeight + 'px' }">
+          <div class="no-results fade" ng-class="{ fade: results.length || searchState.loading || searchState.firstLoad }">No results, please try another search</div>
+          <div ng-mouseenter="result.mouseover = true" ng-mouseleave="result.mouseover = false" ng-class="{ fade: searchState.loading && !paginating }" ng-style="{ top: tops[$index], left: lefts[$index] }" class="product search-result" ng-repeat="result in results">
+            <div ng-class="{ active: result.mouseover }" class="hover-options">
+
+              <a ng-click="clickGetLink()" class="hover-option">
+                <i class="fa fa-link"></i>
+                Get Link
+              </a>
+
+              <a ng-click="toggleSelectedProduct(result)" ng-class="{ active: productSelected(result) }" class="hover-option">
+                <i ng-class="{ 'fa-plus-circle': !productSelected(result), 'fa-minus-circle': productSelected(result) }" class="fa add-to-widget-icon"></i>
+                {{ productSelected(result) ? 'Remove' :  'Add to Quicklist' }}
+              </a>
+              <!-- <a class="hover-option"><i class="fa fa-plus add-to-widget-icon"></i>Add to favorites</a> -->
+            </div>
+            <!-- FIXME: height and width info is clearly broken -->
+            <div class="product-image-container">
+              <img ng-click="showModal(result)" load-animation="fade" class="search-result-image" ng-src="{{result.image.sizes.Large.url}}">
+            </div>
+            <!-- <img load-animation="fade" class="search-result-image" ng-src="{{result.image.sizes.Large.url}}" height="{{result.image.sizes.Large.height}} width="{{result.image.sizes.Large.width}}"> -->
+            <div class="product-info">
+              <div class="product-name">{{result.name}}</div>
+              <span ng-if="true || !result.salePriceLabel">
+                <span class="price">
+                  <span class="est-commission-label">Est. Commission: </span>
+                  <b class="dark">{{result.salePriceLabel || result.priceLabel}}</b></span>
+              </span>
+              <span ng-if="false && result.salePriceLabel">
+                <span class="price">
+                  <span class="strikethrough">{{result.priceLabel}}</span>
+                  <b class="pink">{{result.salePriceLabel}}</b>
+                </span>
+              </span>
+              <a ng-click="toggleFavorite(result)" ng-class="{'fa-heart': result.favorite, 'fa-heart-o': !result.favorite}" class="favorite favorite-small fa"></a>
+              <!-- <a ng-show="productSelected(result)" ng-class="{ active: productSelected(result) }" ng-click="toggleSelectedProduct(result)" class="add-to-widget add-to-widget-small favorite favorite-small fa fa-circle"></a> -->
+              <!-- <div class="commission"><b>Est. Commission:</b> {{result.salePriceLabel}}</div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-if="false && config.appMode == 'app'" id="widgets-container" class="widgets-container">
+        <div class="widget-buttons">
+          <a ng-show="selectedProducts.length" class="btn fa fa-times clear-selected-products-button" ng-click="utils.clear(selectedProducts)"></a>
+          <div class="selected-products">
+            <a ng-click="utils.remove(selectedProducts, product)" ng-repeat="product in selectedProducts" class="selected-product" ng-style="{ 'background-image': 'url(' + product.image.sizes.Small.url + ')' }"></a>
+          </div>
+          <a ng-class="{ active: widgets.active, 'not-active': !widgets.active }" class="btn toggle-active-button" ng-click="widgets.active = !widgets.active">
+            <i class="fa widget-arrow" ng-class="{ 'fa-arrow-up': !widgets.active, 'fa-arrow-down': widgets.active }" ></i>
+            Widget
+          </a>
+        </div>
+        <div class="build-widget" ng-controller="ToolsCtrl" ng-include="'modules/tools/tools.tpl.html'">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

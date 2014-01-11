@@ -1,0 +1,412 @@
+@ribbon-height: 40px;
+@ribbon-background-color: @gray;
+[ng-controller=RibbonCtrl] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: @ribbon-height;
+  z-index: 999999999;
+
+  img {
+    display: inline;
+  }
+
+  * {
+    .transition(all 0.2s ease-in-out);
+  }
+
+  // Shopstyle overrides - - - - - - -
+  a {
+    background: transparent;
+  }
+
+  // End Shopstyle overrides - - - - - - -
+
+
+
+  // Content container overrides - - - - -
+
+  // .search-result {
+  //   position: relative !important;
+  //   display: inline-block;
+  // }
+
+  // .widgets-container {
+  //   display: none !important;
+  // }
+
+  .results-container, .search-results-container {
+    bottom: 0 !important;
+  }
+
+  .filter-bar {
+    bottom: 0 !important;
+  }
+
+  .tab-container.only-feed .search-feed-buttons {
+    display: none !important;
+  }
+
+  .tab-container.only-feed .filter-bar-content {
+    top: 0 !important;
+  }
+
+  .shopsense-search-container {
+    .fill;
+    top: @ribbon-height;
+    position: fixed;
+    background: white;
+    .translate3d(0, 0, 0);
+    z-index: -1;
+
+    &.not-active {
+      .translate3d(0, -10px, 0);
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  // End content container overrides - - - - - - -
+
+  .post-title {
+    margin-top: 0;
+  }
+
+  .get-link-img {
+    display: inline-block;
+    max-height: 32px;
+    border: 2px solid white;
+    margin-right: 7px;
+    margin-top: -12px;
+    margin-bottom: -10px;
+    margin-left: -5px;
+  }
+
+  .get-link {
+    .scroll;
+    text-align: center;
+
+    .related-products-well {
+      margin-top: 25px;
+    }
+
+    .related-products {
+      white-space: nowrap;
+      .scroll;
+    }
+
+    .related-products-title {
+      margin: 0;
+      padding: 0;
+      margin-bottom: 10px;
+    }
+
+    .product-info {
+      padding: 5px;
+    }
+
+    .product-image {
+      display: inline-block;
+    }
+
+    .related-product {
+      width: 350px;
+      display: inline-block;
+      padding: 0 30px;
+      white-space: normal;
+    }
+  }
+
+  .share-buttons {
+
+    .social-icon {
+      display: inline-block;
+      font-size: 20px;
+      color: white;
+      // background-color: @gray;
+      background-color: @gray-dark;
+      width: 34px;
+      text-align: center;
+      line-height: 34px;
+      margin-top: 3px;
+
+      &:hover {
+        // background-color: black;
+        background-color: @brand-primary;
+      }
+
+      .social-icon-image {
+        max-width: 20px;
+        max-height: 20px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-top: -4px;
+      }
+    }
+  }
+
+  .social-buttons-container {
+    margin-top: 5px;
+  }
+
+  .share-buttons-td {
+    width: 205px;
+  }
+
+  .get-link-input {
+    margin-top: -6px;
+    margin-bottom: -4px;
+    background: rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    color: @gray-light;
+    margin-right: 5px;
+    width: 100px;
+  }
+
+  .find-link-product-option {
+    line-height: 20px;
+    min-width: 41px;
+  }
+
+  .close-ribbon-button {
+    opacity: 0.5;
+    font-size: 13px;
+    vertical-align: middle;
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 5px;
+    float: left;
+  }
+
+  .mini-ribbon {
+    background: @gray;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    right: left;
+  }
+
+  .post-content {
+    box-shadow: none;
+    outline: none;
+  }
+
+  .ribbon-body {
+    background-color: #444;
+    .fill;
+    color: white;
+    z-index: 2;
+    padding: 3px;
+
+    .selected-products-container {
+      position: absolute;
+      top: 0;
+      right: 255px;
+      bottom: 0;
+      left: 535px;
+      display: inline-block;
+      padding: 5px;
+      padding-left: 265px;
+      z-index: -1;
+      // background: rgba(0, 0, 0, 0.1);
+    }
+
+    &.no-product-found {
+      .selected-products-container {
+        left: 500px;
+      }
+    }
+
+    &.on-shopstyle {
+      .selected-products-container {
+        left: 205px;
+      }
+    }
+
+    .selected-products {
+      white-space: nowrap;
+      display: block;
+      overflow: auto;
+    }
+
+    .clear-selected-products-button {
+      display: inline-block;
+      float: left;
+    }
+
+    .selected-product {
+      @dimension: 30px;
+      display: inline-block;
+      // float: left;
+      height: @dimension;
+      width: @dimension;
+      margin-right: 5px;
+      background-position: center center;
+      background-repeat: no-repeat;
+      // background-color: white;
+      position: relative;
+
+      &:hover {
+        &::after {
+          line-height: @dimension - 4;
+          text-align: center;
+          // line-height: @dimension;
+          content: 'x';
+          font-size: 14px;
+          .fill;
+          color: white;
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+
+    .ribbon-options {
+      margin-left: 5px;
+      margin-right: 15px;
+      float: left;
+
+      .link-btn {
+        // background-color: rgba(0, 0, 0, 0.1);
+        margin-left: -8px;
+        margin-top: -1px;
+        padding: 7px 16px;
+      }
+    }
+
+    .shopsense-logo {
+      float: right;
+      width: 230px;
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      margin: 0;
+
+      &.active {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+
+        i {
+          color: white;
+        }
+      }
+
+      &:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      i {
+        color: gray;
+        margin-right: 2px;
+        font-size: 12px;
+        width: 12px;
+      }
+    }
+  }
+
+  .ribbon-content-container .content-background {
+    .fill;
+    top: @ribbon-height;
+    position: fixed;
+    background-color: rgba(50, 50, 50, 0.8);
+
+    &:not(.active) {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    > .content-container {
+      background: white;
+      top: @ribbon-height;
+      bottom: 50px;
+      left: 50px;
+      right: 50px;
+      max-height: 800px;
+      position: fixed;
+      .translate3d(0, 0, 0);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+      &:not(.active) {
+        .translate3d(0, -10px, 0);
+        // bottom: 100%;
+      }
+
+      .tab-container {
+        .fill;
+        background: white;
+
+        &.active {
+          .transition(none) !important;
+          z-index: 2;
+        }
+
+        &.not-active {
+          z-index: 1;
+          // .transition(none) !important;
+          // .fill; // don't affect the positioning of other elements
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
+
+// Shopstyle.com style overrides
+.page-header {
+  top: 10px;
+
+  &::before {
+    content: 'Loading...';
+    text-align: center;
+    line-height: @ribbon-height;
+    box-sizing: border-box;
+    position: absolute;
+    background-color: @ribbon-background-color;
+    color: white;
+    top: -@ribbon-height;
+    height: @ribbon-height;
+    font-size: 15px;
+    left: 0;
+    right: 0;
+  }
+}
+
+// .detailsFetcher {
+//   position: relative;
+// }
+
+
+// Product overlays
+.shopsense-product-overlay {
+  cursor: pointer;
+  .fill;
+  z-index: 5;
+
+  .hover-actions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .clearfix;
+
+    .hover-action {
+      width: 50%;
+      line-height: 30px;
+      text-align: center;
+      background-color: rgba(50, 50, 50, 1);
+      color: white;
+      font-size: 13px;
+      display: inline-block;
+      float: left;
+
+      &:hover {
+        background-color: rgba(60, 60, 60, 1);
+      }
+    }
+  }
+}

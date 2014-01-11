@@ -2,9 +2,19 @@ handlebars = require 'handlebars'
 express = require 'express'
 exphbs  = require 'express3-handlebars'
 _  = require 'lodash'
+fs = require 'fs'
+mkdirp = require 'mkdirp'
+convert = require './convert'
 app = express()
 
-app.engine 'html', exphbs defaultLayout: '../../main'
+partialsDir = 'compiled-templates'
+
+app.engine 'html', exphbs
+  defaultLayout: 'main'
+  layoutsDir: './'
+  partialsDir: "./#{partialsDir}"
+  extname: '.tpl.html'
+
 app.set 'view engine', 'handlebars'
 app.set 'views', __dirname
 
@@ -19,6 +29,16 @@ app.get '/', (req, res) ->
 console.info 'Listening in port 3000...'
 app.listen 3000
 
+# TODO: make this recursively support infinite depth
+for type in ['templates', 'modules/account', 'modules/home', 'modules/insights', 'modules/ribbon', 'modules/search', 'modules/tools']
+  path = "./templates/#{type}/"
+  for fileName in fs.readdirSync path
+    continue unless _.contains fileName, '.tpl.html'
+    fileStr = fs.readFileSync "#{path}#{fileName}", 'utf8'
+    # fileStr = fileStr.replace '.tpl.html', ''
+    partialName = "#{type}/" + fileName.replace(/\.handlebars^|.html^/, '')
+    mkdirp.sync "./#{partialsDir}/#{type}"
+    fs.writeFileSync "./#{partialsDir}/#{partialName}"
 
 handlebars.registerHelper "forEach", (name, _in, context, options) ->
   fn = options.fn

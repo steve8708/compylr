@@ -9,7 +9,12 @@ app.set 'view engine', 'handlebars'
 app.set 'views', __dirname
 
 app.get '/', (req, res) ->
-  res.render 'template-output/output.html', bar: [1, 2, 3], foo: 'hi!'
+  res.render 'template-output/output.html',
+    foo: 'BAR'
+    selectedProducts: [
+      name: 'product name'
+      image: sizes: Small: url: 'https://www.google.com/images/srpr/logo11w.png'
+    ]
 
 console.info 'Listening in port 3000...'
 app.listen 3000

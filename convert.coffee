@@ -20,6 +20,10 @@ else
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
 keygen, link, meta, param, source, track, wbr'.split /,\s*/
 
+escapeCurlyBraces = (str) ->
+  str
+    .replace(/\{/g, '&#123;')
+    .replace(/\}/g, '&#125;')
 
 beautify = (str) ->
   str = str.replace /\{\{(#|\/)([\s\S]+?)\}\}/g, (match, type, body) ->
@@ -67,17 +71,11 @@ getCloseTag = (string) ->
     # Open tag
     else if char is '<'
       selfClosing = false
-      after = string.substr index
+      tag = string.substr(index).match(/\w+/)[0]
       # Check if self closing tag
-      for selfClosingTag in selfClosingTags
-        if after.indexOf(selfClosingTag) is 0
-          selfClosing = true
-          # Self closing tag, ignore
-          break
-      if selfClosing
+      if tag and tag in selfClosingTags
         continue
-      else
-        depth++
+      depth++
 
 interpolated = file
   .replace(/<[^>]*?ng\-repeat="(.*?)">([\S\s]+)/gi, (match, text, post) ->
@@ -108,6 +106,20 @@ interpolated = file
       else
         throw new Error 'Parse error! Could not find close tag for ng-if'
   )
+  .replace(/(ng-src|ng-href|ng-value)="(.*)"/, (match, src) ->
+    escapedMatch = escapeCurlyBraces match
+    """#{escapedMatch} src="#{src}" """
+  )
+  # FIXME: this doesn't support multiple interpolations in one tag
+  .replace(/<[^>]*?(\w+)\s*?=\s*?"([^">]*?\{\{[^">]+\}\}[^">*]?)".*?>/, (match, attrName, attrVal) ->
+    # Match without the final '#'
+    trimmedMatch = match.substr 0, match.length - 1
+    if attrName.indexOf('ng-attr-') is o
+      match
+    else
+      """#{trimmedMatch} ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
+  )
+
   # .replace(/<[^>]*?ng\-show="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
   #   close = getCloseTag match
   #   if close

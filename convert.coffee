@@ -1,12 +1,25 @@
-#!/usr/bin/env node
+#!/usr/bin/env coffee
+
+# TODO:
+#   partials (crawl and map directory this script gets pointed to)
+#   flask server render whole app backend a page at a time
+#   angular hook into page post-render
+
 argv = require('optimist').argv
 fs = require 'fs'
 
-file = fs.readFileSync argv.file, 'utf8'
+if argv.file
+  file = fs.readFileSync argv.file, 'utf8'
+else
+  console.warn 'you must specify a file with "--file="'
+  return
 
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
 keygen, link, meta, param, source, track, wbr'.split /,\s*/
 
+# TODO: pretty format
+#   replace '\n' with '\n  ' where '  ' is 2 spaces * depth
+#   Maybe prettify at very end instead
 getCloseTag = (string) ->
   index = 0
   depth = 0
@@ -49,12 +62,13 @@ getCloseTag = (string) ->
 
 interpolated = file
   .replace(/<[^>]*?ng\-repeat="(.*?)">([\S\s]+)/gi, (match, text, post) ->
-    varName = text.split(' in ')[1]
+    varName = text
+    # varName = text.split(' in ')[1]
     close = getCloseTag match
     if close
-      "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
+      "{{#each #{varName}}}\n#{close.before}\n{{/each}}\n#{close.after}"
     else
-      throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
+      throw new Error 'Parse error! Could not find close tag for ng-repeat'
   )
   .replace(/<[^>]*?ng\-if="(.*)".*?>([\S\s]+)/, (match, varName, post) ->
     # Unless
@@ -62,29 +76,29 @@ interpolated = file
       varName = varName.substr 1
       close = getCloseTag match
       if close
-        "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
+        "{{#unless #{varName}}}\n#{close.before}\n{{/unless}}\n#{close.after}"
       else
-        throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
+        throw new Error 'Parse error! Could not find close tag for ng-if'
     else
       close = getCloseTag match
       if close
-        "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
+        "{{#if #{varName}}}\n#{close.before}\n{{/if}}\n#{close.after}"
       else
-        throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
+        throw new Error 'Parse error! Could not find close tag for ng-if'
   )
-  .replace(/<[^>]*?ng\-show="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
-    close = getCloseTag match
-    if close
-      "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
-    else
-      throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
-  )
-  .replace(/<[^>]*?ng\-hide="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
-    close = getCloseTag match
-    if close
-      "{{##{varName}}}\n#{close.before}\n{{/#{varName}}}\n#{close.after}"
-    else
-      throw new Error 'Parse error! Coudlnt find close tag for ng-repeat'
-  )
+  # .replace(/<[^>]*?ng\-show="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
+  #   close = getCloseTag match
+  #   if close
+  #     "{{#if #{varName}}}\n#{close.before}\n{{/if}}\n#{close.after}"
+  #   else
+  #     throw new Error 'Parse error! Could not find close tag for ng-show'
+  # )
+  # .replace(/<[^>]*?ng\-hide="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
+  #   close = getCloseTag match
+  #   if close
+  #     "{{#unless #{varName}}}\n#{close.before}\n{{/unless}}\n#{close.after}"
+  #   else
+  #     throw new Error 'Parse error! Could not find close tag for ng-hide'
+  # )
 
 console.log '\n\n\n\n\n\n\NINTERPOLATED:\n\n', interpolated

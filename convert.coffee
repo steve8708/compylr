@@ -1,12 +1,15 @@
 #!/usr/bin/env coffee
 
 # TODO:
-#   partials (crawl and map directory this script gets pointed to)
-#   flask server render whole app backend a page at a time
-#   angular hook into page post-render
+#   - crawl full directory of templates and partials and output new tree of files
+#   - partials (crawl and map directory this script gets pointed to)
+#   - flask server render whole app backend a page at a time
+#   - angular hook into page post-render
+#   - prettify output
 
 argv = require('optimist').argv
 fs = require 'fs'
+beautifyHtml = require('js-beautify').html
 
 if argv.file
   file = fs.readFileSync argv.file, 'utf8'
@@ -16,6 +19,21 @@ else
 
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
 keygen, link, meta, param, source, track, wbr'.split /,\s*/
+
+
+beautify = (str) ->
+  str = str.replace /\{\{(#|\/)([\s\S]+?)\}\}/g, (match, type, body) ->
+    modifier = if type is '#' then '' else '/'
+    "<#{modifier}##{body}>"
+
+  pretty = beautifyHtml str
+
+  pretty = pretty
+    .replace /<(\/?)#(.*)>/g, (match, modifier, body) ->
+      "{{#{modifier}#{body}}}"
+
+  pretty
+
 
 # TODO: pretty format
 #   replace '\n' with '\n  ' where '  ' is 2 spaces * depth
@@ -101,4 +119,8 @@ interpolated = file
   #     throw new Error 'Parse error! Could not find close tag for ng-hide'
   # )
 
-console.log '\n\n\n\n\n\n\NINTERPOLATED:\n\n', interpolated
+
+beautified = beautify interpolated
+
+unless argv['no-write']
+  fs.writeFileSync 'template-output/output.html', beautified

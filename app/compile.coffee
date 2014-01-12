@@ -1,13 +1,13 @@
 #!/usr/bin/env coffee
 
-argv = require('optimist').argv
-fs = require 'fs'
-_ = require 'lodash'
-_str = require 'underscore.string'
+argv         = require('optimist').argv
+fs           = require 'fs'
+_            = require 'lodash'
+_str         = require 'underscore.string'
 beautifyHtml = require('js-beautify').html
-
-config =
-  verbose: false
+helpers      = require './helpers'
+config       = require './config'
+glob         = require 'glob'
 
 
 # Helpers - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -32,9 +32,6 @@ getRefNames = (str, options) ->
       # product: selectedProducts
       map[slit[0]] = split[1]
   map
-
-verboseLog = (args...) ->
-  console.info args... if config.verbose
 
 stripComments = (str) ->
   str.replace(/<!--[\s\S]*?-->/g, '')
@@ -143,12 +140,12 @@ unescapeBraces = (str) ->
     .replace(/__\}\}__/g, '}}')
 
 
-# Convert - - - - - - - - - - - - - - - - - - - - - - - -
+# Compile - - - - - - - - - - - - - - - - - - - - - - - -
 
-convert = (options) ->
+compile = (options) ->
   filePath = argv.file or options.file
   if filePath
-    verboseLog 'filePath', filePath
+    helpers.logVerbose 'filePath', filePath
     file = fs.readFileSync filePath, 'utf8'
   else
     file = options.string or options
@@ -169,7 +166,7 @@ convert = (options) ->
       # ng-repeat - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
-        verboseLog 'match 1'
+        helpers.logVerbose 'match 1'
         updated = true
         varName = text
         varNameSplit = varName.split ' '
@@ -190,7 +187,7 @@ convert = (options) ->
       # ng-if - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?\sng-if="(.*?)".*?>([\S\s]+)/, (match, varName, post) ->
-        verboseLog 'match 2'
+        helpers.logVerbose 'match 2'
         updated = true
         varName = varName.trim()
         # TODO: expressions
@@ -211,7 +208,7 @@ convert = (options) ->
       # ng-include - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?\sng-include="'(.*)'".*?>/, (match, includePath, post) ->
-        verboseLog 'match 3'
+        helpers.logVerbose 'match 3'
         updated = true
         includePath = includePath.replace '.tpl.html', ''
         match = match.replace /\sng-include=/, ' data-ng-include='
@@ -221,7 +218,7 @@ convert = (options) ->
       # ng-src, ng-href, ng-value - - - - - - -
 
       .replace(/\s(ng-src|ng-href|ng-value)="(.*)"/, (match, attrName, attrVal) ->
-        verboseLog 'match 4'
+        helpers.logVerbose 'match 4'
         updated = true
         escapedMatch = escapeCurlyBraces match
         escapedAttrVal = escapeBraces attrVal
@@ -231,7 +228,7 @@ convert = (options) ->
       # ng-class, ng-style - - - - - - - - - -
 
       .replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
-        verboseLog 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
+        helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
         updated = true
         type = attrName.substr 3 # 'class' or 'style'
         typeMatch = match.match new RegExp "\\s#{type}=\"([\\s\\S]*?)\""
@@ -249,7 +246,7 @@ convert = (options) ->
 
       # TODO: ng-click only on anchors
       .replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, (match, tagName, attrName, attrVal) ->
-        verboseLog 'match 7', attrName: attrName, attrVal: attrVal
+        helpers.logVerbose 'match 7', attrName: attrName, attrVal: attrVal
         updated = true
         hrefStr = """href="{{urlPath}}?action=#{encodeURIComponent attrVal}" """
         anchorStr = escapeBraces """<a #{hrefStr} data-ng-#{escapeCurlyBraces hrefStr}"""
@@ -273,7 +270,7 @@ convert = (options) ->
       # attr="{{intrerpolation}}" - - - - - - - -
 
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)".*?>/, (match, attrName, attrVal) ->
-        verboseLog 'match 5', attrName: attrName, attrVal: attrVal
+        helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '#'
         trimmedMatch = match.substr 0, match.length - 1
         trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
@@ -313,7 +310,7 @@ convert = (options) ->
       # {{interpolation}}, {{exression == true}} -
 
       .replace(/\{\{([^#\/>_][\s\S]*?[^_])\}\}/g, (match, body) ->
-        verboseLog 'match 7'
+        helpers.logVerbose 'match 7'
         updated = true
         body = body.trim()
         words = body.match /[\w\.]+/
@@ -322,7 +319,7 @@ convert = (options) ->
           prefix = ''
           suffix = ''
           if words and words[0].length isnt body.length
-            verboseLog 'body', body
+            helpers.logVerbose 'body', body
             prefix = 'expression "'
             suffix = '"'
           escapeBraces """<span data-ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
@@ -344,4 +341,4 @@ convert = (options) ->
 
   beautified
 
-module.exports = convert
+module.exports = compile

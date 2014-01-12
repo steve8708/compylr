@@ -1,3 +1,5 @@
+# TODO: get data from shopstylie API over HTTP
+
 handlebars = require 'handlebars'
 express = require 'express'
 exphbs  = require 'express3-handlebars'
@@ -32,6 +34,13 @@ pageData =
 
 fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompiledTemplatesDir}/index.tpl.html"
 
+# In Java can use ScriptEngineManager to eval js
+# (http://stackoverflow.com/questions/2605032/using-eval-in-java)
+evalExpression = (expression, context) ->
+  value = evaluate parse(expression).body[0].expression, context
+  console.log expression: expression, value: value, context: context
+  value
+
 # TODO: make this recursively support infinite depth
 # TODO: move this to convert.coffee and allow recursive src and dest options
 # TODO: make into grunt task
@@ -47,10 +56,7 @@ handlebars.registerHelper "ifExpression", (expression, options) ->
   fn = new Function expression
   value = null
 
-  # In Java can use ScriptEngineManager to eval js
-  # (http://stackoverflow.com/questions/2605032/using-eval-in-java)
-  ast = parse(expression).body[0].expression
-  value = evaluate ast, pageData
+  value = evalExpression expression, @
 
   if not options.hash.includeZero and not value
     options.inverse @
@@ -62,10 +68,17 @@ handlebars.registerHelper "expression", (expression, options) ->
   value = null
 
   # TODO: there are better ways to do @, borrow angular eval function
-  ast = parse(expression).body[0].expression
-  value = evaluate ast, pageData
+  value = evalExpression expression, @
 
   value
+
+handlebars.registerHelper "hbsShow", (expression, options) ->
+  value = evalExpression expression, @
+  if value then 'data-hbs-show' else 'data-hbs-hide'
+
+handlebars.registerHelper "hbsHide", (expression, options) ->
+  value = evalExpression expression, @
+  if value then 'data-hbs-hide' else 'data-hbs-show'
 
 handlebars.registerHelper "json", (obj) ->
   new handlebars.SafeString JSON.stringify obj, null, 2
@@ -84,7 +97,7 @@ handlebars.registerHelper "forEach", (name, _in, context, options) ->
   i = 0
   ret = ""
   data = undefined
-  context = context.call(@) if typeof context is 'function'
+  # context = context.call(@) if typeof context is 'function'
   if context and _.isObject context
     if _.isArray context
       j = context.length

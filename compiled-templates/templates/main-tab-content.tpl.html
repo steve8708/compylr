@@ -6,118 +6,170 @@
       </div>
     {{/ifExpression}}
 
-    <div class="tab-container" data-ng-if="openTab.name == 'search'" data-ng-class="{ active: openTab.name == 'search', 'not-active': openTab.name != 'search' }" data-ng-controller="SearchCtrl" data-ng-include="'modules/search/search.tpl.html'"></div>
-    <div class="tab-container" data-ng-if="openTab.name == 'account'" data-ng-class="{ active: openTab.name == 'account', 'not-active': openTab.name != 'account' }" data-ng-controller="AccountCtrl" data-ng-include="'modules/account/account.tpl.html'"></div>
-    <div class="tab-container padded get-link" data-ng-if="openTab.name == 'link'" data-ng-class="{ active: openTab.name == 'link', 'not-active': openTab.name != 'link' }">
-      <div data-ng-if="!findLink.productOnPage" class="no-product-on-page padded">
-        Sorry, we couldn't find a product on this page.
+    {{#ifExpression "openTab.name == 'search'"}}
+      <div class="tab-container" data-ng-if="openTab.name == 'search'" data-ng-class="{ active: openTab.name == 'search', 'not-active': openTab.name != 'search' }" data-ng-controller="SearchCtrl" data-ng-include="'modules/search/search.tpl.html'">
+        {{> modules/search/search}}
       </div>
-      <div data-ng-if="findLink.productOnPage" class="product-on-page-container">
+    {{/ifExpression}}
 
-        <div class="product-on-page">
-          <div class="product-image-container">
-            <img class="product-image" data-ng-src="&#123;&#123;findLink.productOnPage.image.sizes.Large.url&#125;&#125;" src="ng-src">
+    {{#ifExpression "openTab.name == 'account'"}}
+      <div class="tab-container" data-ng-if="openTab.name == 'account'" data-ng-class="{ active: openTab.name == 'account', 'not-active': openTab.name != 'account' }" data-ng-controller="AccountCtrl" data-ng-include="'modules/account/account.tpl.html'">
+        {{> modules/account/account}}
+      </div>
+    {{/ifExpression}}
+
+    {{#ifExpression "openTab.name == 'link'"}}
+      <div class="tab-container padded get-link" data-ng-if="openTab.name == 'link'" data-ng-class="{ active: openTab.name == 'link', 'not-active': openTab.name != 'link' }">
+
+        {{#unless findLink.productOnPage}}
+          <div data-ng-if="!findLink.productOnPage" class="no-product-on-page padded">
+
+            Sorry, we couldn't find a product on this page.
           </div>
-          <div class="product-info selectable">
-            <span data-ng-bind="findLink.productOnPage.name">{{findLink.productOnPage.name}}</span> •
-            <span data-ng-bind="findLink.productOnPage.priceLabel">{{findLink.productOnPage.priceLabel}}</span>
-          </div>
-          <div class="product-options">
-            <a data-ng-click="clickGetLink()" class="btn btn-basic find-link-product-option">Copy Link</a>
-            <a data-ng-click="toggleSelectedProduct(findLink.productOnPage)" class="btn btn-basic find-link-product-option">Add To Quicklist</a>
-            <div class="social-buttons-container inline">
-              <a data-ng-click="share('facebook')" class="btn btn-basic find-link-product-option fa fa-facebook"></a>
-              <a data-ng-click="share('twitter')" class="btn btn-basic find-link-product-option fa fa-twitter"></a>
-              <a data-ng-click="share('tumblr')" class="btn btn-basic find-link-product-option fa fa-tumblr"></a>
+        {{/unless}}
 
-              <a data-ng-click="share('pinterest')" class="btn btn-basic find-link-product-option fa fa-pinterest"></a>
-              <a data-ng-click="share('mail')" class="btn btn-basic find-link-product-option fa fa-envelope"></a>
-            </div>
-          </div>
-        </div>
-        <div class="well related-products-well">
-          <h3 class="related-products-title">Related Products</h3>
-          <div class="related-products">
-            {{#forEach 'product' in findLink.relatedProducts}}
-              <div class="related-product" data-ng-repeat="product in findLink.relatedProducts">
+        {{#if findLink.productOnPage}}
+          <div data-ng-if="findLink.productOnPage" class="product-on-page-container">
 
-                <div class="product-image-container">
-                  <img class="product-image" data-ng-src="{{product.image.sizes.Large.url}}" data-ng-attr-data-ng-src="&#123;&#123;product.image.sizes.Large.url&#125;&#125;">
-                </div>
-                <div class="product-info selectable">
-                  <span data-ng-bind="product.name">{{product.name}}</span> •
-                  <span data-ng-bind="product.priceLabel">{{product.priceLabel}}</span>
-                </div>
-                <div class="product-options">
-                  <a data-ng-click="clickGetLink()" class="btn btn btn-basic find-link-product-option">Copy Link</a>
-                  <a data-ng-click="toggleSelectedProduct(product)" class="btn btn-basic find-link-product-option">Add To Quicklist</a>
-                  <div class="social-buttons-container">
-                    <a data-ng-click="share('facebook')" class="btn btn-basic find-link-product-option fa fa-facebook"></a>
-                    <a data-ng-click="share('twitter')" class="btn btn-basic find-link-product-option fa fa-twitter"></a>
-                    <a data-ng-click="share('tumblr')" class="btn btn-basic find-link-product-option fa fa-tumblr"></a>
 
-                    <a data-ng-click="share('pinterest')" class="btn btn-basic find-link-product-option fa fa-pinterest"></a>
-                    <a data-ng-click="share('mail')" class="btn btn-basic find-link-product-option fa fa-envelope"></a>
-                  </div>
+            <div class="product-on-page">
+              <div class="product-image-container">
+                <img class="product-image" data-ng-src="&#123;&#123;findLink.productOnPage.image.sizes.Large.url&#125;&#125;" src="{{findLink.productOnPage.image.sizes.Large.url}}" data-ng-attr-src="&#123;&#123;findLink.productOnPage.image.sizes.Large.url&#125;&#125;">
+              </div>
+              <div class="product-info selectable">
+                <span data-ng-bind="findLink.productOnPage.name">{{findLink.productOnPage.name}}</span> •
+                <span data-ng-bind="findLink.productOnPage.priceLabel">{{findLink.productOnPage.priceLabel}}</span>
+              </div>
+              <div class="product-options">
+                <a data-ng-click="clickGetLink()" class="btn btn-basic find-link-product-option">Copy Link</a>
+                <a data-ng-click="toggleSelectedProduct(findLink.productOnPage)" class="btn btn-basic find-link-product-option">Add To Quicklist</a>
+                <div class="social-buttons-container inline">
+                  <a data-ng-click="share('facebook')" class="btn btn-basic find-link-product-option fa fa-facebook"></a>
+                  <a data-ng-click="share('twitter')" class="btn btn-basic find-link-product-option fa fa-twitter"></a>
+                  <a data-ng-click="share('tumblr')" class="btn btn-basic find-link-product-option fa fa-tumblr"></a>
 
+                  <a data-ng-click="share('pinterest')" class="btn btn-basic find-link-product-option fa fa-pinterest"></a>
+                  <a data-ng-click="share('mail')" class="btn btn-basic find-link-product-option fa fa-envelope"></a>
                 </div>
               </div>
-            {{/forEach}}
+            </div>
+            <div class="well related-products-well">
+              <h3 class="related-products-title">Related Products</h3>
+              <div class="related-products">
+                {{#forEach 'product' in findLink.relatedProducts}}
+                  <div class="related-product" data-ng-repeat="product in findLink.relatedProducts">
 
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tab-container scroll" data-ng-if="openTab.name == 'post'" data-ng-class="{ active: openTab.name == 'post', 'not-active': openTab.name != 'post' }">
-      <div class="padded scroll fill">
+                    <div class="product-image-container">
+                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Large.url&#125;&#125;" src="{{product.image.sizes.Large.url}}" data-ng-attr-src="&#123;&#123;product.image.sizes.Large.url&#125;&#125;">
+                    </div>
+                    <div class="product-info selectable">
+                      <span data-ng-bind="product.name">{{product.name}}</span> •
+                      <span data-ng-bind="product.priceLabel">{{product.priceLabel}}</span>
+                    </div>
+                    <div class="product-options">
+                      <a data-ng-click="clickGetLink()" class="btn btn btn-basic find-link-product-option">Copy Link</a>
+                      <a data-ng-click="toggleSelectedProduct(product)" class="btn btn-basic find-link-product-option">Add To Quicklist</a>
+                      <div class="social-buttons-container">
+                        <a data-ng-click="share('facebook')" class="btn btn-basic find-link-product-option fa fa-facebook"></a>
+                        <a data-ng-click="share('twitter')" class="btn btn-basic find-link-product-option fa fa-twitter"></a>
+                        <a data-ng-click="share('tumblr')" class="btn btn-basic find-link-product-option fa fa-tumblr"></a>
 
-        <div data-ng-if="!selectedProducts.length" class="no-results center well">You have no products in your Quicklist! First search for products and click 'Add to Quicklist' to add items to your post</div>
-        <div data-ng-if="selectedProducts.length" class="post-container">
-          <h3 class="post-title">Post</h3>
-          <div data-ng-init="show = {}; show.showPrice = true; show.showBrand = true; show.showName = true" class="options">
-            <label for="showPrice">Show Product Name</label>
-            <input name="showName" type="checkbox" data-ng-model="show.showName">&nbsp;&nbsp;&nbsp;
+                        <a data-ng-click="share('pinterest')" class="btn btn-basic find-link-product-option fa fa-pinterest"></a>
+                        <a data-ng-click="share('mail')" class="btn btn-basic find-link-product-option fa fa-envelope"></a>
+                      </div>
 
-            <label for="showBrand">Show Brand Name</label>
-            <input name="showBrand" type="checkbox" data-ng-model="show.showBrand">&nbsp;&nbsp;&nbsp;
+                    </div>
+                  </div>
+                {{/forEach}}
 
-            <label for="showPrice">Show Price</label>
-            <input name="showPrice" type="checkbox" data-ng-model="show.showPrice">&nbsp;&nbsp;&nbsp;
-
-            <label for="showPrice">Show Link</label>
-            <input name="showPrice" type="checkbox" data-ng-model="show.showLink">
-          </div>
-          <div data-ng-click="selectTarget($event)" contenteditable="true" class="post-container well">
-            <div class="post-content" data-ng-repeat="product in selectedProducts">
-              <a target="_blank" href="<span data-ng-bind=" product.clickUrl ">{{product.clickUrl}}</span>">
-                <span data-ng-if="show.showName" class="product-name"><span data-ng-bind="product.name">{{product.name}}</span></span>
-                <span data-ng-if="show.showBrand" class="product-brand">• <span data-ng-bind="product.brand.name">{{product.brand.name}}</span></span>
-                <span data-ng-if="show.showPrice" class="product-price">• <span data-ng-bind="product.priceLabel">{{product.priceLabel}}</span></span>
-                <span data-ng-if="show.showLink" class="product-link">• <span data-ng-bind="product.clickUrl">{{product.clickUrl}}</span></span>
-              </a>
+              </div>
             </div>
           </div>
+        {{/if}}
 
-          <div class="share-buttons">
-            <a data-ng-click="share('facebook', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-facebook social-icon"></a>
-            <a data-ng-click="share('twitter', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-twitter social-icon"></a>
-            <a data-ng-click="share('tumblr', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-tumblr social-icon"></a>
+      </div>
+    {{/ifExpression}}
 
-            <a data-ng-click="share('pinterest', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-pinterest social-icon"></a>
-            <a data-ng-click="share('mail', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-envelope social-icon"></a>
-          </div>
+    {{#ifExpression "openTab.name == 'post'"}}
+      <div class="tab-container scroll" data-ng-if="openTab.name == 'post'" data-ng-class="{ active: openTab.name == 'post', 'not-active': openTab.name != 'post' }">
 
-          <h3>Links</h3>
-          <table class="well post-container table table-striped">
-            <tr class="post-content" data-ng-repeat="product in selectedProducts">
-              <td>
-                <img class="product-image" data-ng-src="<span data-ng-bind=" product.image.sizes.Small.url ">{{product.image.sizes.Small.url}}</span>">
+        <div class="padded scroll fill">
+
+          {{#unless selectedProducts.length}}
+            <div data-ng-if="!selectedProducts.length" class="no-results center well">
+              You have no products in your Quicklist! First search for products and click 'Add to Quicklist' to add items to your post</div>
+          {{/unless}}
+
+          {{#if selectedProducts.length}}
+            <div data-ng-if="selectedProducts.length" class="post-container">
+
+              <h3 class="post-title">Post</h3>
+              <div data-ng-init="show = {}; show.showPrice = true; show.showBrand = true; show.showName = true" class="options">
+                <label for="showPrice">Show Product Name</label>
+                <input name="showName" type="checkbox" data-ng-model="show.showName">&nbsp;&nbsp;&nbsp;
+
+                <label for="showBrand">Show Brand Name</label>
+                <input name="showBrand" type="checkbox" data-ng-model="show.showBrand">&nbsp;&nbsp;&nbsp;
+
+                <label for="showPrice">Show Price</label>
+                <input name="showPrice" type="checkbox" data-ng-model="show.showPrice">&nbsp;&nbsp;&nbsp;
+
+                <label for="showPrice">Show Link</label>
+                <input name="showPrice" type="checkbox" data-ng-model="show.showLink">
+              </div>
+              <div data-ng-click="selectTarget($event)" contenteditable="true" class="post-container well">
+                {{#forEach 'product' in selectedProducts}}
+                  <div class="post-content" data-ng-repeat="product in selectedProducts">
+
+                    <a target="_blank" href="{{product.clickUrl}}" data-ng-attr-href="&#123;&#123;product.clickUrl&#125;&#125;">
+                      {{#if show.showName}}
+                        <span data-ng-if="show.showName" class="product-name">
+<span data-ng-bind="product.name">{{product.name}}</span></span>
+                      {{/if}}
+
+                      {{#if show.showBrand}}
+                        <span data-ng-if="show.showBrand" class="product-brand">
+• <span data-ng-bind="product.brand.name">{{product.brand.name}}</span></span>
+                      {{/if}}
+
+                      {{#if show.showPrice}}
+                        <span data-ng-if="show.showPrice" class="product-price">
+• <span data-ng-bind="product.priceLabel">{{product.priceLabel}}</span></span>
+                      {{/if}}
+
+                      {{#if show.showLink}}
+                        <span data-ng-if="show.showLink" class="product-link">
+• <span data-ng-bind="product.clickUrl">{{product.clickUrl}}</span></span>
+                      {{/if}}
+
+                    </a>
+                  </div>
+                {{/forEach}}
+
+              </div>
+
+              <div class="share-buttons">
+                <a data-ng-click="share('facebook', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-facebook social-icon"></a>
+                <a data-ng-click="share('twitter', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-twitter social-icon"></a>
+                <a data-ng-click="share('tumblr', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-tumblr social-icon"></a>
+
+                <a data-ng-click="share('pinterest', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-pinterest social-icon"></a>
+                <a data-ng-click="share('mail', selectedProducts[0].pageUrl, selectedProducts[0].pageUrl, selectedProducts[0].image.sizes.Original.url)" class="fa fa-envelope social-icon"></a>
+              </div>
+
+              <h3>Links</h3>
+              <table class="well post-container table table-striped">
+                {{#forEach 'product' in selectedProducts}}
+                  <tr class="post-content" data-ng-repeat="product in selectedProducts">
+
+                    <td>
+                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="{{product.image.sizes.Small.url}}" data-ng-attr-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;">
+                    </td>
+                    <td>
+                      <span class="product-name"><span data-ng-bind="product.name">{{product.name}}</span><span>
               </td>
               <td>
-                <span class="product-name"><span data-ng-bind="product.name">{{product.name}}</span><span>
-              </td>
-              <td>
-                <input size="50" data-ng-click="selectTarget($event)" class="product-url" value="<span data-ng-bind="product.clickUrl">{{product.clickUrl}}</span>">
+                <input size="50" data-ng-click="selectTarget($event)" class="product-url" value="{{product.clickUrl}}" data-ng-attr-value="&#123;&#123;product.clickUrl&#125;&#125;">
               </td>
               <td class="share-buttons-td">
                 <div class="share-buttons">
@@ -132,10 +184,21 @@
             </tr>
           </table>
         </div>
+{{/forEach}}
+
       </div>
     </div>
-    <div class="tab-container" data-ng-if="openTab.name == 'tools'" data-ng-class="{ active: openTab.name == 'tools', 'not-active': openTab.name != 'tools' }" data-ng-controller="ToolsCtrl" data-ng-include="'modules/tools/tools.tpl.html'"></div>
-    <div class="tab-container" data-ng-if="openTab.name == 'extras'" data-ng-class="{ active: openTab.name == 'extras', 'not-active': openTab.name != 'extras' }">
+{{/if}}
+
+    {{#ifExpression "openTab.name == 'tools'"}}
+<div class="tab-container" data-ng-if="openTab.name == 'tools'" data-ng-class="{ active: openTab.name == 'tools', 'not-active': openTab.name != 'tools' }" data-ng-controller="ToolsCtrl" data-ng-include="'modules/tools/tools.tpl.html'">
+
+{{> modules/tools/tools}}</div>
+{{/ifExpression}}
+
+    {{#ifExpression "openTab.name == 'extras'"}}
+<div class="tab-container" data-ng-if="openTab.name == 'extras'" data-ng-class="{ active: openTab.name == 'extras', 'not-active': openTab.name != 'extras' }">
+
       <div class="insights-container">
         <div data-ng-init="extrasTab = 'walkthrough'" class="left-navbar">
           <a data-ng-class="{ active: extrasTab == 'walkthrough' }" data-ng-model="extrasTab" btn-radio="'walkthrough'" class="left-nav-link">Product Tour<i class="fa fa-caret-right"></i></a>
@@ -149,8 +212,16 @@
         </div>
       </div>
     </div>
-    <div class="tab-container" data-ng-if="openTab.name == 'tag'" data-ng-class="{ active: openTab.name == 'tag', 'not-active': openTab.name != 'tag' }" data-ng-controller="ToolsCtrl" data-ng-include="'templates/tag-photo.tpl.html'">
+{{/ifExpression}}
+
+    {{#ifExpression "openTab.name == 'tag'"}}
+<div class="tab-container" data-ng-if="openTab.name == 'tag'" data-ng-class="{ active: openTab.name == 'tag', 'not-active': openTab.name != 'tag' }" data-ng-controller="ToolsCtrl" data-ng-include="'templates/tag-photo.tpl.html'">
+
+{{> templates/tag-photo}}
 
     </div>
+{{/ifExpression}}
+
   </div>
 </div>
+{{/ifExpression}}

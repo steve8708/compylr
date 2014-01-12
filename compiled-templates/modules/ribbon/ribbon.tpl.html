@@ -1,6 +1,7 @@
-<div class="shopsense-search-container" data-ng-show="showSearch" data-ng-class="{ active: showSearch, 'not-active': !showSearch }" data-ng-controller="SearchCtrl" data-ng-include="'modules/search/search.tpl.html'">
+<div class="shopsense-search-container" data-ng-show="showSearch" {{hbsShow "showSearch"}} data-ng-class="{ active: showSearch, 'not-active': !showSearch }" data-ng-controller="SearchCtrl" data-ng-include="'modules/search/search.tpl.html'">
   {{> modules/search/search}}</div>
-<div class="ribbon-content-container" data-ng-include="'templates/main-tab-content.tpl.html'"></div>
+<div class="ribbon-content-container" data-ng-include="'templates/main-tab-content.tpl.html'">
+  {{> templates/main-tab-content}}</div>
 
 <div class="ribbon-body" data-ng-class="{ 'on-shopstyle': onShopstyle, 'no-product-found': !findLink.productOnPage }">
 
@@ -12,9 +13,9 @@
     {{#unless onShopstyle}}
       <a data-ng-if="!onShopstyle" data-ng-class="{ active: openTab.name == 'link' }" data-ng-click="openTab.name = openTab.name == 'link' ? null : 'link'" class="btn link-btn">
 
-        <img data-ng-show="findLink.productOnPage" class="get-link-img" data-ng-src="&#123;&#123;findLink.productOnPage.image.sizes.Small.url&#125;&#125;" src="ng-src">
-        <input data-ng-keypress="$event.preventDefault()" data-ng-click="selectTarget($event)" data-ng-show="findLink.productOnPage" class="get-link-input" value="{{findLink.productOnPage.clickUrl}}" data-ng-attr-value="&#123;&#123;findLink.productOnPage.clickUrl&#125;&#125;">
-        <i data-ng-show="!findLink.productOnPage" class="fa fa-link"></i>
+        <img data-ng-show="findLink.productOnPage" {{hbsShow "findLink.productOnPage"}} class="get-link-img" data-ng-src="&#123;&#123;findLink.productOnPage.image.sizes.Small.url&#125;&#125;" src="{{findLink.productOnPage.image.sizes.Small.url}}" data-ng-attr-src="&#123;&#123;findLink.productOnPage.image.sizes.Small.url&#125;&#125;">
+        <input data-ng-keypress="$event.preventDefault()" data-ng-click="selectTarget($event)" data-ng-show="findLink.productOnPage" {{hbsShow "findLink.productOnPage"}} class="get-link-input" value="{{findLink.productOnPage.clickUrl}}" data-ng-attr-value="&#123;&#123;findLink.productOnPage.clickUrl&#125;&#125;">
+        <i data-ng-show="!findLink.productOnPage" {{hbsShow "!findLink.productOnPage"}} class="fa fa-link"></i>
         Product Link
 
       </a>
@@ -23,7 +24,11 @@
     <a data-ng-class="{ active: openTab.name == 'account' }" data-ng-click="openTab.name = openTab.name == 'account' ? null : 'account'" class="btn"><i class="fa fa-user"></i> Account</a>
     <a data-ng-class="{ active: openTab.name == 'insights' }" data-ng-click="openTab.name = openTab.name == 'insights' ? null : 'insights'" class="btn"><i class="fa fa-bar-chart-o"></i> Insights</a>
 
-    <a data-ng-if="!onShopstyle" data-ng-class="{ active: openTab.name == 'search' }" data-ng-click="openTab.name = openTab.name == 'search' ? null : 'search'" class="btn"><i class="fa fa-search"></i> Search</a>
+    {{#unless onShopstyle}}
+      <a data-ng-if="!onShopstyle" data-ng-class="{ active: openTab.name == 'search' }" data-ng-click="openTab.name = openTab.name == 'search' ? null : 'search'" class="btn">
+        <i class="fa fa-search"></i> Search</a>
+    {{/unless}}
+
 
     <a data-ng-class="{ active: openTab.name == 'tag' }" data-ng-click="openTab.name = openTab.name == 'tag' ? null : 'tag'" class="btn"><i class="fa fa-circle-o"></i> Tag Photo</a>
     <a data-ng-class="{ active: openTab.name == 'tools' }" data-ng-click="openTab.name = openTab.name == 'tools' ? null : 'tools'" class="btn"><i class="fa fa-th"></i> Widget</a>
@@ -31,7 +36,7 @@
   </div>
 
   <span class="selected-products-container">
-      <a data-ng-show="selectedProducts.length" class="btn fa fa-times clear-selected-products-button" data-ng-click="utils.clear(selectedProducts)"></a>
+      <a data-ng-show="selectedProducts.length" {{hbsShow "selectedProducts.length"}} class="btn fa fa-times clear-selected-products-button" data-ng-click="utils.clear(selectedProducts)"></a>
       <span class="selected-products">
         {{#forEach 'product' in selectedProducts}}
 <a data-ng-click="utils.remove(selectedProducts, product)" data-ng-repeat="product in selectedProducts" class="selected-product" data-ng-style="{ 'background-image': 'url(' + product.image.sizes.Small.url + ')' }">
@@ -42,6 +47,6 @@
   </span>
 </div>
 
-<!-- <a data-ng-click="hideRibbon = false" data-ng-show="hideRibbon" class="mini-ribbon">
+<!-- <a data-ng-click="hideRibbon = false" data-ng-show="hideRibbon" {{hbsShow "hideRibbon"}} class="mini-ribbon">
   <i class="fa fa-arrow-right"></i>
 </a>

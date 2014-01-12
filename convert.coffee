@@ -18,6 +18,7 @@ config =
 
 argv = require('optimist').argv
 fs = require 'fs'
+_ = require 'lodash'
 beautifyHtml = require('js-beautify').html
 
 verboseLog = (args...) ->
@@ -136,7 +137,7 @@ convert = (options) ->
     throw new Error 'infinite update loop' if i++ > maxIters
 
     interpolated = interpolated
-      .replace(/<[^>]*?ng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
+      .replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
         verboseLog 'match 1'
         updated = true
         varName = text
@@ -146,12 +147,12 @@ convert = (options) ->
         # varName = text.split(' in ')[1]
         close = getCloseTag match
         if close
-          "{{#forEach #{varName}}}\n#{escapeReplacement close.before}\n{{/forEach}}\n#{close.after}"
+          "{{#forEach #{varName}}}\n#{close.before.replace /\sng-repeat/, ' data-ng-repeat'}\n{{/forEach}}\n#{close.after}"
         else
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
       )
       # TODO: 'ifExpression' separate from  'if'
-      .replace(/<[^>]*?ng-if="(.*?)".*?>([\S\s]+)/, (match, varName, post) ->
+      .replace(/<[^>]*?\sng-if="(.*?)".*?>([\S\s]+)/, (match, varName, post) ->
         verboseLog 'match 2'
         updated = true
         varName = varName.trim()
@@ -165,21 +166,22 @@ convert = (options) ->
 
         close = getCloseTag match
         if close
-          "{{##{tagName} #{varName}}}\n#{escapeReplacement close.before}\n{{/#{tagName}}}\n#{close.after}"
+          "{{##{tagName} #{varName}}}\n#{close.before.replace /\sng-if=/, " data-ng-if="}\n{{/#{tagName}}}\n#{close.after}"
         else
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
       )
-      .replace(/<[^>]*?ng-include="'(.*)'".*?>/, (match, includePath, post) ->
+      .replace(/<[^>]*?\sng-include="'(.*)'".*?>/, (match, includePath, post) ->
         verboseLog 'match 3'
         updated = true
         includePath = includePath.replace '.tpl.html', ''
-        escapeReplacement "#{match}\n{{> #{includePath}}}"
+        match = match.replace /\sng-include=/, ' data-ng-include='
+        "#{match}\n{{> #{includePath}}}"
       )
-      .replace(/(ng-src|ng-href|ng-value)="(.*)"/, (match, src) ->
+      .replace(/\s(ng-src|ng-href|ng-value)="(.*)"/, (match, attrName, attrValue) ->
         verboseLog 'match 4'
         updated = true
         escapedMatch = escapeCurlyBraces match
-        escapeReplacement """#{escapedMatch} src="#{src}" """
+        """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{attrValue}" """
       )
       # FIXME: this doesn't support multiple interpolations in one tag
       .replace(/<[^>]*?([\w\-_]+)\s*?=\s*?"([^">]*?\{\{[^">]+\}\}[^">*]?)".*?>/, (match, attrName, attrVal) ->
@@ -187,39 +189,43 @@ convert = (options) ->
         # Match without the final '#'
         trimmedMatch = match.substr 0, match.length - 1
         trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
-        if attrName.indexOf('ng-attr-') is 0 or attrName.indexOf('__ATTR__') is 0
+        if attrName.indexOf('ng-attr-') is 0 or attrName.indexOf('data-ng-attr-') is 0
           match
         else
           updated = true
-          escapeReplacement """#{escapeBraces trimmedMatch} ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
-
+          """#{escapeBraces trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
+      )
+      .replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
+        hbsTagType = if showOrHide is 'ng-show' then 'hbsShow' else 'hbsHide'
+        match = match.replace ' ' + showOrHide, " data-#{showOrHide}"
+        "#{match} {{#{hbsTagType} \"#{expression}\"}}"
       )
 
-    i = 0
-    maxIters = 100
+  i = 0
+  updated = true
+  while updated
+    updated = false
 
-    while updated
-      updated = false
+    throw new Error 'infinite update loop' if i++ > maxIters
 
-      throw new Error 'infinite update loop' if i++ > maxIters
-
-      interpolated = interpolated
-        .replace(/\{\{([^#\/>_][\s\S]*?)\}\}/g, (match, body) ->
-          verboseLog 'match 7'
-          body = body.trim()
-          words = body.match /[\w\.]+/
-          if body.indexOf('expression') isnt 0 and body.indexOf('json') isnt 0
-            updated = true
-            prefix = ''
-            suffix = ''
-            if words and words[0].length isnt body.length
-              verboseLog 'body', body
-              prefix = 'expression "'
-              suffix = '"'
-            escapeBraces """<span ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
-          else
-            escapeBraces match
-        )
+    interpolated = interpolated
+      .replace(/\{\{([^#\/>_][\s\S]*?)\}\}/g, (match, body) ->
+        verboseLog 'match 7'
+        updated = true
+        body = body.trim()
+        words = body.match /[\w\.]+/
+        isHelper = words[0] in ['json', 'expression', 'hbsShow', 'hbsHide']
+        if not isHelper
+          prefix = ''
+          suffix = ''
+          if words and words[0].length isnt body.length
+            verboseLog 'body', body
+            prefix = 'expression "'
+            suffix = '"'
+          escapeBraces """<span ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
+        else
+          escapeBraces match
+      )
 
     # .replace(/<[^>]*?ng\-show="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
     #   close = getCloseTag match

@@ -8,10 +8,22 @@
         {{#ifExpression "option.type == 'checkbox'"}}
           <input data-ng-if="option.type == 'checkbox'" type="checkbox" data-ng-model="option.model">
 
-          <input data-ng-if="option.type == 'color'" type="color" data-ng-model="option.model">
-          <input min="<span data-ng-bind=" option.min ">{{option.min}}</span>" max="<span data-ng-bind=" option.max ">{{option.max}}</span>" step="<span data-ng-bind=" option.step ">{{option.step}}</span>" data-ng-if="option.type == 'range'" type="range" data-ng-model="option.model">
-          <select data-ng-class="{ pink: option.name == 'Collection' }" dir="rtl" data-ng-if="option.type == 'select'" data-ng-model="option.model" data-ng-options="option for option in option.options"></select>
+          {{#ifExpression "option.type == 'color'"}}
+            <input data-ng-if="option.type == 'color'" type="color" data-ng-model="option.model">
+
+            {{#ifExpression "option.type == 'range'"}}
+              <input min="{{option.min}}" max="{{option.max}}" step="{{option.step}}" data-ng-if="option.type == 'range'" type="range" data-ng-model="option.model" data-ng-attr-min="&#123;&#123;option.min&#125;&#125;">
+
+              {{#ifExpression "option.type == 'select'"}}
+                <select data-ng-class="{ pink: option.name == 'Collection' }" dir="rtl" data-ng-if="option.type == 'select'" data-ng-model="option.model" data-ng-options="option for option in option.options">
+                </select>
+              {{/ifExpression}}
+
       </div>
+      {{/ifExpression}}
+
+      {{/ifExpression}}
+
       {{/ifExpression}}
 
     {{/forEach}}
@@ -42,44 +54,72 @@
   </div>
 
   <div data-ng-class="{ fade: state.loading }" class="widget-preview tagged-photo">
-    <div data-ng-show="!selectedProducts.length" class="no-results center block">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your quicklist</div>
+    <div data-ng-show="!selectedProducts.length" {{hbsShow "!selectedProducts.length"}} class="no-results center block">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your quicklist</div>
     <div outlet="imageContainer" data-ng-class="{ dragover: dragover }" class="drop-your-photo" ui-event="{ drop: 'dropImage($event)', dragenter: 'dragover = true', dragleave: 'dragover = false' }">
-      <div data-ng-hide="droppedImage.src" class="drop-your-photo-text">
+      <div data-ng-hide="droppedImage.src" {{hbsHide "droppedImage.src"}} class="drop-your-photo-text">
         <i class="fa fa-arrow-circle-down drop-photo-icon"></i>
         Drop your photo here
-        <div data-ng-if="pageImages.length" class="or-use-photo-from-this-page">
-          or use a photo from this page:
-          <div class="page-images">
-            <a data-ng-click="setDroppedImage(img)" data-ng-repeat="img in pageImages">
-              <img class="page-image" data-ng-src="&#123;&#123;img&#125;&#125;" src="ng-src">
-            </a>
-          </div>
-        </div>
-      </div>
-      <img data-ng-show="droppedImage.src" class="dropped-image" outlet="droppedImage">
-      <div data-ng-style="tagContainerStyle" data-ng-show="droppedImage.src" data-ng-click="addTag($event)" class="tags-container">
-        <div draggable="true" ui-event="{ dragstart: 'dragstartTag($event, tag)', drag: 'dragTag($event, tag)', dragend: 'dragendTag($event, tag)' }" data-ng-mouseenter="tag.show = true" data-ng-style="{ top: tag.y * 100 + '%', left: tag.x * 100 + '%', opacity: taggedPhoto.options.dotOpacity.model, width: taggedPhoto.options.dotSize.model + 'px', height: taggedPhoto.options.dotSize.model + 'px', backgroundColor: taggedPhoto.options.dotColor.model, boxShadow: taggedPhoto.options.dotShadow.model ? null : 'none' }"
-        class="tag" data-ng-repeat="tag in tags"></div>
-        <div data-ng-mouseleave="tag.show = false" data-ng-repeat="tag in tags" data-ng-show="tag.show" data-ng-style="{ top: tag.y * 100 + '%', left: tag.x * 100 + '%', opacity: taggedPhoto.options.tagOpacity.model, backgroundColor: taggedPhoto.options.tagColor.model, boxShadow: taggedPhoto.options.tagShadow.model ? null : 'none' }"
-        class="tag-body">
-          <div data-ng-if="!tag.product" class="choose-product fill">
-            <div class="title">Choose a product</div>
-            <div class="choose-product-images scroll">
-              <a data-ng-click="tag.product = product" class="choose-product-for-tag" data-ng-repeat="product in selectedProducts">
-                <img data-ng-src="<span data-ng-bind="product.image.sizes.Small.url">{{product.image.sizes.Small.url}}</span>">
-              </a>
-              <a data-ng-click="openTab.name = 'search'" class="fa fa-plus-circle add-product-to-tag"></a>
+        {{#if pageImages.length}}
+          <div data-ng-if="pageImages.length" class="or-use-photo-from-this-page">
+
+            or use a photo from this page:
+            <div class="page-images">
+              {{#forEach 'img' in pageImages}}
+                <a data-ng-click="setDroppedImage(img)" data-ng-repeat="img in pageImages">
+
+                  <img class="page-image" data-ng-src="&#123;&#123;img&#125;&#125;" src="{{img}}" data-ng-attr-src="&#123;&#123;img&#125;&#125;">
+                </a>
+              {{/forEach}}
+
             </div>
           </div>
-          <div data-ng-if="tag.product" class="fill">
-            <img class="product-image" data-ng-src="<span data-ng-bind=" tag.product.image.sizes.Large.url ">{{tag.product.image.sizes.Large.url}}</span>">
-            <span class="product-info">
+        {{/if}}
+
+      </div>
+      <img data-ng-show="droppedImage.src" {{hbsShow "droppedImage.src"}} class="dropped-image" outlet="droppedImage">
+      <div data-ng-style="tagContainerStyle" data-ng-show="droppedImage.src" {{hbsShow "droppedImage.src"}} data-ng-click="addTag($event)" class="tags-container">
+        {{#forEach 'tag' in tags}}
+          <div draggable="true" ui-event="{ dragstart: 'dragstartTag($event, tag)', drag: 'dragTag($event, tag)', dragend: 'dragendTag($event, tag)' }" data-ng-mouseenter="tag.show = true" data-ng-style="{ top: tag.y * 100 + '%', left: tag.x * 100 + '%', opacity: taggedPhoto.options.dotOpacity.model, width: taggedPhoto.options.dotSize.model + 'px', height: taggedPhoto.options.dotSize.model + 'px', backgroundColor: taggedPhoto.options.dotColor.model, boxShadow: taggedPhoto.options.dotShadow.model ? null : 'none' }"
+          class="tag" data-ng-repeat="tag in tags">
+          </div>
+        {{/forEach}}
+
+        {{#forEach 'tag' in tags}}
+          <div data-ng-mouseleave="tag.show = false" data-ng-repeat="tag in tags" data-ng-show="tag.show" {{hbsShow "tag.show"}} data-ng-style="{ top: tag.y * 100 + '%', left: tag.x * 100 + '%', opacity: taggedPhoto.options.tagOpacity.model, backgroundColor: taggedPhoto.options.tagColor.model, boxShadow: taggedPhoto.options.tagShadow.model ? null : 'none' }"
+          class="tag-body">
+
+            {{#unless tag.product}}
+              <div data-ng-if="!tag.product" class="choose-product fill">
+
+                <div class="title">Choose a product</div>
+                <div class="choose-product-images scroll">
+                  {{#forEach 'product' in selectedProducts}}
+                    <a data-ng-click="tag.product = product" class="choose-product-for-tag" data-ng-repeat="product in selectedProducts">
+
+                      <img data-ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="{{product.image.sizes.Small.url}}" data-ng-attr-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;">
+                    </a>
+                  {{/forEach}}
+
+                  <a data-ng-click="openTab.name = 'search'" class="fa fa-plus-circle add-product-to-tag"></a>
+                </div>
+              </div>
+            {{/unless}}
+
+            {{#if tag.product}}
+              <div data-ng-if="tag.product" class="fill">
+
+                <img class="product-image" data-ng-src="&#123;&#123;tag.product.image.sizes.Large.url&#125;&#125;" src="{{tag.product.image.sizes.Large.url}}" data-ng-attr-src="&#123;&#123;tag.product.image.sizes.Large.url&#125;&#125;">
+                <span class="product-info">
               <span data-ng-bind="tag.product.name">{{tag.product.name}}</span>
 
 
-            </span>
+                </span>
+              </div>
+            {{/if}}
+
           </div>
-        </div>
+        {{/forEach}}
+
       </div>
     </div>
   </div>

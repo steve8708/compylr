@@ -4,7 +4,7 @@
       <a data-ng-click="closeModal()" class="close-modal-button">+</a>
       <div class="preview-image-container">
         {{#if activeProduct.product}}
-          <img data-ng-if="activeProduct.product" load-animation="fade" class="preview-image" data-ng-src="&#123;&#123;activeProduct.product.image.sizes.Original.url&#125;&#125;" src="ng-src">
+          <img data-ng-if="activeProduct.product" load-animation="fade" class="preview-image" data-ng-src="&#123;&#123;activeProduct.product.image.sizes.Original.url&#125;&#125;" src="{{activeProduct.product.image.sizes.Original.url}}" data-ng-attr-src="&#123;&#123;activeProduct.product.image.sizes.Original.url&#125;&#125;">
 
 
       </div>
@@ -43,7 +43,7 @@
 
         <div>
           <a data-ng-click="toggleFavorite(activeProduct.product)" data-ng-class="{'fa-heart': activeProduct.product.favorite, 'fa-heart-o': !activeProduct.product.favorite}" class="favorite favorite-large fa fa-heart-o"></a>
-          <select data-ng-change="toggleList(activeProduct.product)" data-ng-model="activeProduct.product.list" data-ng-show="activeProduct.product.favorite" class="favorite-text input-sm" data-ng-options="list.name for list in lists | orderBy:'-sort'">
+          <select data-ng-change="toggleList(activeProduct.product)" data-ng-model="activeProduct.product.list" data-ng-show="activeProduct.product.favorite" {{hbsShow "activeProduct.product.favorite"}} class="favorite-text input-sm" data-ng-options="list.name for list in lists | orderBy:'-sort'">
             <option value="">-- Add to List --</option>
           </select>
           <a data-ng-class="{ active: !productSelected(activeProduct.product) }" data-ng-click="toggleSelectedProduct(activeProduct.product)" class="btn btn-basic add-to-widget-btn">
@@ -62,7 +62,11 @@
         </div>
         <div class="colors">
           <b>Available Colors:</b>
-          <span class="available-color" data-ng-repeat="color in activeProduct.product.colors"><span data-ng-bind="color.name">{{color.name}}</span><span class="comma">, </span></span>
+          {{#forEach 'color' in activeProduct.product.colors}}
+            <span class="available-color" data-ng-repeat="color in activeProduct.product.colors">
+<span data-ng-bind="color.name">{{color.name}}</span><span class="comma">, </span></span>
+          {{/forEach}}
+
         </div>
       </div>
     </div>
@@ -79,17 +83,21 @@
         </div>
       </div>
       <div class="filter-bar-content">
-        <div class="search-content" data-ng-show="mode.name == 'search'">
+        <div class="search-content" data-ng-show="mode.name == 'search'" {{hbsShow "mode.name == 'search'"}}>
           <div class="search-input-container">
 
             <input tabindex="1" id="search-products" data-ng-model="query.value" data-ng-keyup="searchKeypress($event)" type="search" results="5" placeholder=" Search products..." class="search-input">
           </div>
 
-          <div data-ng-show="activeFilters.length" class="active-filters-container">
-            <a data-ng-click="removeFilter(filter)" class="active-filter <span data-ng-bind=" filter.type ">{{filter.type}}</span>" data-ng-repeat="filter in activeFilters">
-              <span data-ng-bind="filter.name">{{filter.name}}</span>
-              <i class="fa fa-times"></i>
-            </a>
+          <div data-ng-show="activeFilters.length" {{hbsShow "activeFilters.length"}} class="active-filters-container">
+            {{#forEach 'filter' in activeFilters}}
+              <a data-ng-click="removeFilter(filter)" class="active-filter {{filter.type}}" data-ng-repeat="filter in activeFilters" data-ng-attr-class="active-filter &#123;&#123;filter.type&#125;&#125;">
+
+                <span data-ng-bind="filter.name">{{filter.name}}</span>
+                <i class="fa fa-times"></i>
+              </a>
+            {{/forEach}}
+
           </div>
 
           <div class="sort-container">
@@ -105,8 +113,16 @@
 
 
                   <ul class="list-unstyled tree-ul tree-container">
-                    <li data-ng-if="data.visible" data-ng-repeat="data in categoryHierarchy" data-ng-include="'modules/search/tree-view.tpl.html'">
-                      {{> modules/search/tree-view}}</li>
+                    {{#if data.visible}}
+                      {{#forEach 'data' in categoryHierarchy}}
+                        <li data-ng-if="data.visible" data-ng-repeat="data in categoryHierarchy" data-ng-include="'modules/search/tree-view.tpl.html'">
+
+
+                          {{> modules/search/tree-view}}</li>
+                      {{/forEach}}
+
+                    {{/if}}
+
                   </ul>
                 </div>
               </div>
@@ -117,10 +133,18 @@
 
               <input data-ng-model="input.brand" type="search" results="5" class="search-brands-input" placeholder="Search Brands...">
               <div class="accordion-content">
-                <a data-ng-click="toggleFilter(brand)" class="brand-choice" data-ng-click="brand.active = !brand.active" data-ng-class="{ active: brand.active }" data-ng-repeat="brand in brands | limitTo: 150">
-                  <span data-ng-bind="brand.name">{{brand.name}}</span>
-                  <i data-ng-if="brand.active" class="fa fa-check check-icon"></i>
-                </a>
+                {{#forEach 'brand' in brands | limitTo: 150}}
+                  <a data-ng-click="toggleFilter(brand)" class="brand-choice" data-ng-click="brand.active = !brand.active" data-ng-class="{ active: brand.active }" data-ng-repeat="brand in brands | limitTo: 150">
+
+                    <span data-ng-bind="brand.name">{{brand.name}}</span>
+                    {{#if brand.active}}
+                      <i data-ng-if="brand.active" class="fa fa-check check-icon">
+</i>
+                    {{/if}}
+
+                  </a>
+                {{/forEach}}
+
               </div>
 
             </div>
@@ -137,9 +161,17 @@
             <div data-ng-class="{ active: activeFilterPanel == 'color' }" class="filter-group search-color">
               <a data-ng-click="togglePanel('color')" class="accordion-label">Color <i class="fa fa-caret-left label-caret"></i></a>
               <div class="accordion-content">
-                <a data-ng-click="toggleFilter(color)" class="color-choice" data-ng-repeat="color in colors" data-ng-style="{ backgroundColor: color.name }" data-ng-class="{ active: color.active }">
-                  <i data-ng-if="color.active" class="fa fa-check-circle color-check-icon"></i>
-                </a>
+                {{#forEach 'color' in colors}}
+                  <a data-ng-click="toggleFilter(color)" class="color-choice" data-ng-repeat="color in colors" data-ng-style="{ backgroundColor: color.name }" data-ng-class="{ active: color.active }">
+
+                    {{#if color.active}}
+                      <i data-ng-if="color.active" class="fa fa-check-circle color-check-icon">
+</i>
+                    {{/if}}
+
+                  </a>
+                {{/forEach}}
+
               </div>
             </div>
 
@@ -151,10 +183,18 @@
               <input data-ng-model="input.store" type="search" results="5" placeholder="Search Stores..." class="search-stores-input">
 
               <div class="accordion-content">
-                <a data-ng-click="toggleFilter(store)" data-ng-model="store.query" class="store-choice" data-ng-click="store.active = !store.active" data-ng-class="{ active: store.active }" data-ng-repeat="store in stores | limitTo: 150">
-                  <span data-ng-bind="store.name">{{store.name}}</span>
-                  <i data-ng-if="store.active" class="fa fa-check check-icon"></i>
-                </a>
+                {{#forEach 'store' in stores | limitTo: 150}}
+                  <a data-ng-click="toggleFilter(store)" data-ng-model="store.query" class="store-choice" data-ng-click="store.active = !store.active" data-ng-class="{ active: store.active }" data-ng-repeat="store in stores | limitTo: 150">
+
+                    <span data-ng-bind="store.name">{{store.name}}</span>
+                    {{#if store.active}}
+                      <i data-ng-if="store.active" class="fa fa-check check-icon">
+</i>
+                    {{/if}}
+
+                  </a>
+                {{/forEach}}
+
               </div>
             </div>
           </div>
@@ -166,13 +206,17 @@
           </div>
         </div>
 
-        <div class="follow-content" data-ng-show="mode.name == 'feed'">
+        <div class="follow-content" data-ng-show="mode.name == 'feed'" {{hbsShow "mode.name == 'feed'"}}>
           <div class="following-container">
             <div data-ng-click="activeFollow.name = 'following'" data-ng-class="{ active: activeFollow.name == 'following' }" class="following"><a>Following</a>
             </div>
             <ul class="list-unstyled">
-              <li data-ng-class="{ active: activeFollow.name == follow }" class="follow" data-ng-click="activeFollow.name = ( activeFollow.name === follow ? 'following' : follow )" data-ng-repeat="follow in following"><a><span data-ng-bind="follow.name">{{follow.name}}</span></a>
-              </li>
+              {{#forEach 'follow' in following}}
+                <li data-ng-class="{ active: activeFollow.name == follow }" class="follow" data-ng-click="activeFollow.name = ( activeFollow.name === follow ? 'following' : follow )" data-ng-repeat="follow in following">
+                  <a><span data-ng-bind="follow.name">{{follow.name}}</span></a>
+                </li>
+              {{/forEach}}
+
               <li class="follow">
                 <a tooltip="Follow More" tooltip-placement="right" class="add-button fa fa-plus-circle"></a>
               </li>
@@ -182,9 +226,13 @@
           <div class="collections">
             <div class="collections-title">My Lists</div>
             <ul class="list-unstyled">
-              <li data-ng-click="activateSearch(collection)" data-ng-class="{ active: activeFollow.name == collection }" class="saved-collection" data-ng-repeat="collection in collections">
-                <a><span data-ng-bind="collection.name">{{collection.name}}</span></a>
-              </li>
+              {{#forEach 'collection' in collections}}
+                <li data-ng-click="activateSearch(collection)" data-ng-class="{ active: activeFollow.name == collection }" class="saved-collection" data-ng-repeat="collection in collections">
+
+                  <a><span data-ng-bind="collection.name">{{collection.name}}</span></a>
+                </li>
+              {{/forEach}}
+
               <li class="follow">
                 <a tooltip="New Collection" tooltip-placement="right" class="add-button fa fa-plus-circle"></a>
               </li>
@@ -194,9 +242,13 @@
           <div class="saved-searches">
             <div class="saved-searches-title">Saved Searches</div>
             <ul class="list-unstyled">
-              <li data-ng-click="activateSearch(search)" data-ng-class="{ active: activeFollow.name == search }" class="saved-search" data-ng-repeat="search in savedSearches">
-                <a><span data-ng-bind="search.name">{{search.name}}</span></a>
-              </li>
+              {{#forEach 'search' in savedSearches}}
+                <li data-ng-click="activateSearch(search)" data-ng-class="{ active: activeFollow.name == search }" class="saved-search" data-ng-repeat="search in savedSearches">
+
+                  <a><span data-ng-bind="search.name">{{search.name}}</span></a>
+                </li>
+              {{/forEach}}
+
               <li class="follow">
                 <a tooltip="New Saved Search" tooltip-placement="right" class="add-button fa fa-plus-circle"></a>
               </li>
@@ -216,61 +268,82 @@
         <div class="loading-icon" data-ng-class="{ show: searchState.loading }">✪</div>
         <div class="search-results-wrapper" data-ng-style="{ height:  containerHeight + 'px' }">
           <div class="no-results fade" data-ng-class="{ fade: results.length || searchState.loading || searchState.firstLoad }">No results, please try another search</div>
-          <div data-ng-mouseenter="result.mouseover = true" data-ng-mouseleave="result.mouseover = false" data-ng-class="{ fade: searchState.loading && !paginating }" data-ng-style="{ top: tops[$index], left: lefts[$index] }" class="product search-result" data-ng-repeat="result in results">
-            <div data-ng-class="{ active: result.mouseover }" class="hover-options">
+          {{#forEach 'result' in results}}
+            <div data-ng-mouseenter="result.mouseover = true" data-ng-mouseleave="result.mouseover = false" data-ng-class="{ fade: searchState.loading && !paginating }" data-ng-style="{ top: tops[$index], left: lefts[$index] }" class="product search-result" data-ng-repeat="result in results">
 
-              <a data-ng-click="clickGetLink()" class="hover-option">
-                <i class="fa fa-link"></i>
-                Get Link
-              </a>
+              <div data-ng-class="{ active: result.mouseover }" class="hover-options">
 
-              <a data-ng-click="toggleSelectedProduct(result)" data-ng-class="{ active: productSelected(result) }" class="hover-option">
-                <i data-ng-class="{ 'fa-plus-circle': !productSelected(result), 'fa-minus-circle': productSelected(result) }" class="fa add-to-widget-icon"></i>
-                <span data-ng-bind="productSelected(result) ? 'Remove' :  'Add to Quicklist'">{{expression "productSelected(result) ? 'Remove' :  'Add to Quicklist'"}}</span>
-              </a>
+                <a data-ng-click="clickGetLink()" class="hover-option">
+                  <i class="fa fa-link"></i>
+                  Get Link
+                </a>
 
-            </div>
+                <a data-ng-click="toggleSelectedProduct(result)" data-ng-class="{ active: productSelected(result) }" class="hover-option">
+                  <i data-ng-class="{ 'fa-plus-circle': !productSelected(result), 'fa-minus-circle': productSelected(result) }" class="fa add-to-widget-icon"></i>
+                  <span data-ng-bind="productSelected(result) ? 'Remove' :  'Add to Quicklist'">{{expression "productSelected(result) ? 'Remove' :  'Add to Quicklist'"}}</span>
+                </a>
 
-            <div class="product-image-container">
-              <img data-ng-click="showModal(result)" load-animation="fade" class="search-result-image" data-ng-src="<span data-ng-bind=" result.image.sizes.Large.url ">{{result.image.sizes.Large.url}}</span>">
-            </div>
-
-            <div class="product-info">
-              <div class="product-name"><span data-ng-bind="result.name">{{result.name}}</span>
               </div>
-              <span data-ng-if="true || !result.salePriceLabel">
+
+              <div class="product-image-container">
+                <img data-ng-click="showModal(result)" load-animation="fade" class="search-result-image" data-ng-src="&#123;&#123;result.image.sizes.Large.url&#125;&#125;" src="{{result.image.sizes.Large.url}}" data-ng-attr-src="&#123;&#123;result.image.sizes.Large.url&#125;&#125;">
+              </div>
+
+              <div class="product-info">
+                <div class="product-name"><span data-ng-bind="result.name">{{result.name}}</span>
+                </div>
+                {{#ifExpression "true || !result.salePriceLabel"}}
+                  <span data-ng-if="true || !result.salePriceLabel">
+
                 <span class="price">
                   <span class="est-commission-label">Est. Commission: </span>
-              <b class="dark"><span data-ng-bind="result.salePriceLabel || result.priceLabel">{{expression "result.salePriceLabel || result.priceLabel"}}</span></b>
-              </span>
-              </span>
-              <span data-ng-if="false && result.salePriceLabel">
+                  <b class="dark"><span data-ng-bind="result.salePriceLabel || result.priceLabel">{{expression "result.salePriceLabel || result.priceLabel"}}</span></b>
+                  </span>
+                  </span>
+                {{/ifExpression}}
+
+                {{#ifExpression "false && result.salePriceLabel"}}
+                  <span data-ng-if="false && result.salePriceLabel">
+
                 <span class="price">
                   <span class="strikethrough"><span data-ng-bind="result.priceLabel">{{result.priceLabel}}</span></span>
-              <b class="pink"><span data-ng-bind="result.salePriceLabel">{{result.salePriceLabel}}</span></b>
-              </span>
-              </span>
-              <a data-ng-click="toggleFavorite(result)" data-ng-class="{'fa-heart': result.favorite, 'fa-heart-o': !result.favorite}" class="favorite favorite-small fa"></a>
+                  <b class="pink"><span data-ng-bind="result.salePriceLabel">{{result.salePriceLabel}}</span></b>
+                  </span>
+                  </span>
+                {{/ifExpression}}
 
+                <a data-ng-click="toggleFavorite(result)" data-ng-class="{'fa-heart': result.favorite, 'fa-heart-o': !result.favorite}" class="favorite favorite-small fa"></a>
+
+
+              </div>
+            </div>
+          {{/forEach}}
+
+        </div>
+      </div>
+      {{#ifExpression "false && config.appMode == 'app'"}}
+        <div data-ng-if="false && config.appMode == 'app'" id="widgets-container" class="widgets-container">
+
+          <div class="widget-buttons">
+            <a data-ng-show="selectedProducts.length" {{hbsShow "selectedProducts.length"}} class="btn fa fa-times clear-selected-products-button" data-ng-click="utils.clear(selectedProducts)"></a>
+            <div class="selected-products">
+              {{#forEach 'product' in selectedProducts}}
+                <a data-ng-click="utils.remove(selectedProducts, product)" data-ng-repeat="product in selectedProducts" class="selected-product" data-ng-style="{ 'background-image': 'url(' + product.image.sizes.Small.url + ')' }">
+                </a>
+              {{/forEach}}
 
             </div>
+            <a data-ng-class="{ active: widgets.active, 'not-active': !widgets.active }" class="btn toggle-active-button" data-ng-click="widgets.active = !widgets.active">
+              <i class="fa widget-arrow" data-ng-class="{ 'fa-arrow-up': !widgets.active, 'fa-arrow-down': widgets.active }"></i>
+              Widget
+            </a>
+          </div>
+          <div class="build-widget" data-ng-controller="ToolsCtrl" data-ng-include="'modules/tools/tools.tpl.html'">
+            {{> modules/tools/tools}}
           </div>
         </div>
-      </div>
-      <div data-ng-if="false && config.appMode == 'app'" id="widgets-container" class="widgets-container">
-        <div class="widget-buttons">
-          <a data-ng-show="selectedProducts.length" class="btn fa fa-times clear-selected-products-button" data-ng-click="utils.clear(selectedProducts)"></a>
-          <div class="selected-products">
-            <a data-ng-click="utils.remove(selectedProducts, product)" data-ng-repeat="product in selectedProducts" class="selected-product" data-ng-style="{ 'background-image': 'url(' + product.image.sizes.Small.url + ')' }"></a>
-          </div>
-          <a data-ng-class="{ active: widgets.active, 'not-active': !widgets.active }" class="btn toggle-active-button" data-ng-click="widgets.active = !widgets.active">
-            <i class="fa widget-arrow" data-ng-class="{ 'fa-arrow-up': !widgets.active, 'fa-arrow-down': widgets.active }"></i>
-            Widget
-          </a>
-        </div>
-        <div class="build-widget" data-ng-controller="ToolsCtrl" data-ng-include="'modules/tools/tools.tpl.html'">
-        </div>
-      </div>
+      {{/ifExpression}}
+
     </div>
   </div>
 </div>

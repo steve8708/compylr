@@ -10,7 +10,7 @@
   </div>
   <div class="content-container">
 
-    <div class="tab-content" data-ng-show="activeTab.name == 'Boutique'">
+    <div class="tab-content" data-ng-show="activeTab.name == 'Boutique'" {{hbsShow "activeTab.name == 'Boutique'"}}>
       <div class="widget-options">
         <div class="presets">
           <a class="preset fa fa-square" data-ng-model="preset.name" btn-radio="'lookbook'" class="preset"></a>
@@ -25,10 +25,22 @@
             {{#ifExpression "option.type == 'checkbox'"}}
               <input data-ng-if="option.type == 'checkbox'" type="checkbox" data-ng-model="option.model">
 
-              <span class="range-value" data-ng-if="option.type == 'range'"><span data-ng-bind="option.model">{{option.model}}</span></span>
-              <input data-ng-if="option.type == 'range'" type="range" min="<span data-ng-bind=" option.min ">{{option.min}}</span>" max="<span data-ng-bind=" option.max ">{{option.max}}</span>" step="<span data-ng-bind=" option.step ">{{option.step}}</span>" data-ng-model="option.model">
-              <select data-ng-class="{ pink: option.name == 'Collection' }" dir="rtl" data-ng-if="option.type == 'select'" data-ng-model="option.model" data-ng-options="option for option in option.options"></select>
+              {{#ifExpression "option.type == 'range'"}}
+                <span class="range-value" data-ng-if="option.type == 'range'">
+<span data-ng-bind="option.model">{{option.model}}</span></span>
+              {{/ifExpression}}
+
+              {{#ifExpression "option.type == 'range'"}}
+                <input data-ng-if="option.type == 'range'" type="range" min="{{option.min}}" max="{{option.max}}" step="{{option.step}}" data-ng-model="option.model" data-ng-attr-min="&#123;&#123;option.min&#125;&#125;">
+
+                {{#ifExpression "option.type == 'select'"}}
+                  <select data-ng-class="{ pink: option.name == 'Collection' }" dir="rtl" data-ng-if="option.type == 'select'" data-ng-model="option.model" data-ng-options="option for option in option.options">
+                  </select>
+                {{/ifExpression}}
+
           </div>
+          {{/ifExpression}}
+
           {{/ifExpression}}
 
         {{/forEach}}
@@ -62,32 +74,48 @@
       </div>
 
       <div class="widget-preview" data-ng-class="{ fade: state.loading, nowrap: boutique.options.showInfo.model != 'Best Fit' }">
-        <div data-ng-show="!selectedProducts.length" class="no-results center block well">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your widget</div>
+        <div data-ng-show="!selectedProducts.length" {{hbsShow "!selectedProducts.length"}} class="no-results center block well">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your widget</div>
 
         <div data-ss-widget class="widget-wrapper" data-ng-style="{ width: boutique.containerSize.width + 80 + 'px', height: boutique.containerSize.height + 'px'}">
           <div class="widget-wrapper">
-            <i data-ng-show="boutique.pages.length > 1" data-ng-class="{disabled: boutique.currentPage == 0}" class="fa fa-chevron-left previous-page" data-ng-click="navigateGallery('left')"></i>
-            <i data-ng-show="boutique.pages.length > 1" data-ng-class="{disabled: boutique.currentPage == boutique.pages.length - 1}" class="fa fa-chevron-right next-page" data-ng-click="navigateGallery('right')"></i>
+            <i data-ng-show="boutique.pages.length > 1" {{hbsShow "boutique.pages.length > 1"}} data-ng-class="{disabled: boutique.currentPage == 0}" class="fa fa-chevron-left previous-page" data-ng-click="navigateGallery('left')"></i>
+            <i data-ng-show="boutique.pages.length > 1" {{hbsShow "boutique.pages.length > 1"}} data-ng-class="{disabled: boutique.currentPage == boutique.pages.length - 1}" class="fa fa-chevron-right next-page" data-ng-click="navigateGallery('right')"></i>
           </div>
           <div class="widget-wrapper">
             <div class="widget-container" data-ng-style="{ width: boutique.containerSize.width + 'px', height: boutique.containerSize.height + 'px' }">
               <div class="widget-scroller" data-ng-style="{ width: boutique.options.size.model * selectedProducts.length + 100 + 'px', height: boutique.containerSize.height + 'px', 'margin-left': '-' + (boutique.containerSize.width * boutique.currentPage) + 'px'}">
-                <div data-ng-repeat="page in boutique.pages" data-ng-style="{ width: boutique.containerSize.width + 'px', height: boutique.containerSize.height + 'px'}" class="widget-page">
-                  <div class="boutique-widget-span" data-ng-repeat="result in page">
-                    <div data-ng-style="{ width: boutique.options.size.model + 'px', height: boutique.options.size.model + 'px' }" data-show-on-hover="<span data-ng-bind=" boutique.options.showInfo.model ">{{boutique.options.showInfo.model}}</span>" data-show-brand="<span data-ng-bind="
-                    boutique.options.showBrand.model ">{{boutique.options.showBrand.model}}</span>" data-show-price="<span data-ng-bind=" boutique.options.showPrice.model ">{{boutique.options.showPrice.model}}</span>" class="widget-image boutique-widget">
-                      <div class="image-container">
-                        <img data-ng-src="&#123;&#123;result.image.sizes.Original.url&#125;&#125;" src="ng-src">
-                      </div>
-                      <div class="details">
-                        <div data-ng-if="boutique.options.showBrand.model" class="brand-name"><span data-ng-bind="result.brand.name">{{result.brand.name}}</span>
+                {{#forEach 'page' in boutique.pages}}
+                  <div data-ng-repeat="page in boutique.pages" data-ng-style="{ width: boutique.containerSize.width + 'px', height: boutique.containerSize.height + 'px'}" class="widget-page">
+
+                    {{#forEach 'result' in page}}
+                      <div class="boutique-widget-span" data-ng-repeat="result in page">
+
+                        <div data-ng-style="{ width: boutique.options.size.model + 'px', height: boutique.options.size.model + 'px' }" data-show-on-hover="{{boutique.options.showInfo.model}}" data-show-brand="{{boutique.options.showBrand.model}}" data-show-price="{{boutique.options.showPrice.model}}"
+                        class="widget-image boutique-widget" data-ng-attr-data-show-on-hover="&#123;&#123;boutique.options.showInfo.model&#125;&#125;">
+                          <div class="image-container">
+                            <img data-ng-src="&#123;&#123;result.image.sizes.Original.url&#125;&#125;" src="{{result.image.sizes.Original.url}}" data-ng-attr-src="&#123;&#123;result.image.sizes.Original.url&#125;&#125;">
+                          </div>
+                          <div class="details">
+                            {{#if boutique.options.showBrand.model}}
+                              <div data-ng-if="boutique.options.showBrand.model" class="brand-name">
+                                <span data-ng-bind="result.brand.name">{{result.brand.name}}</span>
+                              </div>
+                            {{/if}}
+
+                            {{#if boutique.options.showPrice.model}}
+                              <div data-ng-if="boutique.options.showPrice.model" class="retailer-name">
+                                <span data-ng-bind="result.salePriceLabel || result.priceLabel">{{expression "result.salePriceLabel || result.priceLabel"}}</span>
+                              </div>
+                            {{/if}}
+
+                          </div>
                         </div>
-                        <div data-ng-if="boutique.options.showPrice.model" class="retailer-name"><span data-ng-bind="result.salePriceLabel || result.priceLabel">{{expression "result.salePriceLabel || result.priceLabel"}}</span>
-                        </div>
                       </div>
-                    </div>
+                    {{/forEach}}
+
                   </div>
-                </div>
+                {{/forEach}}
+
               </div>
             </div>
           </div>

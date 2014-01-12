@@ -25,7 +25,6 @@ app.use express.session secret: 'foobar', store: new express.session.MemoryStore
 app.use express.static 'static'
 
 app.engine 'html', exphbs
-  defaultLayout: 'main'
   layoutsDir: './'
   partialsDir: "./#{templatesDir}"
   extname: '.tpl.html'
@@ -200,6 +199,8 @@ handlebars.registerHelper "forEach", (name, _in, context) ->
 cache =
   results: {}
 
+currentReq = null
+
 resultsSuccess = (req, res, results) ->
   sessionData = req.session.pageData or= _.cloneDeep pageData
   sessionData.results = results
@@ -214,8 +215,6 @@ resultsSuccess = (req, res, results) ->
 
   unless res.headerSent
     res.render "#{templatesDir}/index.tpl.html", sessionData
-
-currentReq = null
 
 app.get '/:page?/:tab?/:product?', (req, res) ->
   currentReq = req

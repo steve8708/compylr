@@ -1,4 +1,4 @@
-# Compilr
+![Imgur](http://i.imgur.com/XeaMTNW.png)
 Compiles angular apps to be run on any backend. SEO is not longer a problem
 for single page apps. Maximum performance, minimal load times, optimal development efficiency.
 
@@ -62,7 +62,7 @@ for single page apps. Maximum performance, minimal load times, optimal developme
   * `{{ foo && bar }}` -> `{{expression "foo && bar"}}`
   * `<img src="{{ foo[bar] || attributes }}>"` -> `<img src="{{expression 'foo[bar] || attributes'}}>`
 
-## Route configuration
+## State & Route Configuration
 Configure your state and routes in one place and Compilr
 will compile them into application logic for both your client and server
 ```
@@ -109,10 +109,13 @@ will compile them into application logic for both your client and server
 
 ```
 
+## Project Status
+Functional demo complete. Working on production ready v1
+
 ## Usage
 `compilr src/path/* dest/path/*`
 
-## Contribution
+## Contributing
 We need more adapters! Node + express is built. We need python, ruby, and more!
 
 ## Demo

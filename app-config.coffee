@@ -31,11 +31,10 @@ module.exports =
     # TODO: session data
     toggleSelectedProduct: (product) ->
       console.log 'toggleSelectedProduct', product
-      sessionData = currentReq.session.pageData or= _.cloneDeep pageData
       id = product and product.id or product
-      foundProduct = _.find sessionData.selectedProducts, (item) ->
+      foundProduct = _.find @selectedProducts, (item) ->
         item and "#{item.id}" is "#{id}"
       if product
-        sessionData.selectedProducts.unshift product
+        @selectedProducts.unshift product
       else
-        sessionData.selectedProducts.splice sessionData.selectedProducts.indexOf(product), 1
+        @selectedProducts.splice @selectedProducts.indexOf(product), 1

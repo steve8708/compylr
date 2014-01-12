@@ -13,39 +13,9 @@ client/server route and logic sharing, environment agnostic state persistence.
 * Backend agnostic
 
 ## How it works
-* 100% automatic - configure your routes, compile your app, enjoy.
 * Compiles Angular Templates to Handlebars Templates
 * Standardizes route configuration using JSON for angular and any backend (via an adapter)
 * Standardizes state management with angular and any backend (via an adapter)
-* Keeps your life simple and happy. Build your angular app, don't even think about
-  your server. Compilr will do everything for you
-
-## Key Components
-* 100% SEO friendly
-* Ultra high performance
-  * You don't need to run your whole app on the server to render a template. So don't.
-    Instead cross compile templates and sync state.
-* Angular application logic
-  * Use ng-click to trigger client __and__ server actions
-  (e.g. changing states and routes) even without any browser javascript!
-* Client and server rendering (render on server, once app loaded renders on client)
-* Pushtate support (always keep urls in sync)
-* Simple state and route configuration
-* Shared session state on client and server with simple configuration
-* Shared route logic on client and server with simple configuration
-* Backend agnostic. Supports any backend with a simple adapter
-* Full expression support - e.g. `ng-show="foo && bar[foo] || bar.foo"`
-* Event support - e.g. `ng-click="foo = !foo"`
-* Form support
-* Offline support
-* Templates compile to 100% valid handlebars
-  * Handlebars helpers comparible - extend with your own
-* Template resolution
-  * All angular template attributes are 100% safe. They are converted
-    to handlebars expressions and to ng-attributes so the template
-    can be immediately displayed in the browser but angular can still
-    find all necessary hooks to take control of the application once loaded
-  * e.g. '{{foo}}' ➜ '<span ng-bind="foo">{{foo}}<span>'
 
 ## Example
 
@@ -130,8 +100,35 @@ will compile them into application logic for both your client and server.
 
 ```
 
-## Supported Attributes
 
+## Key Components
+* 100% SEO friendly
+* Ultra high performance
+  * You don't need to run your whole app on the server to render a template. So don't.
+    Instead cross compile templates and sync state.
+* Angular application logic
+  * Use ng-click to trigger client __and__ server actions
+  (e.g. changing states and routes) even without any browser javascript!
+* Client and server rendering (render on server, once app loaded renders on client)
+* Pushtate support (always keep urls in sync)
+* Simple state and route configuration
+* Shared session state on client and server with simple configuration
+* Shared route logic on client and server with simple configuration
+* Backend agnostic. Supports any backend with a simple adapter
+* Full expression support - e.g. `ng-show="foo && bar[foo] || bar.foo"`
+* Event support - e.g. `ng-click="foo = !foo"`
+* Form support
+* Offline support
+* Templates compile to 100% valid handlebars
+  * Handlebars helpers comparible - extend with your own
+* Template resolution
+  * All angular template attributes are 100% safe. They are converted
+    to handlebars expressions and to ng-attributes so the template
+    can be immediately displayed in the browser but angular can still
+    find all necessary hooks to take control of the application once loaded
+  * e.g. '{{foo}}' ➜ '<span ng-bind="foo">{{foo}}<span>'
+
+## Supported Attributes
 * **ng-repeat**
 * **ng-include**
 * **ng-show**

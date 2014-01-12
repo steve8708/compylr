@@ -54,7 +54,7 @@ warnVerbose = (args...) ->
 
 # In Java can use ScriptEngineManager to eval js
 # (http://stackoverflow.com/questions/2605032/using-eval-in-java)
-safeEvalExpression = (expression, context) ->
+safeEvalStaticExpression = (expression, context) ->
   try
     expressionBody = expressionCache[expression] or parse(expression).body[0].expression
     expressionCache[expression] = expressionBody unless expressionCache[expression]
@@ -78,7 +78,12 @@ fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompile
 # TODO: make this recursively support infinite depth
 # TODO: move this to convert.coffee and allow recursive src and dest options
 # TODO: make into grunt task
-for type in ['templates', 'modules/account', 'modules/home', 'modules/insights', 'modules/ribbon', 'modules/search', 'modules/tools']
+directories = [
+  'templates', 'modules/account', 'modules/home', 'modules/insights'
+  'modules/ribbon', 'modules/search', 'modules/tools'
+]
+
+for type in directories
   path = "./#{preCompiledTemplatesDir}/#{type}/"
   for fileName in fs.readdirSync path
     continue unless _.contains fileName, '.tpl.html'
@@ -92,7 +97,7 @@ console.info 'Done compiling templates.'
 # Compile Handlebars Helpers - - - - - - - - - - - - - - - - - - -
 
 handlebars.registerHelper "eachExpression", (name, _in, expression, options) ->
-  value = safeEvalExpression expression, @
+  value = safeEvalStaticExpression expression, @
   instance.helpers.forEach name, _in, value, options
 
 handlebars.registerHelper "styleExpression", (expression, options) ->
@@ -111,7 +116,7 @@ handlebars.registerHelper "classExpression", (expression, options) ->
   ' ' + out.join(' ') + ' '
 
 handlebars.registerHelper "ifExpression", (expression, options) ->
-  value = safeEvalExpression expression, @
+  value = safeEvalStaticExpression expression, @
 
   if not options.hash.includeZero and not value
     options.inverse @
@@ -120,15 +125,15 @@ handlebars.registerHelper "ifExpression", (expression, options) ->
 
 handlebars.registerHelper "expression", (expression, options) ->
   # TODO: there are better ways to do @, borrow angular eval function
-  value = safeEvalExpression expression, @
+  value = safeEvalStaticExpression expression, @
   value
 
 handlebars.registerHelper "hbsShow", (expression, options) ->
-  value = safeEvalExpression expression, @
+  value = safeEvalStaticExpression expression, @
   if value then 'data-hbs-show' else 'data-hbs-hide'
 
 handlebars.registerHelper "hbsHide", (expression, options) ->
-  value = safeEvalExpression expression, @
+  value = safeEvalStaticExpression expression, @
   if value then 'data-hbs-hide' else 'data-hbs-show'
 
 handlebars.registerHelper "json", (args..., options) ->
@@ -142,7 +147,6 @@ handlebars.registerHelper "interpolatedScript", (options) ->
   scriptStr += '>'
 
   "#{scriptStr} #{options.fn @} </script>"
-
 
 # TODO: looping through options
 #   (key, value) in bar

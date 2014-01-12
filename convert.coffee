@@ -165,6 +165,9 @@ convert = (options) ->
     throw new Error 'infinite update loop' if i++ > maxIters
 
     interpolated = interpolated
+
+      # ng-repeat - - - - - - - - - - - - - -
+
       .replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
         verboseLog 'match 1'
         updated = true
@@ -183,7 +186,9 @@ convert = (options) ->
         else
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
       )
-      # TODO: 'ifExpression' separate from  'if'
+
+      # ng-if - - - - - - - - - - - - - - - - -
+
       .replace(/<[^>]*?\sng-if="(.*?)".*?>([\S\s]+)/, (match, varName, post) ->
         verboseLog 'match 2'
         updated = true
@@ -202,6 +207,9 @@ convert = (options) ->
         else
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
       )
+
+      # ng-include - - - - - - - - - - - - - -
+
       .replace(/<[^>]*?\sng-include="'(.*)'".*?>/, (match, includePath, post) ->
         verboseLog 'match 3'
         updated = true
@@ -209,6 +217,9 @@ convert = (options) ->
         match = match.replace /\sng-include=/, ' data-ng-include='
         "#{match}\n{{> #{includePath}}}"
       )
+
+      # ng-src, ng-href, ng-value - - - - - - -
+
       .replace(/\s(ng-src|ng-href|ng-value)="(.*)"/, (match, attrName, attrVal) ->
         verboseLog 'match 4'
         updated = true
@@ -216,6 +227,9 @@ convert = (options) ->
         escapedAttrVal = escapeBraces attrVal
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       )
+
+      # ng-class, ng-style - - - - - - - - - -
+
       .replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
         verboseLog 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
         updated = true
@@ -230,6 +244,9 @@ convert = (options) ->
 
         match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
       )
+
+      # click-action - - - - - - - - - - - - - - -
+
       # TODO: ng-click only on anchors
       .replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, (match, tagName, attrName, attrVal) ->
         verboseLog 'match 7', attrName: attrName, attrVal: attrVal
@@ -251,9 +268,10 @@ convert = (options) ->
         else
           close = getCloseTag match
           "#{anchorStr}>\n#{close.before.replace attrName, escapeBasicAttribute attrName}\n</a>\n#{close.after}"
-
       )
-      # FIXME: this doesn't support multiple interpolations in one tag
+
+      # attr="{{intrerpolation}}" - - - - - - - -
+
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)".*?>/, (match, attrName, attrVal) ->
         verboseLog 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '#'
@@ -274,6 +292,8 @@ convert = (options) ->
           """#{trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
       )
 
+      # ng-show, ng-hide - - - - - - - - - - - - -
+
       .replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
         updated = true
         hbsTagType = if showOrHide is 'ng-show' then 'hbsShow' else 'hbsHide'
@@ -289,6 +309,9 @@ convert = (options) ->
     throw new Error 'infinite update loop' if i++ > maxIters
 
     interpolated = interpolated
+
+      # {{interpolation}}, {{exression == true}} -
+
       .replace(/\{\{([^#\/>_][\s\S]*?[^_])\}\}/g, (match, body) ->
         verboseLog 'match 7'
         updated = true

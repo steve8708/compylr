@@ -38,11 +38,11 @@ client/server route and logic sharing, environment agnostic state persistence.
 ```
 
 ### Compiled temlpate output
-Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angular interpolations
+Includes {{}} for handlebars and attributes + escaped {{}} (&amp#123;) for angular interpolations
 ```html
 {{#forEach 'foo' in bar}}
   <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">
-    <img src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}} ng-attr-src="&amp;#123;&amp;#123;user.image&amp;#123;&amp;#123;">
+    <img src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}} ng-attr-src="&#123;&#123;user.image&#125;&#125;">
 
     <span ng-bind="foo">{{foo}}</span>
 
@@ -53,11 +53,11 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
 {{/forEach}}
 
 {{#if foo.length}}
-  <img class="small {{#if imgVisible}}active{{/if}} ng-class="{ active: imgVisible }" ng-if="foo.length">
+  <img class="small {{#if imgVisible}}active{{/if}}" ng-class="{ active: imgVisible }" ng-if="foo.length">
 {{/if}}
 
 {{#ifExpression "foo && bar"}}
-  <img ng-if="foo && bar" style="{{styleExpression '{ color: mainColor }'}}>
+  <img ng-if="foo && bar" style="{{styleExpression '{ color: mainColor }'}}">
 {{/ifExpression}}
 
 <span ng-bind="foo && bar">

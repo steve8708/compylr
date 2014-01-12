@@ -60,7 +60,7 @@ Maximum performance, minimal load times, optimal development efficiency, 100% SE
 ```
 
 ### Compiled temlpate output
-Includes {{mustaches}} for handlebars and attributes + escaped {{mustaches}} (&#126;)for angular (escaped notation not displayed for readability)
+Includes {{}} for handlebars and attributes + escaped {{}} for angular (escaped notation not displayed for readability)
 ```html
   {{#forEach 'foo' in bar}}
     <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">
@@ -120,7 +120,7 @@ will compile them into application logic for both your client and server
 
 ```
 
-## Supports
+## Supported Attributes
 
 * **ng-repeat**
 * **ng-include**

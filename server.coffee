@@ -42,6 +42,7 @@ evalExpression = (expression, context) ->
 
 console.info 'Compiling templates...'
 
+mkdirp.sync './#{templatesDir}'
 fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompiledTemplatesDir}/index.tpl.html"
 
 # TODO: make this recursively support infinite depth

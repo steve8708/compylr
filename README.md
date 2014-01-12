@@ -146,53 +146,6 @@ will compile them into application logic for both your client and server.
 * **Interpolations**
 * **Expressions**
 
-## State & Route Configuration
-Configure your state and routes in one place and Compilr
-will compile them into application logic for both your client and server
-
-```javascript
-{
-  routes: {
-    '/:page/:tab/:product': {
-      data: {
-        showModal: true
-      },
-      compute: {
-        'activeTab.name': '$params.tab',
-        activeProduct: 'results[$params.product]',
-        foo: function(params, stateData) {
-          return foobar;
-        }
-      },
-      exec: ['getProducts']
-    }
-  },
-  data: {
-    activeProduct: {},
-    query: {
-      value: ''
-    },
-    mode: {
-      name: 'search'
-    },
-    openTab: {
-      name: 'insights'
-    },
-
-    toggleSelectedProduct: function(id) {
-      var product = _.find(this.selectedProducts, function(item) {
-        return item && ("" + item.id) === ("" + id);
-      });
-      if (product) {
-        return this.selectedProducts.unshift(product);
-      } else {
-        return this.remove(this.selectedProducts, product);
-      }
-    }
-  }
-}
-
-```
 
 ## Project Status
 Functional demo complete. Working on production ready v1.0.0

@@ -3,6 +3,11 @@
 Compiles angular apps to run on any server, regardless of language or platform, with server side rendering, SEO support, route logic sharing, and state persistence.
 Maximum performance, minimal load times, optimal development efficiency, 100% SEO support
 
+## Purpose
+* Write your angular app, auto compile to your backend, never think about SEO again.
+* Maximum performance (don't run a bunch of frontend-specific code just to render your templates for faster loadtimes and SEO)
+* Backend agnostic
+
 ## How it works
 * 100% automatic - configure your routes, compile your app, enjoy.
 * Compiles Angular Templates to Handlebars Templates
@@ -42,49 +47,48 @@ Maximum performance, minimal load times, optimal development efficiency, 100% SE
 
 ### Angular template input
 ```html
-  <a ng-repeat="product in products" ng-click="activeProduct = product">
-    <img src="{{user.image}}" ng-show="foo && bar">
+<a ng-repeat="product in products" ng-click="activeProduct = product">
+  <img src="{{user.image}}" ng-show="foo && bar">
 
-    {{foo}}
+  {{foo}}
 
-    <div ng-include="'path/to/partial'">
-    </div>
-  </a>
+  <div ng-include="'path/to/partial'">
+  </div>
+</a>
 
 
-  <img class="small" ng-class="{ active: imgVisible }" ng-if="foo.length">
-  <img ng-style="{ color: mainColor }" ng-if="foo && bar">
+<img class="small" ng-class="{ active: imgVisible }" ng-if="foo.length">
+<img ng-style="{ color: mainColor }" ng-if="foo && bar">
 
-  {{ foo && bar }}
-
+{{ foo && bar }}
 ```
 
 ### Compiled temlpate output
 Includes {{}} for handlebars and attributes + escaped {{}} for angular (escaped notation not displayed for readability)
 ```html
-  {{#forEach 'foo' in bar}}
-    <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">
-      <img src="{{user.image}}" ng-attr-src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}}>
+{{#forEach 'foo' in bar}}
+  <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">
+    <img src="{{user.image}}" ng-attr-src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}}>
 
-      <span ng-bind="foo">{{foo}}</span>
+    <span ng-bind="foo">{{foo}}</span>
 
-      <div ng-include="'path/to/partial'">
-        {{> path/to/partial}}
-      </div>
-    </a>
-  {{/forEach}}
+    <div ng-include="'path/to/partial'">
+      {{> path/to/partial}}
+    </div>
+  </a>
+{{/forEach}}
 
-  {{#if foo.length}}
-    <img class="small {{#if imgVisible}}active{{/if}} ng-class="{ active: imgVisible }" ng-if="foo.length">
-  {{/if}}
+{{#if foo.length}}
+  <img class="small {{#if imgVisible}}active{{/if}} ng-class="{ active: imgVisible }" ng-if="foo.length">
+{{/if}}
 
-  {{#ifExpression "foo && bar"}}
-    <img ng-if="foo && bar" style="{{styleExpression '{ color: mainColor }'}}>
-  {{/ifExpression}}
+{{#ifExpression "foo && bar"}}
+  <img ng-if="foo && bar" style="{{styleExpression '{ color: mainColor }'}}>
+{{/ifExpression}}
 
-  <span ng-bind="foo && bar">
-    {{expression "foo && bar"}}
-  </span>
+<span ng-bind="foo && bar">
+  {{expression "foo && bar"}}
+</span>
 ```
 
 ### State & Route Configuration

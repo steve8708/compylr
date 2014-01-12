@@ -14,7 +14,8 @@
       <a data-ng-if="!onShopstyle" data-ng-class="{ active: openTab.name == 'link' }" data-ng-click="openTab.name = openTab.name == 'link' ? null : 'link'" class="btn link-btn">
 
         <img data-ng-show="findLink.productOnPage" {{hbsShow "findLink.productOnPage"}} class="get-link-img" data-ng-src="&#123;&#123;findLink.productOnPage.image.sizes.Small.url&#125;&#125;" src="{{findLink.productOnPage.image.sizes.Small.url}}" data-ng-attr-src="&#123;&#123;findLink.productOnPage.image.sizes.Small.url&#125;&#125;">
-        <input data-ng-keypress="$event.preventDefault()" data-ng-click="selectTarget($event)" data-ng-show="findLink.productOnPage" {{hbsShow "findLink.productOnPage"}} class="get-link-input" value="{{findLink.productOnPage.clickUrl}}" data-ng-attr-value="&#123;&#123;findLink.productOnPage.clickUrl&#125;&#125;">
+        <input data-ng-keypress="$event.preventDefault()" data-ng-click="selectTarget($event)" data-ng-show="findLink.productOnPage" {{hbsShow "findLink.productOnPage"}} class="get-link-input" value="<span data-ng-bind=" findLink.productOnPage.clickUrl
+        ">{{findLink.productOnPage.clickUrl}}</span>">
         <i data-ng-show="!findLink.productOnPage" {{hbsShow "!findLink.productOnPage"}} class="fa fa-link"></i>
         Product Link
 

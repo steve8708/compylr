@@ -1,31 +1,19 @@
 <div class="tools-container" ui-event="{ dragover: 'dragoverContainer($event)', drop: '$event.preventDefault()' }">
   <div class="widget-options">
     {{#forEach 'option' in taggedPhoto.sortedOptions}}
-      <div data-option="{{option.name.toLowerCase()}}" class="widget-option" data-ng-repeat="option in taggedPhoto.sortedOptions" data-ng-attr-data-option="&#123;&#123;option.name.toLowerCase()&#125;&#125;">
+      <div data-option="{{expression " option.name.toLowerCase() "}}" class="widget-option" data-ng-repeat="option in taggedPhoto.sortedOptions" data-ng-attr-data-option="&#123;&#123;option.name.toLowerCase()&#125;&#125;">
 
         <div class="name"><span data-ng-bind="option.name">{{option.name}}</span>
         </div>
         {{#ifExpression "option.type == 'checkbox'"}}
           <input data-ng-if="option.type == 'checkbox'" type="checkbox" data-ng-model="option.model">
-
-          {{#ifExpression "option.type == 'color'"}}
-            <input data-ng-if="option.type == 'color'" type="color" data-ng-model="option.model">
-
-            {{#ifExpression "option.type == 'range'"}}
-              <input min="{{option.min}}" max="{{option.max}}" step="{{option.step}}" data-ng-if="option.type == 'range'" type="range" data-ng-model="option.model" data-ng-attr-min="&#123;&#123;option.min&#125;&#125;">
-
-              {{#ifExpression "option.type == 'select'"}}
-                <select data-ng-class="{ pink: option.name == 'Collection' }" dir="rtl" data-ng-if="option.type == 'select'" data-ng-model="option.model" data-ng-options="option for option in option.options">
-                </select>
-              {{/ifExpression}}
-
+        {{/ifExpression}}
+        >
+        {{#ifExpression "option.type == 'range'"}}
+          <input min="{{option.min}}" max="{{option.max}}" step="{{option.step}}" data-ng-if="option.type == 'range'" type="range" data-ng-model="option.model" data-ng-attr-min="&#123;&#123;option.min&#125;&#125;">
+        {{/ifExpression}}
+        ="option for option in option.options"></select>
       </div>
-      {{/ifExpression}}
-
-      {{/ifExpression}}
-
-      {{/ifExpression}}
-
     {{/forEach}}
 
 
@@ -67,8 +55,8 @@
               {{#forEach 'img' in pageImages}}
                 <a data-ng-click="setDroppedImage(img)" data-ng-repeat="img in pageImages">
 
-                  <img class="page-image" data-ng-src="&#123;&#123;img&#125;&#125;" src="{{img}}" data-ng-attr-src="&#123;&#123;img&#125;&#125;">
-                </a>
+              <img class="page-image" data-ng-src="&#123;&#123;img&#125;&#125;" src="<span data-ng-bind="img">{{img}}</span>" >
+            </a>
               {{/forEach}}
 
             </div>
@@ -96,8 +84,8 @@
                   {{#forEach 'product' in selectedProducts}}
                     <a data-ng-click="tag.product = product" class="choose-product-for-tag" data-ng-repeat="product in selectedProducts">
 
-                      <img data-ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="{{product.image.sizes.Small.url}}" data-ng-attr-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;">
-                    </a>
+                <img data-ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="<span data-ng-bind="product.image.sizes.Small.url">{{product.image.sizes.Small.url}}</span>" >
+              </a>
                   {{/forEach}}
 
                   <a data-ng-click="openTab.name = 'search'" class="fa fa-plus-circle add-product-to-tag"></a>
@@ -108,7 +96,7 @@
             {{#if tag.product}}
               <div data-ng-if="tag.product" class="fill">
 
-                <img class="product-image" data-ng-src="&#123;&#123;tag.product.image.sizes.Large.url&#125;&#125;" src="{{tag.product.image.sizes.Large.url}}" data-ng-attr-src="&#123;&#123;tag.product.image.sizes.Large.url&#125;&#125;">
+                <img class="product-image" data-ng-src="&#123;&#123;tag.product.image.sizes.Large.url&#125;&#125;" src="<span data-ng-bind=" tag.product.image.sizes.Large.url ">{{tag.product.image.sizes.Large.url}}</span>">
                 <span class="product-info">
               <span data-ng-bind="tag.product.name">{{tag.product.name}}</span>
 

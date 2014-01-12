@@ -18,31 +18,19 @@
           <a class="preset fa fa-ellipsis-h" data-ng-model="preset.name" btn-radio="'row'" class="preset"></a>
         </div>
         {{#forEach 'option' in boutique.sortedOptions}}
-          <div data-option="{{option.name.toLowerCase()}}" class="widget-option" data-ng-repeat="option in boutique.sortedOptions" data-ng-attr-data-option="&#123;&#123;option.name.toLowerCase()&#125;&#125;">
+          <div data-option="{{expression " option.name.toLowerCase() "}}" class="widget-option" data-ng-repeat="option in boutique.sortedOptions" data-ng-attr-data-option="&#123;&#123;option.name.toLowerCase()&#125;&#125;">
 
             <div class="name"><span data-ng-bind="option.name">{{option.name}}</span>
             </div>
             {{#ifExpression "option.type == 'checkbox'"}}
               <input data-ng-if="option.type == 'checkbox'" type="checkbox" data-ng-model="option.model">
-
-              {{#ifExpression "option.type == 'range'"}}
-                <span class="range-value" data-ng-if="option.type == 'range'">
-<span data-ng-bind="option.model">{{option.model}}</span></span>
-              {{/ifExpression}}
-
-              {{#ifExpression "option.type == 'range'"}}
-                <input data-ng-if="option.type == 'range'" type="range" min="{{option.min}}" max="{{option.max}}" step="{{option.step}}" data-ng-model="option.model" data-ng-attr-min="&#123;&#123;option.min&#125;&#125;">
-
-                {{#ifExpression "option.type == 'select'"}}
-                  <select data-ng-class="{ pink: option.name == 'Collection' }" dir="rtl" data-ng-if="option.type == 'select'" data-ng-model="option.model" data-ng-options="option for option in option.options">
-                  </select>
-                {{/ifExpression}}
-
+            {{/ifExpression}}
+            l}}</span>
+            {{#ifExpression "option.type == 'range'"}}
+              <input data-ng-if="option.type == 'range'" type="range" min="{{option.min}}" max="{{option.max}}" step="{{option.step}}" data-ng-model="option.model" data-ng-attr-min="&#123;&#123;option.min&#125;&#125;">
+            {{/ifExpression}}
+            ions="option for option in option.options"></select>
           </div>
-          {{/ifExpression}}
-
-          {{/ifExpression}}
-
         {{/forEach}}
 
         <div class="widget-option">
@@ -90,10 +78,10 @@
                     {{#forEach 'result' in page}}
                       <div class="boutique-widget-span" data-ng-repeat="result in page">
 
-                        <div data-ng-style="{ width: boutique.options.size.model + 'px', height: boutique.options.size.model + 'px' }" data-show-on-hover="{{boutique.options.showInfo.model}}" data-show-brand="{{boutique.options.showBrand.model}}" data-show-price="{{boutique.options.showPrice.model}}"
-                        class="widget-image boutique-widget" data-ng-attr-data-show-on-hover="&#123;&#123;boutique.options.showInfo.model&#125;&#125;">
+                        <div data-ng-style="{ width: boutique.options.size.model + 'px', height: boutique.options.size.model + 'px' }" data-show-on-hover="<span data-ng-bind=" boutique.options.showInfo.model ">{{boutique.options.showInfo.model}}</span>" data-show-brand="<span data-ng-bind="
+                        boutique.options.showBrand.model ">{{boutique.options.showBrand.model}}</span>" data-show-price="<span data-ng-bind=" boutique.options.showPrice.model ">{{boutique.options.showPrice.model}}</span>" class="widget-image boutique-widget">
                           <div class="image-container">
-                            <img data-ng-src="&#123;&#123;result.image.sizes.Original.url&#125;&#125;" src="{{result.image.sizes.Original.url}}" data-ng-attr-src="&#123;&#123;result.image.sizes.Original.url&#125;&#125;">
+                            <img data-ng-src="&#123;&#123;result.image.sizes.Original.url&#125;&#125;" src="<span data-ng-bind=" result.image.sizes.Original.url ">{{result.image.sizes.Original.url}}</span>">
                           </div>
                           <div class="details">
                             {{#if boutique.options.showBrand.model}}

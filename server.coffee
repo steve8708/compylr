@@ -6,6 +6,7 @@ exphbs  = require 'express3-handlebars'
 _  = require 'lodash'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
+request = require 'request'
 convert = require './convert'
 evaluate = require("static-eval")
 parse = require("esprima").parse
@@ -25,7 +26,8 @@ app.set 'view engine', 'handlebars'
 app.set 'views', __dirname
 
 pageData =
-  openTab: name: 'search'
+  mode: name: 'search'
+  openTab: name: 'insights'
   foo: 'BAR'
   selectedProducts: [
     name: 'product name'
@@ -38,7 +40,6 @@ fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompile
 # (http://stackoverflow.com/questions/2605032/using-eval-in-java)
 evalExpression = (expression, context) ->
   value = evaluate parse(expression).body[0].expression, context
-  console.log expression: expression, value: value, context: context
   value
 
 # TODO: make this recursively support infinite depth
@@ -91,7 +92,8 @@ handlebars.registerHelper "interpolatedScript", (options) ->
 
   "#{scriptStr} #{options.fn @} </script>"
 
-handlebars.registerHelper "forEach", (name, _in, context, options) ->
+handlebars.registerHelper "forEach", (name, _in, context) ->
+  options = _.last arguments
   fn = options.fn
   inverse = options.inverse
   i = 0
@@ -130,8 +132,23 @@ handlebars.registerHelper "forEach", (name, _in, context, options) ->
   ret
 
 
-app.get '/', (req, res) ->
-  res.render "#{templatesDir}/index.tpl.html", _.extend _.cloneDeep(pageData), data: _.cloneDeep pageData
+app.get '*', (req, res) ->
+  page = req.query.p
+  localData = _.cloneDeep pageData
+  localData.openTab.name = page or 'search'
+  _.extend localData, $data: _.cloneDeep localData
+
+  pid = 'uid5204-23781302-79'
+  urlBase = "http://api.shopstyle.com/api/v2"
+  url = "#{urlBase}/products/?pid=#{pid}&limit=10"
+
+  if page is 'search'
+    request.get url, (err, response, body) ->
+      localData.results = JSON.parse(body).products
+      res.render "#{templatesDir}/index.tpl.html", localData
+  else
+    res.render "#{templatesDir}/index.tpl.html", localData
+
 
 console.info 'Listening in port 3000...'
 app.listen 3000

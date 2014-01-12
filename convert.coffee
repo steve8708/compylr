@@ -68,7 +68,16 @@ convert = (options) ->
     index = 0
     depth = 0
     open = string.match(/<.*?>/)[0]
+    tagName = string.match(/<\w+/)[0].substring 1
     string = string.replace open, ''
+
+    if tagName in selfClosingTags
+      out =
+        before: open
+        after: string.substr open.length
+      # console.log 'out', out
+      return out
+
 
     for char, index in string
       # Close tag
@@ -80,11 +89,7 @@ convert = (options) ->
           afterWithoutTag = after.substring close.length
 
           return (
-            index: index
-            closeTag: close
             after: afterWithoutTag
-            startIndex: index
-            endIndex: index + afterWithTag.length
             before: open + '\n' + string.substr(0, index) + close
           )
         else
@@ -97,6 +102,12 @@ convert = (options) ->
         if tag and tag in selfClosingTags
           continue
         depth++
+
+  # FIXME: this will break for pipes inside strings
+  processFilters = (str) ->
+    filterSplit = str.match /[^\|]+/
+    filters: filterSplit.slice(1).join ' | '
+    replaced: filterSplit[0]
 
   # FIXME: will breal if this is in words
   escapeReplacement = (str) ->
@@ -144,10 +155,14 @@ convert = (options) ->
         varNameSplit = varName.split ' '
         varNameSplit[0] = "'#{varNameSplit[0]}'"
         varName = varNameSplit.join ' '
+        processedFilters = processFilters varName
+        varName = processedFilters.replaced
+        filters = processedFilters.filters
         # varName = text.split(' in ')[1]
         close = getCloseTag match
+        filterStr = if filters.trim() then " filters=\"#{filters}\"" else ''
         if close
-          "{{#forEach #{varName}}}\n#{close.before.replace /\sng-repeat/, ' data-ng-repeat'}\n{{/forEach}}\n#{close.after}"
+          "{{#forEach #{varName}#{filterStr}}}\n#{close.before.replace /\sng-repeat/, ' data-ng-repeat'}\n{{/forEach}}\n#{close.after}"
         else
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
       )
@@ -184,15 +199,27 @@ convert = (options) ->
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{attrValue}" """
       )
       # FIXME: this doesn't support multiple interpolations in one tag
-      .replace(/<[^>]*?([\w\-_]+)\s*?=\s*?"([^">]*?\{\{[^">]+\}\}[^">*]?)".*?>/, (match, attrName, attrVal) ->
-        verboseLog 'match 5'
+      .replace(/<[^>]*?([\w\-_]+)\s*=\s*"([^">]*?\{\{[^">]+\}\}[^">]*?)".*?>/, (match, attrName, attrVal) ->
+        verboseLog 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '#'
         trimmedMatch = match.substr 0, match.length - 1
         trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
-        if attrName.indexOf('ng-attr-') is 0 or attrName.indexOf('data-ng-attr-') is 0
+        if attrName.indexOf('data-ng-attr-') is 0 or _.contains attrVal, '__{{__'
           match
         else
           updated = true
+          # console.log 'attrVal', attrVal
+          newAttrVal = attrVal.replace /\{\{([\s\S]+?)\}\}/g, (match, expression) ->
+            # console.log 'attrValMatch', expression
+            match = match.trim()
+            if expression.length isnt expression.match(/[\w\.]+/)[0].length
+              "{{expression \"#{expression}\"}}"
+            else
+              # console.log 'attrVal not expression', expression
+              match
+
+          trimmedMatch = trimmedMatch.replace attrVal, newAttrVal
+
           """#{escapeBraces trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
       )
       .replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->

@@ -60,7 +60,7 @@
                   <div class="related-product" data-ng-repeat="product in findLink.relatedProducts">
 
                     <div class="product-image-container">
-                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Large.url&#125;&#125;" src="{{product.image.sizes.Large.url}}" data-ng-attr-src="&#123;&#123;product.image.sizes.Large.url&#125;&#125;">
+                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Large.url&#125;&#125;" src="<span data-ng-bind=" product.image.sizes.Large.url ">{{product.image.sizes.Large.url}}</span>">
                     </div>
                     <div class="product-info selectable">
                       <span data-ng-bind="product.name">{{product.name}}</span> •
@@ -121,7 +121,7 @@
                 {{#forEach 'product' in selectedProducts}}
                   <div class="post-content" data-ng-repeat="product in selectedProducts">
 
-                    <a target="_blank" href="{{product.clickUrl}}" data-ng-attr-href="&#123;&#123;product.clickUrl&#125;&#125;">
+                    <a target="_blank" href="<span data-ng-bind=" product.clickUrl ">{{product.clickUrl}}</span>">
                       {{#if show.showName}}
                         <span data-ng-if="show.showName" class="product-name">
 <span data-ng-bind="product.name">{{product.name}}</span></span>
@@ -163,65 +163,66 @@
                   <tr class="post-content" data-ng-repeat="product in selectedProducts">
 
                     <td>
-                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="{{product.image.sizes.Small.url}}" data-ng-attr-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;">
+                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="<span data-ng-bind=" product.image.sizes.Small.url ">{{product.image.sizes.Small.url}}</span>">
                     </td>
                     <td>
-                      <span class="product-name"><span data-ng-bind="product.name">{{product.name}}</span><span>
-              </td>
-              <td>
-                <input size="50" data-ng-click="selectTarget($event)" class="product-url" value="{{product.clickUrl}}" data-ng-attr-value="&#123;&#123;product.clickUrl&#125;&#125;">
-              </td>
-              <td class="share-buttons-td">
-                <div class="share-buttons">
-                  <a data-ng-click="share('facebook', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-facebook social-icon"></a>
-                  <a data-ng-click="share('twitter', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-twitter social-icon"></a>
-                  <a data-ng-click="share('tumblr', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-tumblr social-icon"></a>
+                      <span class="product-name"><span data-ng-bind="product.name">{{product.name}}</span></span>
+                    </td>
+                    <td>
+                      <input size="50" data-ng-click="selectTarget($event)" class="product-url" value="<span data-ng-bind=" product.clickUrl ">{{product.clickUrl}}</span>">
+                    </td>
+                    <td class="share-buttons-td">
+                      <div class="share-buttons">
+                        <a data-ng-click="share('facebook', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-facebook social-icon"></a>
+                        <a data-ng-click="share('twitter', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-twitter social-icon"></a>
+                        <a data-ng-click="share('tumblr', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-tumblr social-icon"></a>
 
-                  <a data-ng-click="share('pinterest', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-pinterest social-icon"></a>
-                  <a data-ng-click="share('mail', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-envelope social-icon"></a>
-                </div>
-              </td>
-            </tr>
-          </table>
+                        <a data-ng-click="share('pinterest', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-pinterest social-icon"></a>
+                        <a data-ng-click="share('mail', product.pageUrl, product.pageUrl, product.image.sizes.Original.url)" class="fa fa-envelope social-icon"></a>
+                      </div>
+                    </td>
+                  </tr>
+                {{/forEach}}
+
+              </table>
+            </div>
+          {{/if}}
+
         </div>
-{{/forEach}}
-
       </div>
-    </div>
-{{/if}}
+    {{/ifExpression}}
 
     {{#ifExpression "openTab.name == 'tools'"}}
-<div class="tab-container" data-ng-if="openTab.name == 'tools'" data-ng-class="{ active: openTab.name == 'tools', 'not-active': openTab.name != 'tools' }" data-ng-controller="ToolsCtrl" data-ng-include="'modules/tools/tools.tpl.html'">
+      <div class="tab-container" data-ng-if="openTab.name == 'tools'" data-ng-class="{ active: openTab.name == 'tools', 'not-active': openTab.name != 'tools' }" data-ng-controller="ToolsCtrl" data-ng-include="'modules/tools/tools.tpl.html'">
 
-{{> modules/tools/tools}}</div>
-{{/ifExpression}}
+        {{> modules/tools/tools}}</div>
+    {{/ifExpression}}
 
     {{#ifExpression "openTab.name == 'extras'"}}
-<div class="tab-container" data-ng-if="openTab.name == 'extras'" data-ng-class="{ active: openTab.name == 'extras', 'not-active': openTab.name != 'extras' }">
+      <div class="tab-container" data-ng-if="openTab.name == 'extras'" data-ng-class="{ active: openTab.name == 'extras', 'not-active': openTab.name != 'extras' }">
 
-      <div class="insights-container">
-        <div data-ng-init="extrasTab = 'walkthrough'" class="left-navbar">
-          <a data-ng-class="{ active: extrasTab == 'walkthrough' }" data-ng-model="extrasTab" btn-radio="'walkthrough'" class="left-nav-link">Product Tour<i class="fa fa-caret-right"></i></a>
-          <a data-ng-class="{ active: extrasTab == 'app' }" data-ng-model="extrasTab" btn-radio="'app'" class="left-nav-link">iOS App<i class="fa fa-caret-right"></i></a>
-          <a data-ng-class="{ active: extrasTab == 'linkstar' }" data-ng-model="extrasTab" btn-radio="'linkstar'" class="left-nav-link">LinkStar<i class="fa fa-caret-right"></i></a>
-        </div>
-        <div class="tab-content">
-          <div class="padded">
-            TODO...
+        <div class="insights-container">
+          <div data-ng-init="extrasTab = 'walkthrough'" class="left-navbar">
+            <a data-ng-class="{ active: extrasTab == 'walkthrough' }" data-ng-model="extrasTab" btn-radio="'walkthrough'" class="left-nav-link">Product Tour<i class="fa fa-caret-right"></i></a>
+            <a data-ng-class="{ active: extrasTab == 'app' }" data-ng-model="extrasTab" btn-radio="'app'" class="left-nav-link">iOS App<i class="fa fa-caret-right"></i></a>
+            <a data-ng-class="{ active: extrasTab == 'linkstar' }" data-ng-model="extrasTab" btn-radio="'linkstar'" class="left-nav-link">LinkStar<i class="fa fa-caret-right"></i></a>
+          </div>
+          <div class="tab-content">
+            <div class="padded">
+              TODO...
+            </div>
           </div>
         </div>
       </div>
-    </div>
-{{/ifExpression}}
+    {{/ifExpression}}
 
     {{#ifExpression "openTab.name == 'tag'"}}
-<div class="tab-container" data-ng-if="openTab.name == 'tag'" data-ng-class="{ active: openTab.name == 'tag', 'not-active': openTab.name != 'tag' }" data-ng-controller="ToolsCtrl" data-ng-include="'templates/tag-photo.tpl.html'">
+      <div class="tab-container" data-ng-if="openTab.name == 'tag'" data-ng-class="{ active: openTab.name == 'tag', 'not-active': openTab.name != 'tag' }" data-ng-controller="ToolsCtrl" data-ng-include="'templates/tag-photo.tpl.html'">
 
-{{> templates/tag-photo}}
+        {{> templates/tag-photo}}
 
-    </div>
-{{/ifExpression}}
+      </div>
+    {{/ifExpression}}
 
   </div>
 </div>
-{{/ifExpression}}

@@ -110,7 +110,7 @@
         <div class="col-sm-6">
           <h4>Top Brands</h4>
           <ul class="list-unstyled">
-            {{#forEach 'brand' in data.best.brands|orderBy: '-y'}}
+            {{#forEach 'brand' in data.best.brands}}
               <li class="top-list-item" data-ng-repeat="brand in data.best.brands|orderBy: '-y'">
 
                 <a href="{{brand.url}}" target="_blank" data-ng-attr-href="&#123;&#123;brand.url&#125;&#125;">
@@ -125,7 +125,7 @@
         <div class="col-sm-6">
           <h4>Top Retailers</h4>
           <ul class="list-unstyled">
-            {{#forEach 'retailer' in data.best.retailers|orderBy: '-y'}}
+            {{#forEach 'retailer' in data.best.retailers}}
               <li class="top-list-item" data-ng-repeat="retailer in data.best.retailers|orderBy: '-y'">
 
                 <a href="{{retailer.url}}" target="_blank" data-ng-attr-href="&#123;&#123;retailer.url&#125;&#125;">

@@ -9,7 +9,7 @@
     <script type="text/javascript" src="http://localhost:5100/ribbon/shopsense-proto-0.0.1.js"></script>
 
     {{#interpolatedScript}}
-      window.bootstrappedData = {{json data}};
+      window.bootstrappedData = {{json $data}};
     {{/interpolatedScript}}
 
     <style>
@@ -30,25 +30,25 @@
       <nav class="navbar navbar-default main-nav" role="navigation">
         <ul class="nav navbar-nav">
           <li ng-class="{ active: openTab.name == 'search' }">
-            <a ng-model="openTab.name" btn-radio="'search'"><i class="fa fa-search"></i> Search</a>
+            <a href="/?p=search" ng-model="openTab.name" btn-radio="'search'"><i class="fa fa-search"></i> Search</a>
           </li>
           <!--           <li class="hidden-xs" class="dropdown" ng-class="{ active: openTab.name == 'tools' }">
             <a href="#/tools">Tools</a>
           </li> -->
           <li ng-class="{ active: openTab.name == 'insights' }">
-            <a ng-model="openTab.name" btn-radio="'insights'"><i class="fa fa-bar-chart-o"></i> Insights</a>
+            <a href="/?p=insights" ng-model="openTab.name" btn-radio="'insights'"><i class="fa fa-bar-chart-o"></i> Insights</a>
           </li>
           <li ng-class="{ active: openTab.name == 'account' }">
-            <a ng-model="openTab.name" btn-radio="'account'"><i class="fa fa-user"></i> Account</a>
+            <a href="/?p=account" ng-model="openTab.name" btn-radio="'account'"><i class="fa fa-user"></i> Account</a>
           </li>
           <li ng-class="{ active: openTab.name == 'tag' }">
-            <a ng-model="openTab.name" btn-radio="'tag'"><i class="fa fa-circle-o"></i> Tag Photo</a>
+            <a href="/?p=tag" ng-model="openTab.name" btn-radio="'tag'"><i class="fa fa-circle-o"></i> Tag Photo</a>
           </li>
           <li ng-class="{ active: openTab.name == 'tools' }">
-            <a ng-model="openTab.name" btn-radio="'tools'"><i class="fa fa-th"></i> Widget</a>
+            <a href="/?p=tools" ng-model="openTab.name" btn-radio="'tools'"><i class="fa fa-th"></i> Widget</a>
           </li>
           <li ng-class="{ active: openTab.name == 'post' }">
-            <a ng-model="openTab.name" btn-radio="'post'"><i class="fa fa-plus"></i> Post</a>
+            <a href="/?p=post" ng-model="openTab.name" btn-radio="'post'"><i class="fa fa-plus"></i> Post</a>
           </li>
           <li class="main-selected-products-container">
             <a ng-show="selectedProducts.length" class="btn fa fa-times clear-selected-products-button" ng-click="utils.clear(selectedProducts)"></a>

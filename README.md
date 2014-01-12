@@ -117,7 +117,7 @@ will compile them into application logic for both your client and server.
   "data": {
     "activeProduct": {},
     "query": {
-      "value": ""†
+      "value": ""
     },
     "mode": {
       "name": "search"

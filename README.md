@@ -1,4 +1,5 @@
 ![Imgur](http://i.imgur.com/XeaMTNW.png)
+
 Compiles angular apps to be run on any backend. SEO is not longer a problem
 for single page apps. Maximum performance, minimal load times, optimal development efficiency.
 
@@ -32,40 +33,41 @@ for single page apps. Maximum performance, minimal load times, optimal developme
   * e.g. '{{foo}}' -> '<span ng-bind="foo">{{foo}}<span>'
 
 ## Supports
-* ### ng-repeat
+* **ng-repeat**
   * `<a ng-repeat="foo in bar"></a>` -> `{{#forEach 'foo' in bar}}<a ng-repeat="foo in bar"></a>{{/forEach}}`
-* ### ng-include
+* **ng-include**
   * `<div ng-include="'path/to/partial'"></div>` -> `{{> path/to/partial}}`
-* ### ng-show
+* **ng-show**
   * `<img ng-show="foo && bar">` -> `<img ng-show="foo" {{hbsShow "foo && bar"}}>`
-* ### ng-hide
+* **ng-hide**
   * `<input ng-show="foo || bar">` -> `<input ng-show="foo" {{hbsHide "foo || bar"}}>`
-* ### ng-if
+* **ng-if**
   * `<img ng-if="foo.length">` -> `{{#if foo.length}}<img ng-if="foo.length">{{/if}}`
   * `<img ng-if="foo && bar">` -> `{{#ifExpression "foo && bar"}}<img ng-if="foo.length">{{/ifExpression}}`
-* ### ng-click
+* **ng-click**
   * `<a ng-click="foo = !bar">` -> `<a href="?action=foo!%3Dbar"></a>`
-* ### ng-class
+* **ng-class**
   * `<img class="small" ng-class="{ active: imgVisible }">` -> `<img class="small {{#if imgVisible}}active{{/if}}`
-* ### ng-style
+* **ng-style**
   * `<img ng-style="{ color: mainColor }">` -> `<img style="{{styleExpression '{ color: mainColor }'}}`
-* ### ng-attr-*
+* **ng-attr-***
   * `<img ng-attr-src="{{logo}}">` -> `<img src="{{logo}}">`
-* ### ng-href`, `ng-value`, `ng-src
+* **ng-href, ng-value, ng-src**
   * `<a ng-href="{{home}}"></a>` -> `<a href="{{home}}"></a>`
-* ### ng-bind
+* **ng-bind**
   * `<span ng-bind="user.name"></span>` -> `<span>{{user.name}}</span>`
-* ### Interpolations
+* **Interpolations**
   * `{{foo}}` -> '<span ng-bind="foo"></span>'
   * `<img name="{{foo}}">` -> `<img ng-attr-name="{{foo}}">`
-* ### Expressions
+* **Expressions**
   * `{{ foo && bar }}` -> `{{expression "foo && bar"}}`
   * `<img src="{{ foo[bar] || attributes }}>"` -> `<img src="{{expression 'foo[bar] || attributes'}}>`
 
 ## State & Route Configuration
 Configure your state and routes in one place and Compilr
 will compile them into application logic for both your client and server
-```
+
+```javascript
 {
   routes: {
     '/:page/:tab/:product': {

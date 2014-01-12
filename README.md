@@ -95,7 +95,7 @@ will compile them into application logic for both your client and server.
     "mode": {
       "name": "search"
     },
-    openTab: {
+    "openTab": {
       "name": "insights"
     }
   }

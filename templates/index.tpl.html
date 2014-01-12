@@ -6,11 +6,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link rel="stylesheet" type="text/css" href="/shopsense-proto-0.0.1.css">
-    <script ng-if="js" type="text/javascript" src="/shopsense-proto-0.0.1.js"></script>
-
     {{#interpolatedScript type="text/javascript"}}
       window.bootstrappedData = {{json $data}};
     {{/interpolatedScript}}
+    <script ng-if="js" type="text/javascript" src="/shopsense-proto-0.0.1.js"></script>
 
     <style type="text/css">
       [data-hbs-hide] {

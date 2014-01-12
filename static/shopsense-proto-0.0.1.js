@@ -65992,10 +65992,13 @@ angular.forEach(HGESTURES, function(eventName, directiveName) {
 }).call(this);
 ;(function ( window, angular, undefined ) {
 ;(function() {
-  var config, _ref;
+  var allowedHosts, config, _ref,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  allowedHosts = ['shopstyle', 'shopstyledev', 'localhost', 'herokuapp'];
 
   config = {
-    appMode: (_ref = location.hostname) === 'shopstyle' || _ref === 'shopstyledev' || _ref === 'localhost' ? 'app' : 'ribbon'
+    appMode: (_ref = location.hostname, __indexOf.call(allowedHosts, _ref) >= 0) ? 'app' : 'ribbon'
   };
 
   _.defer(function() {

@@ -16,6 +16,7 @@ preCompiledTemplatesDir = 'templates'
 
 app.use express.cookieParser()
 app.use express.session secret: 'foobar', store: new express.session.MemoryStore
+app.use express.static 'static'
 
 app.engine 'html', exphbs
   defaultLayout: 'main'
@@ -212,9 +213,9 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
     resultsSuccess req, res, results
     null
 
-console.info 'Listening on port 3000...'
-app.listen 3000
-
+port = process.env.PORT || 5000
+console.info "Listening on port #{port}..."
+app.listen port
 
 tabDefaults =
   insights: 'earnings'

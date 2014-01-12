@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html id="ng-app" ng-app="app" ng-controller="AppCtrl">
+  <head>
+    <title ng-bind="pageTitle"></title>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link rel="stylesheet" type="text/css" href="http://localhost:5100/ribbon/shopsense-proto-0.0.1.css">
+    <script type="text/javascript" src="http://localhost:5100/ribbon/shopsense-proto-0.0.1.js"></script>
+
+    {{#interpolatedScript}}
+      window.bootstrappedData = {{json data}};
+    {{/interpolatedScript}}
+
+  </head>
+  <body ui-event="{ dragover: '$event.preventDefault()', drop: '$event.preventDefault()' }">
+    <header class="header hidden-xs">
+      <img class="logo" src="assets/images/shopsense-logo.png">
+
+      <nav class="navbar navbar-default main-nav" role="navigation">
+        <li ng-class="{ active: openTab.name == 'search' }">
+          <a ng-model="openTab.name" btn-radio="'search'"><i class="fa fa-search"></i> Search</a>
+        </li>
+        <!--           <li class="hidden-xs" class="dropdown" ng-class="{ active: openTab.name == 'tools' }">
+          <a href="#/tools">Tools</a>
+        </li> -->
+        <li ng-class="{ active: openTab.name == 'insights' }">
+          <a ng-model="openTab.name" btn-radio="'insights'"><i class="fa fa-bar-chart-o"></i> Insights</a>
+        </li>
+        <li ng-class="{ active: openTab.name == 'account' }">
+          <a ng-model="openTab.name" btn-radio="'account'"><i class="fa fa-user"></i> Account</a>
+        </li>
+        <li ng-class="{ active: openTab.name == 'tag' }">
+          <a ng-model="openTab.name" btn-radio="'tag'"><i class="fa fa-circle-o"></i> Tag Photo</a>
+        </li>
+        <li ng-class="{ active: openTab.name == 'tools' }">
+          <a ng-model="openTab.name" btn-radio="'tools'"><i class="fa fa-th"></i> Widget</a>
+        </li>
+        <li ng-class="{ active: openTab.name == 'post' }">
+          <a ng-model="openTab.name" btn-radio="'post'"><i class="fa fa-plus"></i> Post</a>
+        </li>
+        <li class="main-selected-products-container">
+          <a ng-show="selectedProducts.length" class="btn fa fa-times clear-selected-products-button" ng-click="utils.clear(selectedProducts)"></a>
+
+          <a ng-click="utils.remove(selectedProducts, product)" class="main-selected-product" ng-repeat="product in selectedProducts">
+            <img src="{{product.image.sizes.Small.url}}">
+          </a>
+        </li>
+      </nav>
+    </header>
+
+    <nav class="mobile-nav visible-xs" role="navigation">
+      <ul class="nav navbar-nav">
+        <li ng-click="go('/search')" ng-class="{ active: openTab.name == 'search' }">
+          <i class="fa fa-search"></i>
+          <a>Products</a>
+        </li ng-click="go('/tools')">
+        <li ng-click="go('/tools')" class="dropdown" ng-class="{ active: openTab.name == 'tools' }">
+          <i class="fa fa-star"></i>
+          <a>LinkStar</a>
+        </li>
+        <li ng-click="go('/insights')" ng-class="{ active: openTab.name == 'insights' }">
+          <i class="fa fa-bar-chart-o"></i>
+          <a>Insights</a>
+        </li>
+        <li ng-click="go('/account')" ng-class="{ active: openTab.name == 'account' }">
+          <i class="fa fa-cog"></i>
+          <a>Account</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- TODO: make into template -->
+    <div ng-init="openTab.name = openTab.name || 'search'" ng-click="openTab.name = $event.target == $event.currentTarget ? null : openTab.name" ng-class="{ active: openTab.name }" ng-include="'templates/main-tab-content.tpl.html'" class="main-view content-background">
+    </div>
+    <!-- <div class="main-view" ui-view="main"></div> -->
+  </body>
+</html>
+

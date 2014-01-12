@@ -1,15 +1,19 @@
 <div class="tools-container" ui-event="{ dragover: 'dragoverContainer($event)', drop: '$event.preventDefault()' }">
   <div class="widget-options">
     {{#forEach 'option' in taggedPhoto.sortedOptions}}
-      <div data-option="<span ng-bind=" option.name.toLowerCase() ">{{expression "option.name.toLowerCase() "}}</span>" class="widget-option" ng-repeat="option in taggedPhoto.sortedOptions" ng-attr-data-option="&#123;&#123;option.name.toLowerCase()&#125;&#125;">
+      <div data-option="{{option.name.toLowerCase()}}" class="widget-option" data-ng-repeat="option in taggedPhoto.sortedOptions" data-ng-attr-data-option="&#123;&#123;option.name.toLowerCase()&#125;&#125;">
 
-        <div class="name"><span ng-bind="option.name">{{option.name}}</span>
+        <div class="name"><span data-ng-bind="option.name">{{option.name}}</span>
         </div>
-        <input ng-if="option.type == 'checkbox'" type="checkbox" ng-model="option.model">
-        <input ng-if="option.type == 'color'" type="color" ng-model="option.model">
-        <input min="<span ng-bind=" option.min ">{{option.min}}</span>" max="<span ng-bind=" option.max ">{{option.max}}</span>" step="<span ng-bind=" option.step ">{{option.step}}</span>" ng-if="option.type == 'range'" type="range" ng-model="option.model">
-        <select ng-class="{ pink: option.name == 'Collection' }" dir="rtl" ng-if="option.type == 'select'" ng-model="option.model" ng-options="option for option in option.options"></select>
+        {{#ifExpression "option.type == 'checkbox'"}}
+          <input data-ng-if="option.type == 'checkbox'" type="checkbox" data-ng-model="option.model">
+
+          <input data-ng-if="option.type == 'color'" type="color" data-ng-model="option.model">
+          <input min="<span data-ng-bind=" option.min ">{{option.min}}</span>" max="<span data-ng-bind=" option.max ">{{option.max}}</span>" step="<span data-ng-bind=" option.step ">{{option.step}}</span>" data-ng-if="option.type == 'range'" type="range" data-ng-model="option.model">
+          <select data-ng-class="{ pink: option.name == 'Collection' }" dir="rtl" data-ng-if="option.type == 'select'" data-ng-model="option.model" data-ng-options="option for option in option.options"></select>
       </div>
+      {{/ifExpression}}
+
     {{/forEach}}
 
 
@@ -18,18 +22,18 @@
       <div class="share-container">
         <div class="share-label">Share</div>
         <div class="share-buttons">
-          <a ng-click="toolShare('facebook')" class="fa fa-facebook social-icon"></a>
-          <a ng-click="toolShare('twitter')" class="fa fa-twitter social-icon"></a>
-          <a ng-click="toolShare('tumblr')" class="fa fa-tumblr social-icon"></a>
+          <a data-ng-click="toolShare('facebook')" class="fa fa-facebook social-icon"></a>
+          <a data-ng-click="toolShare('twitter')" class="fa fa-twitter social-icon"></a>
+          <a data-ng-click="toolShare('tumblr')" class="fa fa-tumblr social-icon"></a>
 
-          <a ng-click="toolShare('pinterest')" class="fa fa-pinterest social-icon"></a>
-          <a ng-click="toolShare('mail')" class="fa fa-envelope social-icon"></a>
+          <a data-ng-click="toolShare('pinterest')" class="fa fa-pinterest social-icon"></a>
+          <a data-ng-click="toolShare('mail')" class="fa fa-envelope social-icon"></a>
         </div>
       </div>
       <div class="code-container">
         <div class="code-label">Embed</div>
-        <textarea ng-click="clickEmbedCode($event)" ng-keypress="keypressEmbedCode($event)" class="code">
-          <div data-ss-widget="grid" data-ss-widget-options='{ "br": <span ng-bind="taggedPhoto.options.brand.model">{{taggedPhoto.options.brand.model}}</span>, "pr": <span ng-bind="taggedPhoto.options.price.model">{{taggedPhoto.options.price.model}}</span>, "ds": <span ng-bind="taggedPhoto.options.dotShadow.model">{{taggedPhoto.options.dotShadow.model}}</span>, "ts": <span ng-bind="taggedPhoto.options.tagShadow.model">{{taggedPhoto.options.tagShadow.model}}</span>, "ds": <span ng-bind="taggedPhoto.options.dotSize.model">{{taggedPhoto.options.dotSize.model}}</span>, "do": <span ng-bind="taggedPhoto.options.dotOpacity.model">{{taggedPhoto.options.dotOpacity.model}}</span>, "to": <span ng-bind="taggedPhoto.options.tagOpacity.model">{{taggedPhoto.options.tagOpacity.model}}</span>, "dc": <span ng-bind="taggedPhoto.options.dotColor.model">{{taggedPhoto.options.dotColor.model}}</span>, "tc": <span ng-bind="taggedPhoto.options.tagColor.model">{{taggedPhoto.options.tagColor.model}}</span> } '></div>
+        <textarea data-ng-click="clickEmbedCode($event)" data-ng-keypress="keypressEmbedCode($event)" class="code">
+          <div data-ss-widget="grid" data-ss-widget-options='{ "br": <span data-ng-bind="taggedPhoto.options.brand.model">{{taggedPhoto.options.brand.model}}</span>, "pr": <span data-ng-bind="taggedPhoto.options.price.model">{{taggedPhoto.options.price.model}}</span>, "ds": <span data-ng-bind="taggedPhoto.options.dotShadow.model">{{taggedPhoto.options.dotShadow.model}}</span>, "ts": <span data-ng-bind="taggedPhoto.options.tagShadow.model">{{taggedPhoto.options.tagShadow.model}}</span>, "ds": <span data-ng-bind="taggedPhoto.options.dotSize.model">{{taggedPhoto.options.dotSize.model}}</span>, "do": <span data-ng-bind="taggedPhoto.options.dotOpacity.model">{{taggedPhoto.options.dotOpacity.model}}</span>, "to": <span data-ng-bind="taggedPhoto.options.tagOpacity.model">{{taggedPhoto.options.tagOpacity.model}}</span>, "dc": <span data-ng-bind="taggedPhoto.options.dotColor.model">{{taggedPhoto.options.dotColor.model}}</span>, "tc": <span data-ng-bind="taggedPhoto.options.tagColor.model">{{taggedPhoto.options.tagColor.model}}</span> } '></div>
           <script src=""></script>
         </textarea>
 
@@ -37,44 +41,40 @@
     </div>
   </div>
 
-  <div ng-class="{ fade: state.loading }" class="widget-preview tagged-photo">
-    <div ng-show="!selectedProducts.length" class="no-results center block">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your quicklist</div>
-    <div outlet="imageContainer" ng-class="{ dragover: dragover }" class="drop-your-photo" ui-event="{ drop: 'dropImage($event)', dragenter: 'dragover = true', dragleave: 'dragover = false' }">
-      <div ng-hide="droppedImage.src" class="drop-your-photo-text">
+  <div data-ng-class="{ fade: state.loading }" class="widget-preview tagged-photo">
+    <div data-ng-show="!selectedProducts.length" class="no-results center block">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your quicklist</div>
+    <div outlet="imageContainer" data-ng-class="{ dragover: dragover }" class="drop-your-photo" ui-event="{ drop: 'dropImage($event)', dragenter: 'dragover = true', dragleave: 'dragover = false' }">
+      <div data-ng-hide="droppedImage.src" class="drop-your-photo-text">
         <i class="fa fa-arrow-circle-down drop-photo-icon"></i>
         Drop your photo here
-        {{#if pageImages.length}}
-          <div ng-if="pageImages.length" class="or-use-photo-from-this-page">
-
-            or use a photo from this page:
-            <div class="page-images">
-              <a ng-click="setDroppedImage(img)" ng-repeat="img in pageImages">
-              <img class="page-image" ng-src="<span ng-bind="img">{{img}}</span>">
+        <div data-ng-if="pageImages.length" class="or-use-photo-from-this-page">
+          or use a photo from this page:
+          <div class="page-images">
+            <a data-ng-click="setDroppedImage(img)" data-ng-repeat="img in pageImages">
+              <img class="page-image" data-ng-src="&#123;&#123;img&#125;&#125;" src="ng-src">
             </a>
-            </div>
           </div>
-        {{/if}}
-
+        </div>
       </div>
-      <img ng-show="droppedImage.src" class="dropped-image" outlet="droppedImage">
-      <div ng-style="tagContainerStyle" ng-show="droppedImage.src" ng-click="addTag($event)" class="tags-container">
-        <div draggable="true" ui-event="{ dragstart: 'dragstartTag($event, tag)', drag: 'dragTag($event, tag)', dragend: 'dragendTag($event, tag)' }" ng-mouseenter="tag.show = true" ng-style="{ top: tag.y * 100 + '%', left: tag.x * 100 + '%', opacity: taggedPhoto.options.dotOpacity.model, width: taggedPhoto.options.dotSize.model + 'px', height: taggedPhoto.options.dotSize.model + 'px', backgroundColor: taggedPhoto.options.dotColor.model, boxShadow: taggedPhoto.options.dotShadow.model ? null : 'none' }"
-        class="tag" ng-repeat="tag in tags"></div>
-        <div ng-mouseleave="tag.show = false" ng-repeat="tag in tags" ng-show="tag.show" ng-style="{ top: tag.y * 100 + '%', left: tag.x * 100 + '%', opacity: taggedPhoto.options.tagOpacity.model, backgroundColor: taggedPhoto.options.tagColor.model, boxShadow: taggedPhoto.options.tagShadow.model ? null : 'none' }"
+      <img data-ng-show="droppedImage.src" class="dropped-image" outlet="droppedImage">
+      <div data-ng-style="tagContainerStyle" data-ng-show="droppedImage.src" data-ng-click="addTag($event)" class="tags-container">
+        <div draggable="true" ui-event="{ dragstart: 'dragstartTag($event, tag)', drag: 'dragTag($event, tag)', dragend: 'dragendTag($event, tag)' }" data-ng-mouseenter="tag.show = true" data-ng-style="{ top: tag.y * 100 + '%', left: tag.x * 100 + '%', opacity: taggedPhoto.options.dotOpacity.model, width: taggedPhoto.options.dotSize.model + 'px', height: taggedPhoto.options.dotSize.model + 'px', backgroundColor: taggedPhoto.options.dotColor.model, boxShadow: taggedPhoto.options.dotShadow.model ? null : 'none' }"
+        class="tag" data-ng-repeat="tag in tags"></div>
+        <div data-ng-mouseleave="tag.show = false" data-ng-repeat="tag in tags" data-ng-show="tag.show" data-ng-style="{ top: tag.y * 100 + '%', left: tag.x * 100 + '%', opacity: taggedPhoto.options.tagOpacity.model, backgroundColor: taggedPhoto.options.tagColor.model, boxShadow: taggedPhoto.options.tagShadow.model ? null : 'none' }"
         class="tag-body">
-          <div ng-if="!tag.product" class="choose-product fill">
+          <div data-ng-if="!tag.product" class="choose-product fill">
             <div class="title">Choose a product</div>
             <div class="choose-product-images scroll">
-              <a ng-click="tag.product = product" class="choose-product-for-tag" ng-repeat="product in selectedProducts">
-                <img ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="ng-src">
+              <a data-ng-click="tag.product = product" class="choose-product-for-tag" data-ng-repeat="product in selectedProducts">
+                <img data-ng-src="<span data-ng-bind="product.image.sizes.Small.url">{{product.image.sizes.Small.url}}</span>">
               </a>
-              <a ng-click="openTab.name = 'search'" class="fa fa-plus-circle add-product-to-tag"></a>
+              <a data-ng-click="openTab.name = 'search'" class="fa fa-plus-circle add-product-to-tag"></a>
             </div>
           </div>
-          <div ng-if="tag.product" class="fill">
-            <img class="product-image" ng-src="<span ng-bind=" tag.product.image.sizes.Large.url ">{{tag.product.image.sizes.Large.url}}</span>">
+          <div data-ng-if="tag.product" class="fill">
+            <img class="product-image" data-ng-src="<span data-ng-bind=" tag.product.image.sizes.Large.url ">{{tag.product.image.sizes.Large.url}}</span>">
             <span class="product-info">
-              <span ng-bind="tag.product.name">{{tag.product.name}}</span>
+              <span data-ng-bind="tag.product.name">{{tag.product.name}}</span>
 
 
             </span>

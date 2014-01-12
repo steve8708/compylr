@@ -27,7 +27,7 @@ stripComments = (str) ->
   str.replace(/<!--[\s\S]*?-->/g, '')
 
 convert = (options) ->
-  filePath = argv.file or options.filePath
+  filePath = argv.file or options.file
   if filePath
     verboseLog 'filePath', filePath
     file = fs.readFileSync filePath, 'utf8'
@@ -97,11 +97,16 @@ convert = (options) ->
           continue
         depth++
 
+  # FIXME: will breal if this is in words
   escapeReplacement = (str) ->
-    str.replace /ng-/g, '__NG__'
+    convertNgToDataNg str
+
+  convertNgToDataNg = (str) ->
+    str.replace /\sng-/g, ' data-ng-'
 
   unescapeReplacements = (str) ->
-    str.replace /__NG__/g, 'ng-'
+    str
+    # str.replace /__NG__/g, 'ng-'
 
   escapeBasicAttribute = (str) ->
     '__ATTR__' + str + '__ATTR__'
@@ -186,7 +191,7 @@ convert = (options) ->
           match
         else
           updated = true
-          escapeReplacement """#{trimmedMatch} ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
+          escapeReplacement """#{escapeBraces trimmedMatch} ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
 
       )
 
@@ -203,7 +208,7 @@ convert = (options) ->
           verboseLog 'match 7'
           body = body.trim()
           words = body.match /[\w\.]+/
-          if body.indexOf('expression') isnt 0
+          if body.indexOf('expression') isnt 0 and body.indexOf('json') isnt 0
             updated = true
             prefix = ''
             suffix = ''
@@ -213,7 +218,7 @@ convert = (options) ->
               suffix = '"'
             escapeBraces """<span ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
           else
-            match
+            escapeBraces match
         )
 
     # .replace(/<[^>]*?ng\-show="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
@@ -234,6 +239,7 @@ convert = (options) ->
   interpolated = unescapeReplacements interpolated
   interpolated = unescapeBraces interpolated
   interpolated = unescapeBasicAttributes interpolated
+  interpolated = convertNgToDataNg interpolated
   beautified = beautify interpolated
 
   if argv.file and not argv['no-write']

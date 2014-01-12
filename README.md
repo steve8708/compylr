@@ -6,16 +6,19 @@ Compile angular apps for rendering on any backend, regardless of language or pla
 Server side rendering, full angular expression support, 100% SEO comparible,
 client/server route and logic sharing, environment agnostic state persistence.
 
+
 ## Purpose
 * Simplicity: you write your angular app, let Compilr do the rest
 * Maximum performance
 * Minimal pageload times
 * Backend agnostic
 
+
 ## How it works
 * Compiles Angular Templates to Handlebars Templates
 * Standardizes route configuration using JSON for angular and any backend (via an adapter)
 * Standardizes state management with angular and any backend (via an adapter)
+
 
 ## Example
 
@@ -128,6 +131,7 @@ will compile them into application logic for both your client and server.
     find all necessary hooks to take control of the application once loaded
   * e.g. '{{foo}}' ➜ '<span ng-bind="foo">{{foo}}<span>'
 
+
 ## Supported Attributes
 * **ng-repeat**
 * **ng-include**
@@ -140,18 +144,23 @@ will compile them into application logic for both your client and server.
 * **ng-attr-***
 * **ng-href, ng-value, ng-src**
 * **ng-bind**
-* **Interpolations**
-* **Expressions**
+* **interpolations**
+ * `{{foo}} <img src="{{bar}}.png">`
+* **expressions**
+ * `{{foo && bar}} <img ng-show="bar || foo">`
 
 
 ## Project Status
 Functional demo complete. Working on production ready v1.0.0
 
+
 ## Usage
 `compilr src/path/* dest/path/*`
 
+
 ## Contributing
 We need more adapters! Node + express is built. We need python, ruby, and more!
+
 
 ## Todo
 * Support for angular filters.
@@ -159,6 +168,7 @@ We need more adapters! Node + express is built. We need python, ruby, and more!
 * Supoprt for logic sharing
   * On node through code sharing
   * On other platforms (python, java, etc) through expression parsing
+
 
 ## Demo
 Coming soon...

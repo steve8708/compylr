@@ -1,10 +1,10 @@
 ![Compilr](http://i.imgur.com/sgvfBB7.png)
 
-Compiles angular apps for rendering on any backend, regardless of language or platform.
-Server side rendering, full angular expression support, 100% SEO comparible,
-client/server route logic sharing, and environment agnostic state persistence.
+Build apps that load fast and feel amazing, with ease.
 
-Build apps that load fast and feel amazing.
+Compile angular apps for rendering on any backend, regardless of language or platform.
+Server side rendering, full angular expression support, 100% SEO comparible,
+client/server route and logic sharing, environment agnostic state persistence.
 
 ## Purpose
 * Simplicity: you write your angular app, let Compilr do the rest

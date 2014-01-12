@@ -270,7 +270,7 @@ convert = (options) ->
   interpolated = unescapeReplacements interpolated
   interpolated = unescapeBraces interpolated
   interpolated = unescapeBasicAttributes interpolated
-  interpolated = convertNgToDataNg interpolated
+  # interpolated = convertNgToDataNg interpolated
   beautified = beautify interpolated
 
   if argv.file and not argv['no-write']

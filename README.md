@@ -1,4 +1,4 @@
-![Imgur](http://i.imgur.com/XeaMTNW.png)
+![Compilr](http://i.imgur.com/sgvfBB7.png)
 
 Compiles angular apps to run on any server, regardless of language or platform, with server side rendering, SEO support, route logic sharing, and state persistence.
 Maximum performance, minimal load times, optimal development efficiency, 100% SEO support

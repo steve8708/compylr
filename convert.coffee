@@ -1,13 +1,16 @@
 #!/usr/bin/env coffee
 
-config =
-  verbose: false
-
 argv = require('optimist').argv
 fs = require 'fs'
 _ = require 'lodash'
 _str = require 'underscore.string'
 beautifyHtml = require('js-beautify').html
+
+config =
+  verbose: false
+
+
+# Helpers - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # E.g. <div ng-repeat="foo in bar"></div>
 getRefNames = (str, options) ->
@@ -36,6 +39,112 @@ verboseLog = (args...) ->
 stripComments = (str) ->
   str.replace(/<!--[\s\S]*?-->/g, '')
 
+selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
+  keygen, link, meta, param, source, track, wbr'.split /,\s*/
+
+escapeCurlyBraces = (str) ->
+  str
+    .replace(/\{/g, '&#123;')
+    .replace(/\}/g, '&#125;')
+
+beautify = (str) ->
+  str = str.replace /\{\{(#|\/)([\s\S]+?)\}\}/g, (match, type, body) ->
+    modifier = if type is '#' then '' else '/'
+    "<#{modifier}##{body}>"
+
+  pretty = beautifyHtml str,
+    indent_size: 2
+    indent_inner_html: true
+    preserve_newlines: false
+
+  pretty = pretty
+    .replace /<(\/?#)(.*)>/g, (match, modifier, body) ->
+      modifier = '/' if modifier is '/#'
+      "{{#{modifier}#{body}}}"
+
+  pretty
+
+
+# TODO: pretty format
+#   replace '\n' with '\n  ' where '  ' is 2 spaces * depth
+#   Maybe prettify at very end instead
+getCloseTag = (string) ->
+  string = string.trim()
+  index = 0
+  depth = 0
+  open = string.match(/<.*?>/)[0]
+  tagName = string.match(/<\w+/)[0].substring 1
+  string = string.replace open, ''
+
+  if tagName in selfClosingTags
+    out =
+      before: open
+      after: string
+    return out
+
+  for char, index in string
+    # Close tag
+    if char is '<' and string[index + 1] is '/'
+      if not depth
+        after = string.substr index
+        close = after.match(/<\/.*?>/)[0]
+        afterWithTag = after + close
+        afterWithoutTag = after.substring close.length
+
+        return (
+          after: afterWithoutTag
+          before: open + '\n' + string.substr(0, index) + close
+        )
+      else
+        depth--
+    # Open tag
+    else if char is '<'
+      selfClosing = false
+      tag = string.substr(index).match(/\w+/)[0]
+      # Check if self closing tag
+      if tag and tag in selfClosingTags
+        continue
+      depth++
+
+# FIXME: this will break for pipes inside strings
+processFilters = (str) ->
+  filterSplit = str.match /[^\|]+/
+  filters: filterSplit.slice(1).join ' | '
+  replaced: filterSplit[0]
+
+# FIXME: will breal if this is in words
+escapeReplacement = (str) ->
+  convertNgToDataNg str
+
+convertNgToDataNg = (str) ->
+  str.replace /\sng-/g, ' data-ng-'
+
+convertDataNgToNg = (str) ->
+  str.replace /\sdata-ng-/g, ' ng-'
+
+unescapeReplacements = (str) ->
+  str
+  # str.replace /__NG__/g, 'ng-'
+
+escapeBasicAttribute = (str) ->
+  '__ATTR__' + str + '__ATTR__'
+
+unescapeBasicAttributes = (str) ->
+  str.replace /__ATTR__/g, ''
+
+escapeBraces = (str) ->
+  str
+    .replace(/\{\{/g, '__{{__')
+    .replace(/\}\}/g, '__}}__')
+
+unescapeBraces = (str) ->
+  str
+    .replace(/__\{\{__/g, '{{')
+    .replace(/__\}\}__/g, '}}')
+
+
+# Convert - - - - - - - - - - - - - - - - - - - - - - - -
+
 convert = (options) ->
   filePath = argv.file or options.file
   if filePath
@@ -43,109 +152,6 @@ convert = (options) ->
     file = fs.readFileSync filePath, 'utf8'
   else
     file = options.string or options
-
-  selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
-  keygen, link, meta, param, source, track, wbr'.split /,\s*/
-
-  escapeCurlyBraces = (str) ->
-    str
-      .replace(/\{/g, '&#123;')
-      .replace(/\}/g, '&#125;')
-
-  beautify = (str) ->
-    str = str.replace /\{\{(#|\/)([\s\S]+?)\}\}/g, (match, type, body) ->
-      modifier = if type is '#' then '' else '/'
-      "<#{modifier}##{body}>"
-
-    pretty = beautifyHtml str,
-      indent_size: 2
-      indent_inner_html: true
-      preserve_newlines: false
-
-    pretty = pretty
-      .replace /<(\/?#)(.*)>/g, (match, modifier, body) ->
-        modifier = '/' if modifier is '/#'
-        "{{#{modifier}#{body}}}"
-
-    pretty
-
-
-  # TODO: pretty format
-  #   replace '\n' with '\n  ' where '  ' is 2 spaces * depth
-  #   Maybe prettify at very end instead
-  getCloseTag = (string) ->
-    string = string.trim()
-    index = 0
-    depth = 0
-    open = string.match(/<.*?>/)[0]
-    tagName = string.match(/<\w+/)[0].substring 1
-    string = string.replace open, ''
-
-    if tagName in selfClosingTags
-      out =
-        before: open
-        after: string
-      return out
-
-    for char, index in string
-      # Close tag
-      if char is '<' and string[index + 1] is '/'
-        if not depth
-          after = string.substr index
-          close = after.match(/<\/.*?>/)[0]
-          afterWithTag = after + close
-          afterWithoutTag = after.substring close.length
-
-          return (
-            after: afterWithoutTag
-            before: open + '\n' + string.substr(0, index) + close
-          )
-        else
-          depth--
-      # Open tag
-      else if char is '<'
-        selfClosing = false
-        tag = string.substr(index).match(/\w+/)[0]
-        # Check if self closing tag
-        if tag and tag in selfClosingTags
-          continue
-        depth++
-
-  # FIXME: this will break for pipes inside strings
-  processFilters = (str) ->
-    filterSplit = str.match /[^\|]+/
-    filters: filterSplit.slice(1).join ' | '
-    replaced: filterSplit[0]
-
-  # FIXME: will breal if this is in words
-  escapeReplacement = (str) ->
-    convertNgToDataNg str
-
-  convertNgToDataNg = (str) ->
-    str.replace /\sng-/g, ' data-ng-'
-
-  convertDataNgToNg = (str) ->
-    str.replace /\sdata-ng-/g, ' ng-'
-
-  unescapeReplacements = (str) ->
-    str
-    # str.replace /__NG__/g, 'ng-'
-
-  escapeBasicAttribute = (str) ->
-    '__ATTR__' + str + '__ATTR__'
-
-  unescapeBasicAttributes = (str) ->
-    str.replace /__ATTR__/g, ''
-
-  escapeBraces = (str) ->
-    str
-      .replace(/\{\{/g, '__{{__')
-      .replace(/\}\}/g, '__}}__')
-
-  unescapeBraces = (str) ->
-    str
-      .replace(/__\{\{__/g, '{{')
-      .replace(/__\}\}__/g, '}}')
 
   updated = true
   interpolated = stripComments file
@@ -301,20 +307,7 @@ convert = (options) ->
           escapeBraces match
       )
 
-    # .replace(/<[^>]*?ng\-show="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
-    #   close = getCloseTag match
-    #   if close
-    #     "{{#if #{varName}}}\n#{close.before}\n{{/if}}\n#{close.after}"
-    #   else
-    #     throw new Error 'Parse error! Could not find close tag for ng-show'
-    # )
-    # .replace(/<[^>]*?ng\-hide="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
-    #   close = getCloseTag match
-    #   if close
-    #     "{{#unless #{varName}}}\n#{close.before}\n{{/unless}}\n#{close.after}"
-    #   else
-    #     throw new Error 'Parse error! Could not find close tag for ng-hide'
-    # )
+  # Unescape and output - - - - - - - - - - - - - - - - - - - - - -
 
   interpolated = unescapeReplacements interpolated
   interpolated = unescapeBraces interpolated

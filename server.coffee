@@ -2,13 +2,15 @@ handlebars = require 'handlebars'
 express = require 'express'
 exphbs  = require 'express3-handlebars'
 _  = require 'lodash'
-_str = require 'underscore.string'
+_.str = require 'underscore.string'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
 request = require 'request'
 convert = require './convert'
 evaluate = require("static-eval")
 parse = require("esprima").parse
+
+# Setup  - - - - - - - - - - - - - - - - - - - - - - -
 
 app = express()
 
@@ -33,7 +35,10 @@ app.set 'views', __dirname
 
 expressionCache = {}
 
-evalWithContext = (expression, context, clone, returnNewContext) ->
+
+# Helpers  - - - - - - - - - - - - - - - - - - - - - - -
+
+safeEvalWithContext = (expression, context, clone, returnNewContext) ->
   context = _.cloneDeep context if clone
   fn = new Function 'context', "with (context) { return #{expression} }"
   try
@@ -49,7 +54,7 @@ warnVerbose = (args...) ->
 
 # In Java can use ScriptEngineManager to eval js
 # (http://stackoverflow.com/questions/2605032/using-eval-in-java)
-evalExpression = (expression, context) ->
+safeEvalExpression = (expression, context) ->
   try
     expressionBody = expressionCache[expression] or parse(expression).body[0].expression
     expressionCache[expression] = expressionBody unless expressionCache[expression]
@@ -63,7 +68,10 @@ evalExpression = (expression, context) ->
   value
 
 
+# Compile templates - - - - - - - - - - - - - - - - - - - - - - -
+
 console.info 'Compiling templates...'
+
 mkdirp.sync "./#{templatesDir}"
 fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompiledTemplatesDir}/index.tpl.html"
 
@@ -80,12 +88,15 @@ for type in ['templates', 'modules/account', 'modules/home', 'modules/insights',
 
 console.info 'Done compiling templates.'
 
+
+# Compile Handlebars Helpers - - - - - - - - - - - - - - - - - - -
+
 handlebars.registerHelper "eachExpression", (name, _in, expression, options) ->
-  value = evalExpression expression, @
+  value = safeEvalExpression expression, @
   instance.helpers.forEach name, _in, value, options
 
 handlebars.registerHelper "styleExpression", (expression, options) ->
-  value = evalWithContext expression, @, true
+  value = safeEvalWithContext expression, @, true
   console.log 'styleExpression', expression, value if value
   out = ';'
   for key, val of value
@@ -93,15 +104,14 @@ handlebars.registerHelper "styleExpression", (expression, options) ->
   " #{out} "
 
 handlebars.registerHelper "classExpression", (expression, options) ->
-  value = evalWithContext expression, @, true
-  console.log 'classExpression', expression, value if value
+  value = safeEvalWithContext expression, @, true
   out = []
   for key, val of value
     out.push key if val
   ' ' + out.join(' ') + ' '
 
 handlebars.registerHelper "ifExpression", (expression, options) ->
-  value = evalExpression expression, @
+  value = safeEvalExpression expression, @
 
   if not options.hash.includeZero and not value
     options.inverse @
@@ -110,15 +120,15 @@ handlebars.registerHelper "ifExpression", (expression, options) ->
 
 handlebars.registerHelper "expression", (expression, options) ->
   # TODO: there are better ways to do @, borrow angular eval function
-  value = evalExpression expression, @
+  value = safeEvalExpression expression, @
   value
 
 handlebars.registerHelper "hbsShow", (expression, options) ->
-  value = evalExpression expression, @
+  value = safeEvalExpression expression, @
   if value then 'data-hbs-show' else 'data-hbs-hide'
 
 handlebars.registerHelper "hbsHide", (expression, options) ->
-  value = evalExpression expression, @
+  value = safeEvalExpression expression, @
   if value then 'data-hbs-hide' else 'data-hbs-show'
 
 handlebars.registerHelper "json", (args..., options) ->
@@ -133,11 +143,6 @@ handlebars.registerHelper "interpolatedScript", (options) ->
 
   "#{scriptStr} #{options.fn @} </script>"
 
-capitalize = (str = '') ->
-  str[0].toUpperCase() + str.substr 1
-
-uncapitalize = (str = '') ->
-  str[0].toLowerCase() + str.substr 1
 
 # TODO: looping through options
 #   (key, value) in bar
@@ -184,6 +189,9 @@ handlebars.registerHelper "forEach", (name, _in, context) ->
   # ret = inverse(@) if i is 0
   ret
 
+
+# Server  - - - - - - - - - - - - - - - - - - - - - - -
+
 # TODO: this is bad, remove
 cache =
   results: {}
@@ -215,7 +223,7 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
 
   action = req.query.action
   if action
-    evalWithContext action, sessionData
+    safeEvalWithContext action, sessionData
     console.log 'action', action
     return res.redirect req._parsedUrl.pathname
 
@@ -244,9 +252,15 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
     resultsSuccess req, res, results
     null
 
+
+# Run - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 port = process.env.PORT || 5000
 console.info "Listening on part #{port}..."
 app.listen port
+
+
+# State Data - - - - - - - - - - - - - - - - - - - - - - -
 
 tabDefaults =
   insights: 'earnings'

@@ -1827,11 +1827,11 @@ function setupModuleLoader(window) {
  * An object that contains information about the current AngularJS version. This object has the
  * following properties:
  *
- * - `full` â€“ `{string}` â€“ Full version string, such as "0.9.18".
- * - `major` â€“ `{number}` â€“ Major version number, such as "0".
- * - `minor` â€“ `{number}` â€“ Minor version number, such as "9".
- * - `dot` â€“ `{number}` â€“ Dot version number, such as "18".
- * - `codeName` â€“ `{string}` â€“ Code name of the release, such as "jiggling-armfat".
+ * - `full` – `{string}` – Full version string, such as "0.9.18".
+ * - `major` – `{number}` – Major version number, such as "0".
+ * - `minor` – `{number}` – Minor version number, such as "9".
+ * - `dot` – `{number}` – Dot version number, such as "18".
+ * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
   full: '1.2.4',    // all of these placeholder strings will be replaced by grunt's
@@ -4403,17 +4403,17 @@ function $BrowserProvider(){
  * @param {string} cacheId Name or id of the newly created cache.
  * @param {object=} options Options object that specifies the cache behavior. Properties:
  *
- *   - `{number=}` `capacity` â€” turns the cache into LRU cache.
+ *   - `{number=}` `capacity` — turns the cache into LRU cache.
  *
  * @returns {object} Newly created cache object with the following set of methods:
  *
- * - `{object}` `info()` â€” Returns id, size, and options of cache.
- * - `{{*}}` `put({string} key, {*} value)` â€” Puts a new key-value pair into the cache and returns
+ * - `{object}` `info()` — Returns id, size, and options of cache.
+ * - `{{*}}` `put({string} key, {*} value)` — Puts a new key-value pair into the cache and returns
  *   it.
- * - `{{*}}` `get({string} key)` â€” Returns cached value for `key` or undefined for cache miss.
- * - `{void}` `remove({string} key)` â€” Removes a key-value pair from the cache.
- * - `{void}` `removeAll()` â€” Removes all cached values.
- * - `{void}` `destroy()` â€” Removes references to this cache from $cacheFactory.
+ * - `{{*}}` `get({string} key)` — Returns cached value for `key` or undefined for cache miss.
+ * - `{void}` `remove({string} key)` — Removes a key-value pair from the cache.
+ * - `{void}` `removeAll()` — Removes all cached values.
+ * - `{void}` `destroy()` — Removes references to this cache from $cacheFactory.
  *
  */
 function $CacheFactoryProvider() {
@@ -6957,7 +6957,7 @@ function $HttpProvider() {
      *
      *
      * # General usage
-     * The `$http` service is a function which takes a single argument â€” a configuration object â€”
+     * The `$http` service is a function which takes a single argument — a configuration object —
      * that is used to generate an HTTP request and returns  a {@link ng.$q promise}
      * with two $http specific methods: `success` and `error`.
      *
@@ -6974,7 +6974,7 @@ function $HttpProvider() {
      * </pre>
      *
      * Since the returned value of calling the $http function is a `promise`, you can also use
-     * the `then` method to register callbacks, and these callbacks will receive a single argument â€“
+     * the `then` method to register callbacks, and these callbacks will receive a single argument –
      * an object representing the response. See the API signature and type info below for more
      * details.
      *
@@ -7202,7 +7202,7 @@ function $HttpProvider() {
      *
      * The interceptors are service factories that are registered with the $httpProvider by
      * adding them to the `$httpProvider.responseInterceptors` array. The factory is called and
-     * injected with dependencies (if specified) and returns the interceptor  â€” a function that
+     * injected with dependencies (if specified) and returns the interceptor  — a function that
      * takes a {@link ng.$q promise} and returns the original or a new promise.
      *
      * <pre>
@@ -7294,30 +7294,30 @@ function $HttpProvider() {
      * @param {object} config Object describing the request to be made and how it should be
      *    processed. The object has following properties:
      *
-     *    - **method** â€“ `{string}` â€“ HTTP method (e.g. 'GET', 'POST', etc)
-     *    - **url** â€“ `{string}` â€“ Absolute or relative URL of the resource that is being requested.
-     *    - **params** â€“ `{Object.<string|Object>}` â€“ Map of strings or objects which will be turned
+     *    - **method** – `{string}` – HTTP method (e.g. 'GET', 'POST', etc)
+     *    - **url** – `{string}` – Absolute or relative URL of the resource that is being requested.
+     *    - **params** – `{Object.<string|Object>}` – Map of strings or objects which will be turned
      *      to `?key1=value1&key2=value2` after the url. If the value is not a string, it will be
      *      JSONified.
-     *    - **data** â€“ `{string|Object}` â€“ Data to be sent as the request message data.
-     *    - **headers** â€“ `{Object}` â€“ Map of strings or functions which return strings representing
+     *    - **data** – `{string|Object}` – Data to be sent as the request message data.
+     *    - **headers** – `{Object}` – Map of strings or functions which return strings representing
      *      HTTP headers to send to the server. If the return value of a function is null, the
      *      header will not be sent.
-     *    - **xsrfHeaderName** â€“ `{string}` â€“ Name of HTTP header to populate with the XSRF token.
-     *    - **xsrfCookieName** â€“ `{string}` â€“ Name of cookie containing the XSRF token.
-     *    - **transformRequest** â€“
-     *      `{function(data, headersGetter)|Array.<function(data, headersGetter)>}` â€“
+     *    - **xsrfHeaderName** – `{string}` – Name of HTTP header to populate with the XSRF token.
+     *    - **xsrfCookieName** – `{string}` – Name of cookie containing the XSRF token.
+     *    - **transformRequest** –
+     *      `{function(data, headersGetter)|Array.<function(data, headersGetter)>}` –
      *      transform function or an array of such functions. The transform function takes the http
      *      request body and headers and returns its transformed (typically serialized) version.
-     *    - **transformResponse** â€“
-     *      `{function(data, headersGetter)|Array.<function(data, headersGetter)>}` â€“
+     *    - **transformResponse** –
+     *      `{function(data, headersGetter)|Array.<function(data, headersGetter)>}` –
      *      transform function or an array of such functions. The transform function takes the http
      *      response body and headers and returns its transformed (typically deserialized) version.
-     *    - **cache** â€“ `{boolean|Cache}` â€“ If true, a default $http cache will be used to cache the
+     *    - **cache** – `{boolean|Cache}` – If true, a default $http cache will be used to cache the
      *      GET request, otherwise if a cache instance built with
      *      {@link ng.$cacheFactory $cacheFactory}, this cache will be used for
      *      caching.
-     *    - **timeout** â€“ `{number|Promise}` â€“ timeout in milliseconds, or {@link ng.$q promise}
+     *    - **timeout** – `{number|Promise}` – timeout in milliseconds, or {@link ng.$q promise}
      *      that should abort the request when resolved.
      *    - **withCredentials** - `{boolean}` - whether to to set the `withCredentials` flag on the
      *      XHR object. See {@link https://developer.mozilla.org/en/http_access_control#section_5
@@ -7333,11 +7333,11 @@ function $HttpProvider() {
      *   these functions are destructured representation of the response object passed into the
      *   `then` method. The response object has these properties:
      *
-     *   - **data** â€“ `{string|Object}` â€“ The response body transformed with the transform
+     *   - **data** – `{string|Object}` – The response body transformed with the transform
      *     functions.
-     *   - **status** â€“ `{number}` â€“ HTTP status code of the response.
-     *   - **headers** â€“ `{function([headerName])}` â€“ Header getter function.
-     *   - **config** â€“ `{Object}` â€“ The configuration object that was used to generate the request.
+     *   - **status** – `{number}` – HTTP status code of the response.
+     *   - **headers** – `{function([headerName])}` – Header getter function.
+     *   - **config** – `{Object}` – The configuration object that was used to generate the request.
      *
      * @property {Array.<Object>} pendingRequests Array of config objects for currently pending
      *   requests. This is primarily meant to be used for debugging purposes.
@@ -8293,7 +8293,7 @@ function $IntervalProvider() {
  * $locale service provides localization rules for various Angular components. As of right now the
  * only public api is:
  *
- * * `id` â€“ `{string}` â€“ locale id formatted as `languageId-countryId` (e.g. `en-us`)
+ * * `id` – `{string}` – locale id formatted as `languageId-countryId` (e.g. `en-us`)
  */
 function $LocaleProvider(){
   this.$get = function() {
@@ -10289,17 +10289,17 @@ function getterFn(path, options, fullExp) {
  * @param {string} expression String expression to compile.
  * @returns {function(context, locals)} a function which represents the compiled expression:
  *
- *    * `context` â€“ `{object}` â€“ an object against which any expressions embedded in the strings
+ *    * `context` – `{object}` – an object against which any expressions embedded in the strings
  *      are evaluated against (typically a scope object).
- *    * `locals` â€“ `{object=}` â€“ local variables context object, useful for overriding values in
+ *    * `locals` – `{object=}` – local variables context object, useful for overriding values in
  *      `context`.
  *
  *    The returned function also has the following properties:
- *      * `literal` â€“ `{boolean}` â€“ whether the expression's top-level node is a JavaScript
+ *      * `literal` – `{boolean}` – whether the expression's top-level node is a JavaScript
  *        literal.
- *      * `constant` â€“ `{boolean}` â€“ whether the expression is made entirely of JavaScript
+ *      * `constant` – `{boolean}` – whether the expression is made entirely of JavaScript
  *        constant literals.
- *      * `assign` â€“ `{?function(context, value)}` â€“ if the expression is assignable, this will be
+ *      * `assign` – `{?function(context, value)}` – if the expression is assignable, this will be
  *        set to a function to change its value on the given context.
  *
  */
@@ -10518,16 +10518,16 @@ function $ParseProvider() {
  *
  * **Methods**
  *
- * - `resolve(value)` â€“ resolves the derived promise with the `value`. If the value is a rejection
+ * - `resolve(value)` – resolves the derived promise with the `value`. If the value is a rejection
  *   constructed via `$q.reject`, the promise will be rejected instead.
- * - `reject(reason)` â€“ rejects the derived promise with the `reason`. This is equivalent to
+ * - `reject(reason)` – rejects the derived promise with the `reason`. This is equivalent to
  *   resolving it with a rejection constructed via `$q.reject`.
  * - `notify(value)` - provides updates on the status of the promises execution. This may be called
  *   multiple times before the promise is either resolved or rejected.
  *
  * **Properties**
  *
- * - promise â€“ `{Promise}` â€“ promise object associated with this deferred.
+ * - promise – `{Promise}` – promise object associated with this deferred.
  *
  *
  * # The Promise API
@@ -10540,7 +10540,7 @@ function $ParseProvider() {
  *
  * **Methods**
  *
- * - `then(successCallback, errorCallback, notifyCallback)` â€“ regardless of when the promise was or
+ * - `then(successCallback, errorCallback, notifyCallback)` – regardless of when the promise was or
  *   will be resolved or rejected, `then` calls one of the success or error callbacks asynchronously
  *   as soon as the result is available. The callbacks are called with a single argument: the result
  *   or rejection reason. Additionally, the notify callback may be called zero or more times to
@@ -10551,9 +10551,9 @@ function $ParseProvider() {
  *   `notifyCallback` method. The promise can not be resolved or rejected from the notifyCallback
  *   method.
  *
- * - `catch(errorCallback)` â€“ shorthand for `promise.then(null, errorCallback)`
+ * - `catch(errorCallback)` – shorthand for `promise.then(null, errorCallback)`
  *
- * - `finally(callback)` â€“ allows you to observe either the fulfillment or rejection of a promise,
+ * - `finally(callback)` – allows you to observe either the fulfillment or rejection of a promise,
  *   but to do so without modifying the final value. This is useful to release resources or do some
  *   clean-up that needs to be done whether the promise was rejected or resolved. See the [full
  *   specification](https://github.com/kriskowal/q/wiki/API-Reference#promisefinallycallback) for
@@ -12206,7 +12206,7 @@ function adjustMatchers(matchers) {
  *
  * - your app is hosted at url `http://myapp.example.com/`
  * - but some of your templates are hosted on other domains you control such as
- *   `http://srv01.assets.example.com/`,Â  `http://srv02.assets.example.com/`, etc.
+ *   `http://srv01.assets.example.com/`,  `http://srv02.assets.example.com/`, etc.
  * - and you have an open redirect at `http://myapp.example.com/clickThru?...`.
  *
  * Here is what a secure configuration for this scenario might look like:
@@ -12881,9 +12881,9 @@ function $SceProvider() {
      * @param {string} expression String expression to compile.
      * @returns {function(context, locals)} a function which represents the compiled expression:
      *
-     *    * `context` â€“ `{object}` â€“ an object against which any expressions embedded in the strings
+     *    * `context` – `{object}` – an object against which any expressions embedded in the strings
      *      are evaluated against (typically a scope object).
-     *    * `locals` â€“ `{object=}` â€“ local variables context object, useful for overriding values in
+     *    * `locals` – `{object=}` – local variables context object, useful for overriding values in
      *      `context`.
      */
     sce.parseAs = function sceParseAs(type, expr) {
@@ -12923,7 +12923,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.trustAsHtml(value)` â†’
+     * Shorthand method.  `$sce.trustAsHtml(value)` →
      *     {@link ng.$sceDelegate#methods_trustAs `$sceDelegate.trustAs($sce.HTML, value)`}
      *
      * @param {*} value The value to trustAs.
@@ -12939,7 +12939,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.trustAsUrl(value)` â†’
+     * Shorthand method.  `$sce.trustAsUrl(value)` →
      *     {@link ng.$sceDelegate#methods_trustAs `$sceDelegate.trustAs($sce.URL, value)`}
      *
      * @param {*} value The value to trustAs.
@@ -12955,7 +12955,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.trustAsResourceUrl(value)` â†’
+     * Shorthand method.  `$sce.trustAsResourceUrl(value)` →
      *     {@link ng.$sceDelegate#methods_trustAs `$sceDelegate.trustAs($sce.RESOURCE_URL, value)`}
      *
      * @param {*} value The value to trustAs.
@@ -12971,7 +12971,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.trustAsJs(value)` â†’
+     * Shorthand method.  `$sce.trustAsJs(value)` →
      *     {@link ng.$sceDelegate#methods_trustAs `$sceDelegate.trustAs($sce.JS, value)`}
      *
      * @param {*} value The value to trustAs.
@@ -13006,7 +13006,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.getTrustedHtml(value)` â†’
+     * Shorthand method.  `$sce.getTrustedHtml(value)` →
      *     {@link ng.$sceDelegate#methods_getTrusted `$sceDelegate.getTrusted($sce.HTML, value)`}
      *
      * @param {*} value The value to pass to `$sce.getTrusted`.
@@ -13019,7 +13019,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.getTrustedCss(value)` â†’
+     * Shorthand method.  `$sce.getTrustedCss(value)` →
      *     {@link ng.$sceDelegate#methods_getTrusted `$sceDelegate.getTrusted($sce.CSS, value)`}
      *
      * @param {*} value The value to pass to `$sce.getTrusted`.
@@ -13032,7 +13032,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.getTrustedUrl(value)` â†’
+     * Shorthand method.  `$sce.getTrustedUrl(value)` →
      *     {@link ng.$sceDelegate#methods_getTrusted `$sceDelegate.getTrusted($sce.URL, value)`}
      *
      * @param {*} value The value to pass to `$sce.getTrusted`.
@@ -13045,7 +13045,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.getTrustedResourceUrl(value)` â†’
+     * Shorthand method.  `$sce.getTrustedResourceUrl(value)` →
      *     {@link ng.$sceDelegate#methods_getTrusted `$sceDelegate.getTrusted($sce.RESOURCE_URL, value)`}
      *
      * @param {*} value The value to pass to `$sceDelegate.getTrusted`.
@@ -13058,7 +13058,7 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.getTrustedJs(value)` â†’
+     * Shorthand method.  `$sce.getTrustedJs(value)` →
      *     {@link ng.$sceDelegate#methods_getTrusted `$sceDelegate.getTrusted($sce.JS, value)`}
      *
      * @param {*} value The value to pass to `$sce.getTrusted`.
@@ -13071,15 +13071,15 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.parseAsHtml(expression string)` â†’
+     * Shorthand method.  `$sce.parseAsHtml(expression string)` →
      *     {@link ng.$sce#methods_parse `$sce.parseAs($sce.HTML, value)`}
      *
      * @param {string} expression String expression to compile.
      * @returns {function(context, locals)} a function which represents the compiled expression:
      *
-     *    * `context` â€“ `{object}` â€“ an object against which any expressions embedded in the strings
+     *    * `context` – `{object}` – an object against which any expressions embedded in the strings
      *      are evaluated against (typically a scope object).
-     *    * `locals` â€“ `{object=}` â€“ local variables context object, useful for overriding values in
+     *    * `locals` – `{object=}` – local variables context object, useful for overriding values in
      *      `context`.
      */
 
@@ -13089,15 +13089,15 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.parseAsCss(value)` â†’
+     * Shorthand method.  `$sce.parseAsCss(value)` →
      *     {@link ng.$sce#methods_parse `$sce.parseAs($sce.CSS, value)`}
      *
      * @param {string} expression String expression to compile.
      * @returns {function(context, locals)} a function which represents the compiled expression:
      *
-     *    * `context` â€“ `{object}` â€“ an object against which any expressions embedded in the strings
+     *    * `context` – `{object}` – an object against which any expressions embedded in the strings
      *      are evaluated against (typically a scope object).
-     *    * `locals` â€“ `{object=}` â€“ local variables context object, useful for overriding values in
+     *    * `locals` – `{object=}` – local variables context object, useful for overriding values in
      *      `context`.
      */
 
@@ -13107,15 +13107,15 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.parseAsUrl(value)` â†’
+     * Shorthand method.  `$sce.parseAsUrl(value)` →
      *     {@link ng.$sce#methods_parse `$sce.parseAs($sce.URL, value)`}
      *
      * @param {string} expression String expression to compile.
      * @returns {function(context, locals)} a function which represents the compiled expression:
      *
-     *    * `context` â€“ `{object}` â€“ an object against which any expressions embedded in the strings
+     *    * `context` – `{object}` – an object against which any expressions embedded in the strings
      *      are evaluated against (typically a scope object).
-     *    * `locals` â€“ `{object=}` â€“ local variables context object, useful for overriding values in
+     *    * `locals` – `{object=}` – local variables context object, useful for overriding values in
      *      `context`.
      */
 
@@ -13125,15 +13125,15 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.parseAsResourceUrl(value)` â†’
+     * Shorthand method.  `$sce.parseAsResourceUrl(value)` →
      *     {@link ng.$sce#methods_parse `$sce.parseAs($sce.RESOURCE_URL, value)`}
      *
      * @param {string} expression String expression to compile.
      * @returns {function(context, locals)} a function which represents the compiled expression:
      *
-     *    * `context` â€“ `{object}` â€“ an object against which any expressions embedded in the strings
+     *    * `context` – `{object}` – an object against which any expressions embedded in the strings
      *      are evaluated against (typically a scope object).
-     *    * `locals` â€“ `{object=}` â€“ local variables context object, useful for overriding values in
+     *    * `locals` – `{object=}` – local variables context object, useful for overriding values in
      *      `context`.
      */
 
@@ -13143,15 +13143,15 @@ function $SceProvider() {
      * @methodOf ng.$sce
      *
      * @description
-     * Shorthand method.  `$sce.parseAsJs(value)` â†’
+     * Shorthand method.  `$sce.parseAsJs(value)` →
      *     {@link ng.$sce#methods_parse `$sce.parseAs($sce.JS, value)`}
      *
      * @param {string} expression String expression to compile.
      * @returns {function(context, locals)} a function which represents the compiled expression:
      *
-     *    * `context` â€“ `{object}` â€“ an object against which any expressions embedded in the strings
+     *    * `context` – `{object}` – an object against which any expressions embedded in the strings
      *      are evaluated against (typically a scope object).
-     *    * `locals` â€“ `{object=}` â€“ local variables context object, useful for overriding values in
+     *    * `locals` – `{object=}` – local variables context object, useful for overriding values in
      *      `context`.
      */
 
@@ -13993,7 +13993,7 @@ function currencyFilter($locale) {
  * @param {(number|string)=} fractionSize Number of decimal places to round the number to.
  * If this is not provided then the fraction size is computed from the current locale's number
  * formatting pattern. In the case of the default locale, it will be 3.
- * @returns {string} Number rounded to decimalPlaces and places a â€œ,â€ after each third digit.
+ * @returns {string} Number rounded to decimalPlaces and places a “,” after each third digit.
  *
  * @example
    <doc:example>
@@ -17443,10 +17443,10 @@ var ngCloakDirective = ngDirective({
  *
  * MVC components in angular:
  *
- * * Model â€” The Model is scope properties; scopes are attached to the DOM where scope properties
+ * * Model — The Model is scope properties; scopes are attached to the DOM where scope properties
  *   are accessed through bindings.
- * * View â€” The template (HTML with data bindings) that is rendered into the View.
- * * Controller â€” The `ngController` directive specifies a Controller class; the class contains business
+ * * View — The template (HTML with data bindings) that is rendered into the View.
+ * * Controller — The `ngController` directive specifies a Controller class; the class contains business
  *   logic behind the application to decorate the scope with functions and values
  *
  * Note that you can also attach controllers to the DOM by declaring it in a route definition
@@ -18712,17 +18712,17 @@ var ngPluralizeDirective = ['$locale', '$interpolate', function($locale, $interp
  * @param {repeat_expression} ngRepeat The expression indicating how to enumerate a collection. These
  *   formats are currently supported:
  *
- *   * `variable in expression` â€“ where variable is the user defined loop variable and `expression`
+ *   * `variable in expression` – where variable is the user defined loop variable and `expression`
  *     is a scope expression giving the collection to enumerate.
  *
  *     For example: `album in artist.albums`.
  *
- *   * `(key, value) in expression` â€“ where `key` and `value` can be any user defined identifiers,
+ *   * `(key, value) in expression` – where `key` and `value` can be any user defined identifiers,
  *     and `expression` is the scope expression giving the collection to enumerate.
  *
  *     For example: `(name, age) in {'adam':10, 'amalie':12}`.
  *
- *   * `variable in expression track by tracking_expression` â€“ You can also provide an optional tracking function
+ *   * `variable in expression track by tracking_expression` – You can also provide an optional tracking function
  *     which can be used to associate the objects in the collection with the DOM elements. If no tracking function
  *     is specified the ng-repeat associates elements by identity in the collection. It is an error to have
  *     more than one tracking function to resolve to the same key. (This would mean that two distinct objects are
@@ -20393,12 +20393,12 @@ function $RouteProvider(){
    *
    *    Object properties:
    *
-   *    - `controller` â€“ `{(string|function()=}` â€“ Controller fn that should be associated with
+   *    - `controller` – `{(string|function()=}` – Controller fn that should be associated with
    *      newly created scope or the name of a {@link angular.Module#controller registered
    *      controller} if passed as a string.
-   *    - `controllerAs` â€“ `{string=}` â€“ A controller alias name. If present the controller will be
+   *    - `controllerAs` – `{string=}` – A controller alias name. If present the controller will be
    *      published to scope under the `controllerAs` name.
-   *    - `template` â€“ `{string=|function()=}` â€“ html template as a string or a function that
+   *    - `template` – `{string=|function()=}` – html template as a string or a function that
    *      returns an html template as a string which should be used by {@link
    *      ngRoute.directive:ngView ngView} or {@link ng.directive:ngInclude ngInclude} directives.
    *      This property takes precedence over `templateUrl`.
@@ -20408,7 +20408,7 @@ function $RouteProvider(){
    *      - `{Array.<Object>}` - route parameters extracted from the current
    *        `$location.path()` by applying the current route
    *
-   *    - `templateUrl` â€“ `{string=|function()=}` â€“ path or function that returns a path to an html
+   *    - `templateUrl` – `{string=|function()=}` – path or function that returns a path to an html
    *      template that should be used by {@link ngRoute.directive:ngView ngView}.
    *
    *      If `templateUrl` is a function, it will be called with the following parameters:
@@ -20426,7 +20426,7 @@ function $RouteProvider(){
    *      {@link ngRoute.$route#$routeChangeError $routeChangeError} event is fired. The map object
    *      is:
    *
-   *      - `key` â€“ `{string}`: a name of a dependency to be injected into the controller.
+   *      - `key` – `{string}`: a name of a dependency to be injected into the controller.
    *      - `factory` - `{string|function}`: If `string` then it is an alias for a service.
    *        Otherwise if function, then it is {@link api/AUTO.$injector#invoke injected}
    *        and the return value is treated as the dependency. If the result is a promise, it is
@@ -20434,7 +20434,7 @@ function $RouteProvider(){
    *        `ngRoute.$routeParams` will still refer to the previous route within these resolve
    *        functions.  Use `$route.current.params` to access the new route parameters, instead.
    *
-   *    - `redirectTo` â€“ {(string|function())=} â€“ value to update
+   *    - `redirectTo` – {(string|function())=} – value to update
    *      {@link ng.$location $location} path with and trigger route redirection.
    *
    *      If `redirectTo` is a function, it will be called with the following parameters:
@@ -29100,15 +29100,15 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     };
     return d3.rebind(drag, event, "on");
   };
-  var Ï€ = Math.PI, Ï„ = 2 * Ï€, halfÏ€ = Ï€ / 2, Îµ = 1e-6, Îµ2 = Îµ * Îµ, d3_radians = Ï€ / 180, d3_degrees = 180 / Ï€;
+  var π = Math.PI, τ = 2 * π, halfπ = π / 2, ε = 1e-6, ε2 = ε * ε, d3_radians = π / 180, d3_degrees = 180 / π;
   function d3_sgn(x) {
     return x > 0 ? 1 : x < 0 ? -1 : 0;
   }
   function d3_acos(x) {
-    return x > 1 ? 0 : x < -1 ? Ï€ : Math.acos(x);
+    return x > 1 ? 0 : x < -1 ? π : Math.acos(x);
   }
   function d3_asin(x) {
-    return x > 1 ? halfÏ€ : x < -1 ? -halfÏ€ : Math.asin(x);
+    return x > 1 ? halfπ : x < -1 ? -halfπ : Math.asin(x);
   }
   function d3_sinh(x) {
     return ((x = Math.exp(x)) - 1 / x) / 2;
@@ -29122,17 +29122,17 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
   function d3_haversin(x) {
     return (x = Math.sin(x / 2)) * x;
   }
-  var Ï = Math.SQRT2, Ï2 = 2, Ï4 = 4;
+  var ρ = Math.SQRT2, ρ2 = 2, ρ4 = 4;
   d3.interpolateZoom = function(p0, p1) {
     var ux0 = p0[0], uy0 = p0[1], w0 = p0[2], ux1 = p1[0], uy1 = p1[1], w1 = p1[2];
-    var dx = ux1 - ux0, dy = uy1 - uy0, d2 = dx * dx + dy * dy, d1 = Math.sqrt(d2), b0 = (w1 * w1 - w0 * w0 + Ï4 * d2) / (2 * w0 * Ï2 * d1), b1 = (w1 * w1 - w0 * w0 - Ï4 * d2) / (2 * w1 * Ï2 * d1), r0 = Math.log(Math.sqrt(b0 * b0 + 1) - b0), r1 = Math.log(Math.sqrt(b1 * b1 + 1) - b1), dr = r1 - r0, S = (dr || Math.log(w1 / w0)) / Ï;
+    var dx = ux1 - ux0, dy = uy1 - uy0, d2 = dx * dx + dy * dy, d1 = Math.sqrt(d2), b0 = (w1 * w1 - w0 * w0 + ρ4 * d2) / (2 * w0 * ρ2 * d1), b1 = (w1 * w1 - w0 * w0 - ρ4 * d2) / (2 * w1 * ρ2 * d1), r0 = Math.log(Math.sqrt(b0 * b0 + 1) - b0), r1 = Math.log(Math.sqrt(b1 * b1 + 1) - b1), dr = r1 - r0, S = (dr || Math.log(w1 / w0)) / ρ;
     function interpolate(t) {
       var s = t * S;
       if (dr) {
-        var coshr0 = d3_cosh(r0), u = w0 / (Ï2 * d1) * (coshr0 * d3_tanh(Ï * s + r0) - d3_sinh(r0));
-        return [ ux0 + u * dx, uy0 + u * dy, w0 * coshr0 / d3_cosh(Ï * s + r0) ];
+        var coshr0 = d3_cosh(r0), u = w0 / (ρ2 * d1) * (coshr0 * d3_tanh(ρ * s + r0) - d3_sinh(r0));
+        return [ ux0 + u * dx, uy0 + u * dy, w0 * coshr0 / d3_cosh(ρ * s + r0) ];
       }
-      return [ ux0 + t * dx, uy0 + t * dy, w0 * Math.exp(Ï * s) ];
+      return [ ux0 + t * dx, uy0 + t * dy, w0 * Math.exp(ρ * s) ];
     }
     interpolate.duration = S * 1e3;
     return interpolate;
@@ -30026,7 +30026,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     return time;
   }
   var d3_format_decimalPoint = ".", d3_format_thousandsSeparator = ",", d3_format_grouping = [ 3, 3 ], d3_format_currencySymbol = "$";
-  var d3_formatPrefixes = [ "y", "z", "a", "f", "p", "n", "Âµ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" ].map(d3_formatPrefix);
+  var d3_formatPrefixes = [ "y", "z", "a", "f", "p", "n", "µ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" ].map(d3_formatPrefix);
   d3.formatPrefix = function(value, precision) {
     var i = 0;
     if (value) {
@@ -30263,7 +30263,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
   var d3_geo_areaSum, d3_geo_areaRingSum = new d3_adder();
   var d3_geo_area = {
     sphere: function() {
-      d3_geo_areaSum += 4 * Ï€;
+      d3_geo_areaSum += 4 * π;
     },
     point: d3_noop,
     lineStart: d3_noop,
@@ -30274,31 +30274,31 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     },
     polygonEnd: function() {
       var area = 2 * d3_geo_areaRingSum;
-      d3_geo_areaSum += area < 0 ? 4 * Ï€ + area : area;
+      d3_geo_areaSum += area < 0 ? 4 * π + area : area;
       d3_geo_area.lineStart = d3_geo_area.lineEnd = d3_geo_area.point = d3_noop;
     }
   };
   function d3_geo_areaRingStart() {
-    var Î»00, Ï†00, Î»0, cosÏ†0, sinÏ†0;
-    d3_geo_area.point = function(Î», Ï†) {
+    var λ00, φ00, λ0, cosφ0, sinφ0;
+    d3_geo_area.point = function(λ, φ) {
       d3_geo_area.point = nextPoint;
-      Î»0 = (Î»00 = Î») * d3_radians, cosÏ†0 = Math.cos(Ï† = (Ï†00 = Ï†) * d3_radians / 2 + Ï€ / 4),
-      sinÏ†0 = Math.sin(Ï†);
+      λ0 = (λ00 = λ) * d3_radians, cosφ0 = Math.cos(φ = (φ00 = φ) * d3_radians / 2 + π / 4),
+      sinφ0 = Math.sin(φ);
     };
-    function nextPoint(Î», Ï†) {
-      Î» *= d3_radians;
-      Ï† = Ï† * d3_radians / 2 + Ï€ / 4;
-      var dÎ» = Î» - Î»0, cosÏ† = Math.cos(Ï†), sinÏ† = Math.sin(Ï†), k = sinÏ†0 * sinÏ†, u = cosÏ†0 * cosÏ† + k * Math.cos(dÎ»), v = k * Math.sin(dÎ»);
+    function nextPoint(λ, φ) {
+      λ *= d3_radians;
+      φ = φ * d3_radians / 2 + π / 4;
+      var dλ = λ - λ0, cosφ = Math.cos(φ), sinφ = Math.sin(φ), k = sinφ0 * sinφ, u = cosφ0 * cosφ + k * Math.cos(dλ), v = k * Math.sin(dλ);
       d3_geo_areaRingSum.add(Math.atan2(v, u));
-      Î»0 = Î», cosÏ†0 = cosÏ†, sinÏ†0 = sinÏ†;
+      λ0 = λ, cosφ0 = cosφ, sinφ0 = sinφ;
     }
     d3_geo_area.lineEnd = function() {
-      nextPoint(Î»00, Ï†00);
+      nextPoint(λ00, φ00);
     };
   }
   function d3_geo_cartesian(spherical) {
-    var Î» = spherical[0], Ï† = spherical[1], cosÏ† = Math.cos(Ï†);
-    return [ cosÏ† * Math.cos(Î»), cosÏ† * Math.sin(Î»), Math.sin(Ï†) ];
+    var λ = spherical[0], φ = spherical[1], cosφ = Math.cos(φ);
+    return [ cosφ * Math.cos(λ), cosφ * Math.sin(λ), Math.sin(φ) ];
   }
   function d3_geo_cartesianDot(a, b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
@@ -30324,10 +30324,10 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     return [ Math.atan2(cartesian[1], cartesian[0]), d3_asin(cartesian[2]) ];
   }
   function d3_geo_sphericalEqual(a, b) {
-    return abs(a[0] - b[0]) < Îµ && abs(a[1] - b[1]) < Îµ;
+    return abs(a[0] - b[0]) < ε && abs(a[1] - b[1]) < ε;
   }
   d3.geo.bounds = function() {
-    var Î»0, Ï†0, Î»1, Ï†1, Î»_, Î»__, Ï†__, p0, dÎ»Sum, ranges, range;
+    var λ0, φ0, λ1, φ1, λ_, λ__, φ__, p0, dλSum, ranges, range;
     var bound = {
       point: point,
       lineStart: lineStart,
@@ -30336,7 +30336,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
         bound.point = ringPoint;
         bound.lineStart = ringStart;
         bound.lineEnd = ringEnd;
-        dÎ»Sum = 0;
+        dλSum = 0;
         d3_geo_area.polygonStart();
       },
       polygonEnd: function() {
@@ -30344,83 +30344,83 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
         bound.point = point;
         bound.lineStart = lineStart;
         bound.lineEnd = lineEnd;
-        if (d3_geo_areaRingSum < 0) Î»0 = -(Î»1 = 180), Ï†0 = -(Ï†1 = 90); else if (dÎ»Sum > Îµ) Ï†1 = 90; else if (dÎ»Sum < -Îµ) Ï†0 = -90;
-        range[0] = Î»0, range[1] = Î»1;
+        if (d3_geo_areaRingSum < 0) λ0 = -(λ1 = 180), φ0 = -(φ1 = 90); else if (dλSum > ε) φ1 = 90; else if (dλSum < -ε) φ0 = -90;
+        range[0] = λ0, range[1] = λ1;
       }
     };
-    function point(Î», Ï†) {
-      ranges.push(range = [ Î»0 = Î», Î»1 = Î» ]);
-      if (Ï† < Ï†0) Ï†0 = Ï†;
-      if (Ï† > Ï†1) Ï†1 = Ï†;
+    function point(λ, φ) {
+      ranges.push(range = [ λ0 = λ, λ1 = λ ]);
+      if (φ < φ0) φ0 = φ;
+      if (φ > φ1) φ1 = φ;
     }
-    function linePoint(Î», Ï†) {
-      var p = d3_geo_cartesian([ Î» * d3_radians, Ï† * d3_radians ]);
+    function linePoint(λ, φ) {
+      var p = d3_geo_cartesian([ λ * d3_radians, φ * d3_radians ]);
       if (p0) {
         var normal = d3_geo_cartesianCross(p0, p), equatorial = [ normal[1], -normal[0], 0 ], inflection = d3_geo_cartesianCross(equatorial, normal);
         d3_geo_cartesianNormalize(inflection);
         inflection = d3_geo_spherical(inflection);
-        var dÎ» = Î» - Î»_, s = dÎ» > 0 ? 1 : -1, Î»i = inflection[0] * d3_degrees * s, antimeridian = abs(dÎ») > 180;
-        if (antimeridian ^ (s * Î»_ < Î»i && Î»i < s * Î»)) {
-          var Ï†i = inflection[1] * d3_degrees;
-          if (Ï†i > Ï†1) Ï†1 = Ï†i;
-        } else if (Î»i = (Î»i + 360) % 360 - 180, antimeridian ^ (s * Î»_ < Î»i && Î»i < s * Î»)) {
-          var Ï†i = -inflection[1] * d3_degrees;
-          if (Ï†i < Ï†0) Ï†0 = Ï†i;
+        var dλ = λ - λ_, s = dλ > 0 ? 1 : -1, λi = inflection[0] * d3_degrees * s, antimeridian = abs(dλ) > 180;
+        if (antimeridian ^ (s * λ_ < λi && λi < s * λ)) {
+          var φi = inflection[1] * d3_degrees;
+          if (φi > φ1) φ1 = φi;
+        } else if (λi = (λi + 360) % 360 - 180, antimeridian ^ (s * λ_ < λi && λi < s * λ)) {
+          var φi = -inflection[1] * d3_degrees;
+          if (φi < φ0) φ0 = φi;
         } else {
-          if (Ï† < Ï†0) Ï†0 = Ï†;
-          if (Ï† > Ï†1) Ï†1 = Ï†;
+          if (φ < φ0) φ0 = φ;
+          if (φ > φ1) φ1 = φ;
         }
         if (antimeridian) {
-          if (Î» < Î»_) {
-            if (angle(Î»0, Î») > angle(Î»0, Î»1)) Î»1 = Î»;
+          if (λ < λ_) {
+            if (angle(λ0, λ) > angle(λ0, λ1)) λ1 = λ;
           } else {
-            if (angle(Î», Î»1) > angle(Î»0, Î»1)) Î»0 = Î»;
+            if (angle(λ, λ1) > angle(λ0, λ1)) λ0 = λ;
           }
         } else {
-          if (Î»1 >= Î»0) {
-            if (Î» < Î»0) Î»0 = Î»;
-            if (Î» > Î»1) Î»1 = Î»;
+          if (λ1 >= λ0) {
+            if (λ < λ0) λ0 = λ;
+            if (λ > λ1) λ1 = λ;
           } else {
-            if (Î» > Î»_) {
-              if (angle(Î»0, Î») > angle(Î»0, Î»1)) Î»1 = Î»;
+            if (λ > λ_) {
+              if (angle(λ0, λ) > angle(λ0, λ1)) λ1 = λ;
             } else {
-              if (angle(Î», Î»1) > angle(Î»0, Î»1)) Î»0 = Î»;
+              if (angle(λ, λ1) > angle(λ0, λ1)) λ0 = λ;
             }
           }
         }
       } else {
-        point(Î», Ï†);
+        point(λ, φ);
       }
-      p0 = p, Î»_ = Î»;
+      p0 = p, λ_ = λ;
     }
     function lineStart() {
       bound.point = linePoint;
     }
     function lineEnd() {
-      range[0] = Î»0, range[1] = Î»1;
+      range[0] = λ0, range[1] = λ1;
       bound.point = point;
       p0 = null;
     }
-    function ringPoint(Î», Ï†) {
+    function ringPoint(λ, φ) {
       if (p0) {
-        var dÎ» = Î» - Î»_;
-        dÎ»Sum += abs(dÎ») > 180 ? dÎ» + (dÎ» > 0 ? 360 : -360) : dÎ»;
-      } else Î»__ = Î», Ï†__ = Ï†;
-      d3_geo_area.point(Î», Ï†);
-      linePoint(Î», Ï†);
+        var dλ = λ - λ_;
+        dλSum += abs(dλ) > 180 ? dλ + (dλ > 0 ? 360 : -360) : dλ;
+      } else λ__ = λ, φ__ = φ;
+      d3_geo_area.point(λ, φ);
+      linePoint(λ, φ);
     }
     function ringStart() {
       d3_geo_area.lineStart();
     }
     function ringEnd() {
-      ringPoint(Î»__, Ï†__);
+      ringPoint(λ__, φ__);
       d3_geo_area.lineEnd();
-      if (abs(dÎ»Sum) > Îµ) Î»0 = -(Î»1 = 180);
-      range[0] = Î»0, range[1] = Î»1;
+      if (abs(dλSum) > ε) λ0 = -(λ1 = 180);
+      range[0] = λ0, range[1] = λ1;
       p0 = null;
     }
-    function angle(Î»0, Î»1) {
-      return (Î»1 -= Î»0) < 0 ? Î»1 + 360 : Î»1;
+    function angle(λ0, λ1) {
+      return (λ1 -= λ0) < 0 ? λ1 + 360 : λ1;
     }
     function compareRanges(a, b) {
       return a[0] - b[0];
@@ -30429,7 +30429,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       return range[0] <= range[1] ? range[0] <= x && x <= range[1] : x < range[0] || range[1] < x;
     }
     return function(feature) {
-      Ï†1 = Î»1 = -(Î»0 = Ï†0 = Infinity);
+      φ1 = λ1 = -(λ0 = φ0 = Infinity);
       ranges = [];
       d3.geo.stream(feature, bound);
       var n = ranges.length;
@@ -30444,25 +30444,25 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
             merged.push(a = b);
           }
         }
-        var best = -Infinity, dÎ»;
+        var best = -Infinity, dλ;
         for (var n = merged.length - 1, i = 0, a = merged[n], b; i <= n; a = b, ++i) {
           b = merged[i];
-          if ((dÎ» = angle(a[1], b[0])) > best) best = dÎ», Î»0 = b[0], Î»1 = a[1];
+          if ((dλ = angle(a[1], b[0])) > best) best = dλ, λ0 = b[0], λ1 = a[1];
         }
       }
       ranges = range = null;
-      return Î»0 === Infinity || Ï†0 === Infinity ? [ [ NaN, NaN ], [ NaN, NaN ] ] : [ [ Î»0, Ï†0 ], [ Î»1, Ï†1 ] ];
+      return λ0 === Infinity || φ0 === Infinity ? [ [ NaN, NaN ], [ NaN, NaN ] ] : [ [ λ0, φ0 ], [ λ1, φ1 ] ];
     };
   }();
   d3.geo.centroid = function(object) {
     d3_geo_centroidW0 = d3_geo_centroidW1 = d3_geo_centroidX0 = d3_geo_centroidY0 = d3_geo_centroidZ0 = d3_geo_centroidX1 = d3_geo_centroidY1 = d3_geo_centroidZ1 = d3_geo_centroidX2 = d3_geo_centroidY2 = d3_geo_centroidZ2 = 0;
     d3.geo.stream(object, d3_geo_centroid);
     var x = d3_geo_centroidX2, y = d3_geo_centroidY2, z = d3_geo_centroidZ2, m = x * x + y * y + z * z;
-    if (m < Îµ2) {
+    if (m < ε2) {
       x = d3_geo_centroidX1, y = d3_geo_centroidY1, z = d3_geo_centroidZ1;
-      if (d3_geo_centroidW1 < Îµ) x = d3_geo_centroidX0, y = d3_geo_centroidY0, z = d3_geo_centroidZ0;
+      if (d3_geo_centroidW1 < ε) x = d3_geo_centroidX0, y = d3_geo_centroidY0, z = d3_geo_centroidZ0;
       m = x * x + y * y + z * z;
-      if (m < Îµ2) return [ NaN, NaN ];
+      if (m < ε2) return [ NaN, NaN ];
     }
     return [ Math.atan2(y, x) * d3_degrees, d3_asin(z / Math.sqrt(m)) * d3_degrees ];
   };
@@ -30479,10 +30479,10 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       d3_geo_centroid.lineStart = d3_geo_centroidLineStart;
     }
   };
-  function d3_geo_centroidPoint(Î», Ï†) {
-    Î» *= d3_radians;
-    var cosÏ† = Math.cos(Ï† *= d3_radians);
-    d3_geo_centroidPointXYZ(cosÏ† * Math.cos(Î»), cosÏ† * Math.sin(Î»), Math.sin(Ï†));
+  function d3_geo_centroidPoint(λ, φ) {
+    λ *= d3_radians;
+    var cosφ = Math.cos(φ *= d3_radians);
+    d3_geo_centroidPointXYZ(cosφ * Math.cos(λ), cosφ * Math.sin(λ), Math.sin(φ));
   }
   function d3_geo_centroidPointXYZ(x, y, z) {
     ++d3_geo_centroidW0;
@@ -30492,18 +30492,18 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
   }
   function d3_geo_centroidLineStart() {
     var x0, y0, z0;
-    d3_geo_centroid.point = function(Î», Ï†) {
-      Î» *= d3_radians;
-      var cosÏ† = Math.cos(Ï† *= d3_radians);
-      x0 = cosÏ† * Math.cos(Î»);
-      y0 = cosÏ† * Math.sin(Î»);
-      z0 = Math.sin(Ï†);
+    d3_geo_centroid.point = function(λ, φ) {
+      λ *= d3_radians;
+      var cosφ = Math.cos(φ *= d3_radians);
+      x0 = cosφ * Math.cos(λ);
+      y0 = cosφ * Math.sin(λ);
+      z0 = Math.sin(φ);
       d3_geo_centroid.point = nextPoint;
       d3_geo_centroidPointXYZ(x0, y0, z0);
     };
-    function nextPoint(Î», Ï†) {
-      Î» *= d3_radians;
-      var cosÏ† = Math.cos(Ï† *= d3_radians), x = cosÏ† * Math.cos(Î»), y = cosÏ† * Math.sin(Î»), z = Math.sin(Ï†), w = Math.atan2(Math.sqrt((w = y0 * z - z0 * y) * w + (w = z0 * x - x0 * z) * w + (w = x0 * y - y0 * x) * w), x0 * x + y0 * y + z0 * z);
+    function nextPoint(λ, φ) {
+      λ *= d3_radians;
+      var cosφ = Math.cos(φ *= d3_radians), x = cosφ * Math.cos(λ), y = cosφ * Math.sin(λ), z = Math.sin(φ), w = Math.atan2(Math.sqrt((w = y0 * z - z0 * y) * w + (w = z0 * x - x0 * z) * w + (w = x0 * y - y0 * x) * w), x0 * x + y0 * y + z0 * z);
       d3_geo_centroidW1 += w;
       d3_geo_centroidX1 += w * (x0 + (x0 = x));
       d3_geo_centroidY1 += w * (y0 + (y0 = y));
@@ -30515,25 +30515,25 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     d3_geo_centroid.point = d3_geo_centroidPoint;
   }
   function d3_geo_centroidRingStart() {
-    var Î»00, Ï†00, x0, y0, z0;
-    d3_geo_centroid.point = function(Î», Ï†) {
-      Î»00 = Î», Ï†00 = Ï†;
+    var λ00, φ00, x0, y0, z0;
+    d3_geo_centroid.point = function(λ, φ) {
+      λ00 = λ, φ00 = φ;
       d3_geo_centroid.point = nextPoint;
-      Î» *= d3_radians;
-      var cosÏ† = Math.cos(Ï† *= d3_radians);
-      x0 = cosÏ† * Math.cos(Î»);
-      y0 = cosÏ† * Math.sin(Î»);
-      z0 = Math.sin(Ï†);
+      λ *= d3_radians;
+      var cosφ = Math.cos(φ *= d3_radians);
+      x0 = cosφ * Math.cos(λ);
+      y0 = cosφ * Math.sin(λ);
+      z0 = Math.sin(φ);
       d3_geo_centroidPointXYZ(x0, y0, z0);
     };
     d3_geo_centroid.lineEnd = function() {
-      nextPoint(Î»00, Ï†00);
+      nextPoint(λ00, φ00);
       d3_geo_centroid.lineEnd = d3_geo_centroidLineEnd;
       d3_geo_centroid.point = d3_geo_centroidPoint;
     };
-    function nextPoint(Î», Ï†) {
-      Î» *= d3_radians;
-      var cosÏ† = Math.cos(Ï† *= d3_radians), x = cosÏ† * Math.cos(Î»), y = cosÏ† * Math.sin(Î»), z = Math.sin(Ï†), cx = y0 * z - z0 * y, cy = z0 * x - x0 * z, cz = x0 * y - y0 * x, m = Math.sqrt(cx * cx + cy * cy + cz * cz), u = x0 * x + y0 * y + z0 * z, v = m && -d3_acos(u) / m, w = Math.atan2(m, u);
+    function nextPoint(λ, φ) {
+      λ *= d3_radians;
+      var cosφ = Math.cos(φ *= d3_radians), x = cosφ * Math.cos(λ), y = cosφ * Math.sin(λ), z = Math.sin(φ), cx = y0 * z - z0 * y, cy = z0 * x - x0 * z, cz = x0 * y - y0 * x, m = Math.sqrt(cx * cx + cy * cy + cz * cz), u = x0 * x + y0 * y + z0 * z, v = m && -d3_acos(u) / m, w = Math.atan2(m, u);
       d3_geo_centroidX2 += v * cx;
       d3_geo_centroidY2 += v * cy;
       d3_geo_centroidZ2 += v * cz;
@@ -30664,12 +30664,12 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
           listener.polygonEnd();
         }
       };
-      function point(Î», Ï†) {
-        var point = rotate(Î», Ï†);
-        if (pointVisible(Î» = point[0], Ï† = point[1])) listener.point(Î», Ï†);
+      function point(λ, φ) {
+        var point = rotate(λ, φ);
+        if (pointVisible(λ = point[0], φ = point[1])) listener.point(λ, φ);
       }
-      function pointLine(Î», Ï†) {
-        var point = rotate(Î», Ï†);
+      function pointLine(λ, φ) {
+        var point = rotate(λ, φ);
         line.point(point[0], point[1]);
       }
       function lineStart() {
@@ -30682,9 +30682,9 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       }
       var segments;
       var buffer = d3_geo_clipBufferListener(), ringListener = clipLine(buffer), polygon, ring;
-      function pointRing(Î», Ï†) {
-        ring.push([ Î», Ï† ]);
-        var point = rotate(Î», Ï†);
+      function pointRing(λ, φ) {
+        ring.push([ λ, φ ]);
+        var point = rotate(λ, φ);
         ringListener.point(point[0], point[1]);
       }
       function ringStart() {
@@ -30722,8 +30722,8 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       lineStart: function() {
         lines.push(line = []);
       },
-      point: function(Î», Ï†) {
-        line.push([ Î», Ï† ]);
+      point: function(λ, φ) {
+        line.push([ λ, φ ]);
       },
       lineEnd: d3_noop,
       buffer: function() {
@@ -30738,7 +30738,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     };
   }
   function d3_geo_clipSort(a, b) {
-    return ((a = a.x)[0] < 0 ? a[1] - halfÏ€ - Îµ : halfÏ€ - a[1]) - ((b = b.x)[0] < 0 ? b[1] - halfÏ€ - Îµ : halfÏ€ - b[1]);
+    return ((a = a.x)[0] < 0 ? a[1] - halfπ - ε : halfπ - a[1]) - ((b = b.x)[0] < 0 ? b[1] - halfπ - ε : halfπ - b[1]);
   }
   function d3_geo_pointInPolygon(point, polygon) {
     var meridian = point[0], parallel = point[1], meridianNormal = [ Math.sin(meridian), -Math.cos(meridian), 0 ], polarAngle = 0, winding = 0;
@@ -30746,101 +30746,101 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     for (var i = 0, n = polygon.length; i < n; ++i) {
       var ring = polygon[i], m = ring.length;
       if (!m) continue;
-      var point0 = ring[0], Î»0 = point0[0], Ï†0 = point0[1] / 2 + Ï€ / 4, sinÏ†0 = Math.sin(Ï†0), cosÏ†0 = Math.cos(Ï†0), j = 1;
+      var point0 = ring[0], λ0 = point0[0], φ0 = point0[1] / 2 + π / 4, sinφ0 = Math.sin(φ0), cosφ0 = Math.cos(φ0), j = 1;
       while (true) {
         if (j === m) j = 0;
         point = ring[j];
-        var Î» = point[0], Ï† = point[1] / 2 + Ï€ / 4, sinÏ† = Math.sin(Ï†), cosÏ† = Math.cos(Ï†), dÎ» = Î» - Î»0, antimeridian = abs(dÎ») > Ï€, k = sinÏ†0 * sinÏ†;
-        d3_geo_areaRingSum.add(Math.atan2(k * Math.sin(dÎ»), cosÏ†0 * cosÏ† + k * Math.cos(dÎ»)));
-        polarAngle += antimeridian ? dÎ» + (dÎ» >= 0 ? Ï„ : -Ï„) : dÎ»;
-        if (antimeridian ^ Î»0 >= meridian ^ Î» >= meridian) {
+        var λ = point[0], φ = point[1] / 2 + π / 4, sinφ = Math.sin(φ), cosφ = Math.cos(φ), dλ = λ - λ0, antimeridian = abs(dλ) > π, k = sinφ0 * sinφ;
+        d3_geo_areaRingSum.add(Math.atan2(k * Math.sin(dλ), cosφ0 * cosφ + k * Math.cos(dλ)));
+        polarAngle += antimeridian ? dλ + (dλ >= 0 ? τ : -τ) : dλ;
+        if (antimeridian ^ λ0 >= meridian ^ λ >= meridian) {
           var arc = d3_geo_cartesianCross(d3_geo_cartesian(point0), d3_geo_cartesian(point));
           d3_geo_cartesianNormalize(arc);
           var intersection = d3_geo_cartesianCross(meridianNormal, arc);
           d3_geo_cartesianNormalize(intersection);
-          var Ï†arc = (antimeridian ^ dÎ» >= 0 ? -1 : 1) * d3_asin(intersection[2]);
-          if (parallel > Ï†arc || parallel === Ï†arc && (arc[0] || arc[1])) {
-            winding += antimeridian ^ dÎ» >= 0 ? 1 : -1;
+          var φarc = (antimeridian ^ dλ >= 0 ? -1 : 1) * d3_asin(intersection[2]);
+          if (parallel > φarc || parallel === φarc && (arc[0] || arc[1])) {
+            winding += antimeridian ^ dλ >= 0 ? 1 : -1;
           }
         }
         if (!j++) break;
-        Î»0 = Î», sinÏ†0 = sinÏ†, cosÏ†0 = cosÏ†, point0 = point;
+        λ0 = λ, sinφ0 = sinφ, cosφ0 = cosφ, point0 = point;
       }
     }
-    return (polarAngle < -Îµ || polarAngle < Îµ && d3_geo_areaRingSum < 0) ^ winding & 1;
+    return (polarAngle < -ε || polarAngle < ε && d3_geo_areaRingSum < 0) ^ winding & 1;
   }
-  var d3_geo_clipAntimeridian = d3_geo_clip(d3_true, d3_geo_clipAntimeridianLine, d3_geo_clipAntimeridianInterpolate, [ -Ï€, -Ï€ / 2 ]);
+  var d3_geo_clipAntimeridian = d3_geo_clip(d3_true, d3_geo_clipAntimeridianLine, d3_geo_clipAntimeridianInterpolate, [ -π, -π / 2 ]);
   function d3_geo_clipAntimeridianLine(listener) {
-    var Î»0 = NaN, Ï†0 = NaN, sÎ»0 = NaN, clean;
+    var λ0 = NaN, φ0 = NaN, sλ0 = NaN, clean;
     return {
       lineStart: function() {
         listener.lineStart();
         clean = 1;
       },
-      point: function(Î»1, Ï†1) {
-        var sÎ»1 = Î»1 > 0 ? Ï€ : -Ï€, dÎ» = abs(Î»1 - Î»0);
-        if (abs(dÎ» - Ï€) < Îµ) {
-          listener.point(Î»0, Ï†0 = (Ï†0 + Ï†1) / 2 > 0 ? halfÏ€ : -halfÏ€);
-          listener.point(sÎ»0, Ï†0);
+      point: function(λ1, φ1) {
+        var sλ1 = λ1 > 0 ? π : -π, dλ = abs(λ1 - λ0);
+        if (abs(dλ - π) < ε) {
+          listener.point(λ0, φ0 = (φ0 + φ1) / 2 > 0 ? halfπ : -halfπ);
+          listener.point(sλ0, φ0);
           listener.lineEnd();
           listener.lineStart();
-          listener.point(sÎ»1, Ï†0);
-          listener.point(Î»1, Ï†0);
+          listener.point(sλ1, φ0);
+          listener.point(λ1, φ0);
           clean = 0;
-        } else if (sÎ»0 !== sÎ»1 && dÎ» >= Ï€) {
-          if (abs(Î»0 - sÎ»0) < Îµ) Î»0 -= sÎ»0 * Îµ;
-          if (abs(Î»1 - sÎ»1) < Îµ) Î»1 -= sÎ»1 * Îµ;
-          Ï†0 = d3_geo_clipAntimeridianIntersect(Î»0, Ï†0, Î»1, Ï†1);
-          listener.point(sÎ»0, Ï†0);
+        } else if (sλ0 !== sλ1 && dλ >= π) {
+          if (abs(λ0 - sλ0) < ε) λ0 -= sλ0 * ε;
+          if (abs(λ1 - sλ1) < ε) λ1 -= sλ1 * ε;
+          φ0 = d3_geo_clipAntimeridianIntersect(λ0, φ0, λ1, φ1);
+          listener.point(sλ0, φ0);
           listener.lineEnd();
           listener.lineStart();
-          listener.point(sÎ»1, Ï†0);
+          listener.point(sλ1, φ0);
           clean = 0;
         }
-        listener.point(Î»0 = Î»1, Ï†0 = Ï†1);
-        sÎ»0 = sÎ»1;
+        listener.point(λ0 = λ1, φ0 = φ1);
+        sλ0 = sλ1;
       },
       lineEnd: function() {
         listener.lineEnd();
-        Î»0 = Ï†0 = NaN;
+        λ0 = φ0 = NaN;
       },
       clean: function() {
         return 2 - clean;
       }
     };
   }
-  function d3_geo_clipAntimeridianIntersect(Î»0, Ï†0, Î»1, Ï†1) {
-    var cosÏ†0, cosÏ†1, sinÎ»0_Î»1 = Math.sin(Î»0 - Î»1);
-    return abs(sinÎ»0_Î»1) > Îµ ? Math.atan((Math.sin(Ï†0) * (cosÏ†1 = Math.cos(Ï†1)) * Math.sin(Î»1) - Math.sin(Ï†1) * (cosÏ†0 = Math.cos(Ï†0)) * Math.sin(Î»0)) / (cosÏ†0 * cosÏ†1 * sinÎ»0_Î»1)) : (Ï†0 + Ï†1) / 2;
+  function d3_geo_clipAntimeridianIntersect(λ0, φ0, λ1, φ1) {
+    var cosφ0, cosφ1, sinλ0_λ1 = Math.sin(λ0 - λ1);
+    return abs(sinλ0_λ1) > ε ? Math.atan((Math.sin(φ0) * (cosφ1 = Math.cos(φ1)) * Math.sin(λ1) - Math.sin(φ1) * (cosφ0 = Math.cos(φ0)) * Math.sin(λ0)) / (cosφ0 * cosφ1 * sinλ0_λ1)) : (φ0 + φ1) / 2;
   }
   function d3_geo_clipAntimeridianInterpolate(from, to, direction, listener) {
-    var Ï†;
+    var φ;
     if (from == null) {
-      Ï† = direction * halfÏ€;
-      listener.point(-Ï€, Ï†);
-      listener.point(0, Ï†);
-      listener.point(Ï€, Ï†);
-      listener.point(Ï€, 0);
-      listener.point(Ï€, -Ï†);
-      listener.point(0, -Ï†);
-      listener.point(-Ï€, -Ï†);
-      listener.point(-Ï€, 0);
-      listener.point(-Ï€, Ï†);
-    } else if (abs(from[0] - to[0]) > Îµ) {
-      var s = from[0] < to[0] ? Ï€ : -Ï€;
-      Ï† = direction * s / 2;
-      listener.point(-s, Ï†);
-      listener.point(0, Ï†);
-      listener.point(s, Ï†);
+      φ = direction * halfπ;
+      listener.point(-π, φ);
+      listener.point(0, φ);
+      listener.point(π, φ);
+      listener.point(π, 0);
+      listener.point(π, -φ);
+      listener.point(0, -φ);
+      listener.point(-π, -φ);
+      listener.point(-π, 0);
+      listener.point(-π, φ);
+    } else if (abs(from[0] - to[0]) > ε) {
+      var s = from[0] < to[0] ? π : -π;
+      φ = direction * s / 2;
+      listener.point(-s, φ);
+      listener.point(0, φ);
+      listener.point(s, φ);
     } else {
       listener.point(to[0], to[1]);
     }
   }
   function d3_geo_clipCircle(radius) {
-    var cr = Math.cos(radius), smallRadius = cr > 0, notHemisphere = abs(cr) > Îµ, interpolate = d3_geo_circleInterpolate(radius, 6 * d3_radians);
-    return d3_geo_clip(visible, clipLine, interpolate, smallRadius ? [ 0, -radius ] : [ -Ï€, radius - Ï€ ]);
-    function visible(Î», Ï†) {
-      return Math.cos(Î») * Math.cos(Ï†) > cr;
+    var cr = Math.cos(radius), smallRadius = cr > 0, notHemisphere = abs(cr) > ε, interpolate = d3_geo_circleInterpolate(radius, 6 * d3_radians);
+    return d3_geo_clip(visible, clipLine, interpolate, smallRadius ? [ 0, -radius ] : [ -π, radius - π ]);
+    function visible(λ, φ) {
+      return Math.cos(λ) * Math.cos(φ) > cr;
     }
     function clipLine(listener) {
       var point0, c0, v0, v00, clean;
@@ -30849,14 +30849,14 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
           v00 = v0 = false;
           clean = 1;
         },
-        point: function(Î», Ï†) {
-          var point1 = [ Î», Ï† ], point2, v = visible(Î», Ï†), c = smallRadius ? v ? 0 : code(Î», Ï†) : v ? code(Î» + (Î» < 0 ? Ï€ : -Ï€), Ï†) : 0;
+        point: function(λ, φ) {
+          var point1 = [ λ, φ ], point2, v = visible(λ, φ), c = smallRadius ? v ? 0 : code(λ, φ) : v ? code(λ + (λ < 0 ? π : -π), φ) : 0;
           if (!point0 && (v00 = v0 = v)) listener.lineStart();
           if (v !== v0) {
             point2 = intersect(point0, point1);
             if (d3_geo_sphericalEqual(point0, point2) || d3_geo_sphericalEqual(point1, point2)) {
-              point1[0] += Îµ;
-              point1[1] += Îµ;
+              point1[0] += ε;
+              point1[1] += ε;
               v = visible(point1[0], point1[1]);
             }
           }
@@ -30915,20 +30915,20 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       d3_geo_cartesianAdd(q, A);
       q = d3_geo_spherical(q);
       if (!two) return q;
-      var Î»0 = a[0], Î»1 = b[0], Ï†0 = a[1], Ï†1 = b[1], z;
-      if (Î»1 < Î»0) z = Î»0, Î»0 = Î»1, Î»1 = z;
-      var Î´Î» = Î»1 - Î»0, polar = abs(Î´Î» - Ï€) < Îµ, meridian = polar || Î´Î» < Îµ;
-      if (!polar && Ï†1 < Ï†0) z = Ï†0, Ï†0 = Ï†1, Ï†1 = z;
-      if (meridian ? polar ? Ï†0 + Ï†1 > 0 ^ q[1] < (abs(q[0] - Î»0) < Îµ ? Ï†0 : Ï†1) : Ï†0 <= q[1] && q[1] <= Ï†1 : Î´Î» > Ï€ ^ (Î»0 <= q[0] && q[0] <= Î»1)) {
+      var λ0 = a[0], λ1 = b[0], φ0 = a[1], φ1 = b[1], z;
+      if (λ1 < λ0) z = λ0, λ0 = λ1, λ1 = z;
+      var δλ = λ1 - λ0, polar = abs(δλ - π) < ε, meridian = polar || δλ < ε;
+      if (!polar && φ1 < φ0) z = φ0, φ0 = φ1, φ1 = z;
+      if (meridian ? polar ? φ0 + φ1 > 0 ^ q[1] < (abs(q[0] - λ0) < ε ? φ0 : φ1) : φ0 <= q[1] && q[1] <= φ1 : δλ > π ^ (λ0 <= q[0] && q[0] <= λ1)) {
         var q1 = d3_geo_cartesianScale(u, (-w + t) / uu);
         d3_geo_cartesianAdd(q1, A);
         return [ q, d3_geo_spherical(q1) ];
       }
     }
-    function code(Î», Ï†) {
-      var r = smallRadius ? radius : Ï€ - radius, code = 0;
-      if (Î» < -r) code |= 1; else if (Î» > r) code |= 2;
-      if (Ï† < -r) code |= 4; else if (Ï† > r) code |= 8;
+    function code(λ, φ) {
+      var r = smallRadius ? radius : π - radius, code = 0;
+      if (λ < -r) code |= 1; else if (λ > r) code |= 2;
+      if (φ < -r) code |= 4; else if (φ > r) code |= 8;
       return code;
     }
   }
@@ -31131,7 +31131,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       return clip;
     };
     function corner(p, direction) {
-      return abs(p[0] - x0) < Îµ ? direction > 0 ? 0 : 3 : abs(p[0] - x1) < Îµ ? direction > 0 ? 2 : 1 : abs(p[1] - y0) < Îµ ? direction > 0 ? 1 : 0 : direction > 0 ? 3 : 2;
+      return abs(p[0] - x0) < ε ? direction > 0 ? 0 : 3 : abs(p[0] - x1) < ε ? direction > 0 ? 2 : 1 : abs(p[1] - y0) < ε ? direction > 0 ? 1 : 0 : direction > 0 ? 3 : 2;
     }
     function compare(a, b) {
       return comparePoints(a.x, b.x);
@@ -31151,22 +31151,22 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     return compose;
   }
   function d3_geo_conic(projectAt) {
-    var Ï†0 = 0, Ï†1 = Ï€ / 3, m = d3_geo_projectionMutator(projectAt), p = m(Ï†0, Ï†1);
+    var φ0 = 0, φ1 = π / 3, m = d3_geo_projectionMutator(projectAt), p = m(φ0, φ1);
     p.parallels = function(_) {
-      if (!arguments.length) return [ Ï†0 / Ï€ * 180, Ï†1 / Ï€ * 180 ];
-      return m(Ï†0 = _[0] * Ï€ / 180, Ï†1 = _[1] * Ï€ / 180);
+      if (!arguments.length) return [ φ0 / π * 180, φ1 / π * 180 ];
+      return m(φ0 = _[0] * π / 180, φ1 = _[1] * π / 180);
     };
     return p;
   }
-  function d3_geo_conicEqualArea(Ï†0, Ï†1) {
-    var sinÏ†0 = Math.sin(Ï†0), n = (sinÏ†0 + Math.sin(Ï†1)) / 2, C = 1 + sinÏ†0 * (2 * n - sinÏ†0), Ï0 = Math.sqrt(C) / n;
-    function forward(Î», Ï†) {
-      var Ï = Math.sqrt(C - 2 * n * Math.sin(Ï†)) / n;
-      return [ Ï * Math.sin(Î» *= n), Ï0 - Ï * Math.cos(Î») ];
+  function d3_geo_conicEqualArea(φ0, φ1) {
+    var sinφ0 = Math.sin(φ0), n = (sinφ0 + Math.sin(φ1)) / 2, C = 1 + sinφ0 * (2 * n - sinφ0), ρ0 = Math.sqrt(C) / n;
+    function forward(λ, φ) {
+      var ρ = Math.sqrt(C - 2 * n * Math.sin(φ)) / n;
+      return [ ρ * Math.sin(λ *= n), ρ0 - ρ * Math.cos(λ) ];
     }
     forward.invert = function(x, y) {
-      var Ï0_y = Ï0 - y;
-      return [ Math.atan2(x, Ï0_y) / n, d3_asin((C - (x * x + Ï0_y * Ï0_y) * n * n) / (2 * n)) ];
+      var ρ0_y = ρ0 - y;
+      return [ Math.atan2(x, ρ0_y) / n, d3_asin((C - (x * x + ρ0_y * ρ0_y) * n * n) / (2 * n)) ];
     };
     return forward;
   }
@@ -31248,8 +31248,8 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       if (!arguments.length) return lower48.translate();
       var k = lower48.scale(), x = +_[0], y = +_[1];
       lower48Point = lower48.translate(_).clipExtent([ [ x - .455 * k, y - .238 * k ], [ x + .455 * k, y + .238 * k ] ]).stream(pointStream).point;
-      alaskaPoint = alaska.translate([ x - .307 * k, y + .201 * k ]).clipExtent([ [ x - .425 * k + Îµ, y + .12 * k + Îµ ], [ x - .214 * k - Îµ, y + .234 * k - Îµ ] ]).stream(pointStream).point;
-      hawaiiPoint = hawaii.translate([ x - .205 * k, y + .212 * k ]).clipExtent([ [ x - .214 * k + Îµ, y + .166 * k + Îµ ], [ x - .115 * k - Îµ, y + .234 * k - Îµ ] ]).stream(pointStream).point;
+      alaskaPoint = alaska.translate([ x - .307 * k, y + .201 * k ]).clipExtent([ [ x - .425 * k + ε, y + .12 * k + ε ], [ x - .214 * k - ε, y + .234 * k - ε ] ]).stream(pointStream).point;
+      hawaiiPoint = hawaii.translate([ x - .205 * k, y + .212 * k ]).clipExtent([ [ x - .214 * k + ε, y + .166 * k + ε ], [ x - .115 * k - ε, y + .234 * k - ε ] ]).stream(pointStream).point;
       return albersUsa;
     };
     return albersUsa.scale(1070);
@@ -31422,7 +31422,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     };
     function point(x, y) {
       context.moveTo(x, y);
-      context.arc(x, y, pointRadius, 0, Ï„);
+      context.arc(x, y, pointRadius, 0, τ);
     }
     function pointLineStart(x, y) {
       context.moveTo(x, y);
@@ -31440,7 +31440,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     return stream;
   }
   function d3_geo_resample(project) {
-    var Î´2 = .5, cosMinDistance = Math.cos(30 * d3_radians), maxDepth = 16;
+    var δ2 = .5, cosMinDistance = Math.cos(30 * d3_radians), maxDepth = 16;
     function resample(stream) {
       return (maxDepth ? resampleRecursive : resampleNone)(stream);
     }
@@ -31451,7 +31451,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       });
     }
     function resampleRecursive(stream) {
-      var Î»00, Ï†00, x00, y00, a00, b00, c00, Î»0, x0, y0, a0, b0, c0;
+      var λ00, φ00, x00, y00, a00, b00, c00, λ0, x0, y0, a0, b0, c0;
       var resample = {
         point: point,
         lineStart: lineStart,
@@ -31474,9 +31474,9 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
         resample.point = linePoint;
         stream.lineStart();
       }
-      function linePoint(Î», Ï†) {
-        var c = d3_geo_cartesian([ Î», Ï† ]), p = project(Î», Ï†);
-        resampleLineTo(x0, y0, Î»0, a0, b0, c0, x0 = p[0], y0 = p[1], Î»0 = Î», a0 = c[0], b0 = c[1], c0 = c[2], maxDepth, stream);
+      function linePoint(λ, φ) {
+        var c = d3_geo_cartesian([ λ, φ ]), p = project(λ, φ);
+        resampleLineTo(x0, y0, λ0, a0, b0, c0, x0 = p[0], y0 = p[1], λ0 = λ, a0 = c[0], b0 = c[1], c0 = c[2], maxDepth, stream);
         stream.point(x0, y0);
       }
       function lineEnd() {
@@ -31488,31 +31488,31 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
         resample.point = ringPoint;
         resample.lineEnd = ringEnd;
       }
-      function ringPoint(Î», Ï†) {
-        linePoint(Î»00 = Î», Ï†00 = Ï†), x00 = x0, y00 = y0, a00 = a0, b00 = b0, c00 = c0;
+      function ringPoint(λ, φ) {
+        linePoint(λ00 = λ, φ00 = φ), x00 = x0, y00 = y0, a00 = a0, b00 = b0, c00 = c0;
         resample.point = linePoint;
       }
       function ringEnd() {
-        resampleLineTo(x0, y0, Î»0, a0, b0, c0, x00, y00, Î»00, a00, b00, c00, maxDepth, stream);
+        resampleLineTo(x0, y0, λ0, a0, b0, c0, x00, y00, λ00, a00, b00, c00, maxDepth, stream);
         resample.lineEnd = lineEnd;
         lineEnd();
       }
       return resample;
     }
-    function resampleLineTo(x0, y0, Î»0, a0, b0, c0, x1, y1, Î»1, a1, b1, c1, depth, stream) {
+    function resampleLineTo(x0, y0, λ0, a0, b0, c0, x1, y1, λ1, a1, b1, c1, depth, stream) {
       var dx = x1 - x0, dy = y1 - y0, d2 = dx * dx + dy * dy;
-      if (d2 > 4 * Î´2 && depth--) {
-        var a = a0 + a1, b = b0 + b1, c = c0 + c1, m = Math.sqrt(a * a + b * b + c * c), Ï†2 = Math.asin(c /= m), Î»2 = abs(abs(c) - 1) < Îµ || abs(Î»0 - Î»1) < Îµ ? (Î»0 + Î»1) / 2 : Math.atan2(b, a), p = project(Î»2, Ï†2), x2 = p[0], y2 = p[1], dx2 = x2 - x0, dy2 = y2 - y0, dz = dy * dx2 - dx * dy2;
-        if (dz * dz / d2 > Î´2 || abs((dx * dx2 + dy * dy2) / d2 - .5) > .3 || a0 * a1 + b0 * b1 + c0 * c1 < cosMinDistance) {
-          resampleLineTo(x0, y0, Î»0, a0, b0, c0, x2, y2, Î»2, a /= m, b /= m, c, depth, stream);
+      if (d2 > 4 * δ2 && depth--) {
+        var a = a0 + a1, b = b0 + b1, c = c0 + c1, m = Math.sqrt(a * a + b * b + c * c), φ2 = Math.asin(c /= m), λ2 = abs(abs(c) - 1) < ε || abs(λ0 - λ1) < ε ? (λ0 + λ1) / 2 : Math.atan2(b, a), p = project(λ2, φ2), x2 = p[0], y2 = p[1], dx2 = x2 - x0, dy2 = y2 - y0, dz = dy * dx2 - dx * dy2;
+        if (dz * dz / d2 > δ2 || abs((dx * dx2 + dy * dy2) / d2 - .5) > .3 || a0 * a1 + b0 * b1 + c0 * c1 < cosMinDistance) {
+          resampleLineTo(x0, y0, λ0, a0, b0, c0, x2, y2, λ2, a /= m, b /= m, c, depth, stream);
           stream.point(x2, y2);
-          resampleLineTo(x2, y2, Î»2, a, b, c, x1, y1, Î»1, a1, b1, c1, depth, stream);
+          resampleLineTo(x2, y2, λ2, a, b, c, x1, y1, λ1, a1, b1, c1, depth, stream);
         }
       }
     }
     resample.precision = function(_) {
-      if (!arguments.length) return Math.sqrt(Î´2);
-      maxDepth = (Î´2 = _ * _) > 0 && 16;
+      if (!arguments.length) return Math.sqrt(δ2);
+      maxDepth = (δ2 = _ * _) > 0 && 16;
       return resample;
     };
     return resample;
@@ -31634,14 +31634,14 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
   function d3_geo_projectionMutator(projectAt) {
     var project, rotate, projectRotate, projectResample = d3_geo_resample(function(x, y) {
       x = project(x, y);
-      return [ x[0] * k + Î´x, Î´y - x[1] * k ];
-    }), k = 150, x = 480, y = 250, Î» = 0, Ï† = 0, Î´Î» = 0, Î´Ï† = 0, Î´Î³ = 0, Î´x, Î´y, preclip = d3_geo_clipAntimeridian, postclip = d3_identity, clipAngle = null, clipExtent = null, stream;
+      return [ x[0] * k + δx, δy - x[1] * k ];
+    }), k = 150, x = 480, y = 250, λ = 0, φ = 0, δλ = 0, δφ = 0, δγ = 0, δx, δy, preclip = d3_geo_clipAntimeridian, postclip = d3_identity, clipAngle = null, clipExtent = null, stream;
     function projection(point) {
       point = projectRotate(point[0] * d3_radians, point[1] * d3_radians);
-      return [ point[0] * k + Î´x, Î´y - point[1] * k ];
+      return [ point[0] * k + δx, δy - point[1] * k ];
     }
     function invert(point) {
-      point = projectRotate.invert((point[0] - Î´x) / k, (Î´y - point[1]) / k);
+      point = projectRotate.invert((point[0] - δx) / k, (δy - point[1]) / k);
       return point && [ point[0] * d3_degrees, point[1] * d3_degrees ];
     }
     projection.stream = function(output) {
@@ -31673,24 +31673,24 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       return reset();
     };
     projection.center = function(_) {
-      if (!arguments.length) return [ Î» * d3_degrees, Ï† * d3_degrees ];
-      Î» = _[0] % 360 * d3_radians;
-      Ï† = _[1] % 360 * d3_radians;
+      if (!arguments.length) return [ λ * d3_degrees, φ * d3_degrees ];
+      λ = _[0] % 360 * d3_radians;
+      φ = _[1] % 360 * d3_radians;
       return reset();
     };
     projection.rotate = function(_) {
-      if (!arguments.length) return [ Î´Î» * d3_degrees, Î´Ï† * d3_degrees, Î´Î³ * d3_degrees ];
-      Î´Î» = _[0] % 360 * d3_radians;
-      Î´Ï† = _[1] % 360 * d3_radians;
-      Î´Î³ = _.length > 2 ? _[2] % 360 * d3_radians : 0;
+      if (!arguments.length) return [ δλ * d3_degrees, δφ * d3_degrees, δγ * d3_degrees ];
+      δλ = _[0] % 360 * d3_radians;
+      δφ = _[1] % 360 * d3_radians;
+      δγ = _.length > 2 ? _[2] % 360 * d3_radians : 0;
       return reset();
     };
     d3.rebind(projection, projectResample, "precision");
     function reset() {
-      projectRotate = d3_geo_compose(rotate = d3_geo_rotation(Î´Î», Î´Ï†, Î´Î³), project);
-      var center = project(Î», Ï†);
-      Î´x = x - center[0] * k;
-      Î´y = y + center[1] * k;
+      projectRotate = d3_geo_compose(rotate = d3_geo_rotation(δλ, δφ, δγ), project);
+      var center = project(λ, φ);
+      δx = x - center[0] * k;
+      δy = y + center[1] * k;
       return invalidate();
     }
     function invalidate() {
@@ -31708,8 +31708,8 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       stream.point(x * d3_radians, y * d3_radians);
     });
   }
-  function d3_geo_equirectangular(Î», Ï†) {
-    return [ Î», Ï† ];
+  function d3_geo_equirectangular(λ, φ) {
+    return [ λ, φ ];
   }
   (d3.geo.equirectangular = function() {
     return d3_geo_projection(d3_geo_equirectangular);
@@ -31726,32 +31726,32 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     };
     return forward;
   };
-  function d3_geo_identityRotation(Î», Ï†) {
-    return [ Î» > Ï€ ? Î» - Ï„ : Î» < -Ï€ ? Î» + Ï„ : Î», Ï† ];
+  function d3_geo_identityRotation(λ, φ) {
+    return [ λ > π ? λ - τ : λ < -π ? λ + τ : λ, φ ];
   }
   d3_geo_identityRotation.invert = d3_geo_equirectangular;
-  function d3_geo_rotation(Î´Î», Î´Ï†, Î´Î³) {
-    return Î´Î» ? Î´Ï† || Î´Î³ ? d3_geo_compose(d3_geo_rotationÎ»(Î´Î»), d3_geo_rotationÏ†Î³(Î´Ï†, Î´Î³)) : d3_geo_rotationÎ»(Î´Î») : Î´Ï† || Î´Î³ ? d3_geo_rotationÏ†Î³(Î´Ï†, Î´Î³) : d3_geo_identityRotation;
+  function d3_geo_rotation(δλ, δφ, δγ) {
+    return δλ ? δφ || δγ ? d3_geo_compose(d3_geo_rotationλ(δλ), d3_geo_rotationφγ(δφ, δγ)) : d3_geo_rotationλ(δλ) : δφ || δγ ? d3_geo_rotationφγ(δφ, δγ) : d3_geo_identityRotation;
   }
-  function d3_geo_forwardRotationÎ»(Î´Î») {
-    return function(Î», Ï†) {
-      return Î» += Î´Î», [ Î» > Ï€ ? Î» - Ï„ : Î» < -Ï€ ? Î» + Ï„ : Î», Ï† ];
+  function d3_geo_forwardRotationλ(δλ) {
+    return function(λ, φ) {
+      return λ += δλ, [ λ > π ? λ - τ : λ < -π ? λ + τ : λ, φ ];
     };
   }
-  function d3_geo_rotationÎ»(Î´Î») {
-    var rotation = d3_geo_forwardRotationÎ»(Î´Î»);
-    rotation.invert = d3_geo_forwardRotationÎ»(-Î´Î»);
+  function d3_geo_rotationλ(δλ) {
+    var rotation = d3_geo_forwardRotationλ(δλ);
+    rotation.invert = d3_geo_forwardRotationλ(-δλ);
     return rotation;
   }
-  function d3_geo_rotationÏ†Î³(Î´Ï†, Î´Î³) {
-    var cosÎ´Ï† = Math.cos(Î´Ï†), sinÎ´Ï† = Math.sin(Î´Ï†), cosÎ´Î³ = Math.cos(Î´Î³), sinÎ´Î³ = Math.sin(Î´Î³);
-    function rotation(Î», Ï†) {
-      var cosÏ† = Math.cos(Ï†), x = Math.cos(Î») * cosÏ†, y = Math.sin(Î») * cosÏ†, z = Math.sin(Ï†), k = z * cosÎ´Ï† + x * sinÎ´Ï†;
-      return [ Math.atan2(y * cosÎ´Î³ - k * sinÎ´Î³, x * cosÎ´Ï† - z * sinÎ´Ï†), d3_asin(k * cosÎ´Î³ + y * sinÎ´Î³) ];
+  function d3_geo_rotationφγ(δφ, δγ) {
+    var cosδφ = Math.cos(δφ), sinδφ = Math.sin(δφ), cosδγ = Math.cos(δγ), sinδγ = Math.sin(δγ);
+    function rotation(λ, φ) {
+      var cosφ = Math.cos(φ), x = Math.cos(λ) * cosφ, y = Math.sin(λ) * cosφ, z = Math.sin(φ), k = z * cosδφ + x * sinδφ;
+      return [ Math.atan2(y * cosδγ - k * sinδγ, x * cosδφ - z * sinδφ), d3_asin(k * cosδγ + y * sinδγ) ];
     }
-    rotation.invert = function(Î», Ï†) {
-      var cosÏ† = Math.cos(Ï†), x = Math.cos(Î») * cosÏ†, y = Math.sin(Î») * cosÏ†, z = Math.sin(Ï†), k = z * cosÎ´Î³ - y * sinÎ´Î³;
-      return [ Math.atan2(y * cosÎ´Î³ + z * sinÎ´Î³, x * cosÎ´Ï† + k * sinÎ´Ï†), d3_asin(k * cosÎ´Ï† - x * sinÎ´Ï†) ];
+    rotation.invert = function(λ, φ) {
+      var cosφ = Math.cos(φ), x = Math.cos(λ) * cosφ, y = Math.sin(λ) * cosφ, z = Math.sin(φ), k = z * cosδγ - y * sinδγ;
+      return [ Math.atan2(y * cosδγ + z * sinδγ, x * cosδφ + k * sinδφ), d3_asin(k * cosδφ - x * sinδφ) ];
     };
     return rotation;
   }
@@ -31794,9 +31794,9 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       if (from != null) {
         from = d3_geo_circleAngle(cr, from);
         to = d3_geo_circleAngle(cr, to);
-        if (direction > 0 ? from < to : from > to) from += direction * Ï„;
+        if (direction > 0 ? from < to : from > to) from += direction * τ;
       } else {
-        from = radius + direction * Ï„;
+        from = radius + direction * τ;
         to = radius - .5 * step;
       }
       for (var point, t = from; direction > 0 ? t > to : t < to; t -= step) {
@@ -31809,11 +31809,11 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     a[0] -= cr;
     d3_geo_cartesianNormalize(a);
     var angle = d3_acos(-a[1]);
-    return ((-a[2] < 0 ? -angle : angle) + 2 * Math.PI - Îµ) % (2 * Math.PI);
+    return ((-a[2] < 0 ? -angle : angle) + 2 * Math.PI - ε) % (2 * Math.PI);
   }
   d3.geo.distance = function(a, b) {
-    var Î”Î» = (b[0] - a[0]) * d3_radians, Ï†0 = a[1] * d3_radians, Ï†1 = b[1] * d3_radians, sinÎ”Î» = Math.sin(Î”Î»), cosÎ”Î» = Math.cos(Î”Î»), sinÏ†0 = Math.sin(Ï†0), cosÏ†0 = Math.cos(Ï†0), sinÏ†1 = Math.sin(Ï†1), cosÏ†1 = Math.cos(Ï†1), t;
-    return Math.atan2(Math.sqrt((t = cosÏ†1 * sinÎ”Î») * t + (t = cosÏ†0 * sinÏ†1 - sinÏ†0 * cosÏ†1 * cosÎ”Î») * t), sinÏ†0 * sinÏ†1 + cosÏ†0 * cosÏ†1 * cosÎ”Î»);
+    var Δλ = (b[0] - a[0]) * d3_radians, φ0 = a[1] * d3_radians, φ1 = b[1] * d3_radians, sinΔλ = Math.sin(Δλ), cosΔλ = Math.cos(Δλ), sinφ0 = Math.sin(φ0), cosφ0 = Math.cos(φ0), sinφ1 = Math.sin(φ1), cosφ1 = Math.cos(φ1), t;
+    return Math.atan2(Math.sqrt((t = cosφ1 * sinΔλ) * t + (t = cosφ0 * sinφ1 - sinφ0 * cosφ1 * cosΔλ) * t), sinφ0 * sinφ1 + cosφ0 * cosφ1 * cosΔλ);
   };
   d3.geo.graticule = function() {
     var x1, x0, X1, X0, y1, y0, Y1, Y0, dx = 10, dy = dx, DX = 90, DY = 360, x, y, X, Y, precision = 2.5;
@@ -31825,9 +31825,9 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     }
     function lines() {
       return d3.range(Math.ceil(X0 / DX) * DX, X1, DX).map(X).concat(d3.range(Math.ceil(Y0 / DY) * DY, Y1, DY).map(Y)).concat(d3.range(Math.ceil(x0 / dx) * dx, x1, dx).filter(function(x) {
-        return abs(x % DX) > Îµ;
+        return abs(x % DX) > ε;
       }).map(x)).concat(d3.range(Math.ceil(y0 / dy) * dy, y1, dy).filter(function(y) {
-        return abs(y % DY) > Îµ;
+        return abs(y % DY) > ε;
       }).map(y));
     }
     graticule.lines = function() {
@@ -31887,10 +31887,10 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       Y = d3_geo_graticuleY(X0, X1, precision);
       return graticule;
     };
-    return graticule.majorExtent([ [ -180, -90 + Îµ ], [ 180, 90 - Îµ ] ]).minorExtent([ [ -180, -80 - Îµ ], [ 180, 80 + Îµ ] ]);
+    return graticule.majorExtent([ [ -180, -90 + ε ], [ 180, 90 - ε ] ]).minorExtent([ [ -180, -80 - ε ], [ 180, 80 + ε ] ]);
   };
   function d3_geo_graticuleX(y0, y1, dy) {
-    var y = d3.range(y0, y1 - Îµ, dy).concat(y1);
+    var y = d3.range(y0, y1 - ε, dy).concat(y1);
     return function(x) {
       return y.map(function(y) {
         return [ x, y ];
@@ -31898,7 +31898,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     };
   }
   function d3_geo_graticuleY(x0, x1, dx) {
-    var x = d3.range(x0, x1 - Îµ, dx).concat(x1);
+    var x = d3.range(x0, x1 - ε, dx).concat(x1);
     return function(y) {
       return x.map(function(x) {
         return [ x, y ];
@@ -31966,91 +31966,91 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     polygonEnd: d3_noop
   };
   function d3_geo_lengthLineStart() {
-    var Î»0, sinÏ†0, cosÏ†0;
-    d3_geo_length.point = function(Î», Ï†) {
-      Î»0 = Î» * d3_radians, sinÏ†0 = Math.sin(Ï† *= d3_radians), cosÏ†0 = Math.cos(Ï†);
+    var λ0, sinφ0, cosφ0;
+    d3_geo_length.point = function(λ, φ) {
+      λ0 = λ * d3_radians, sinφ0 = Math.sin(φ *= d3_radians), cosφ0 = Math.cos(φ);
       d3_geo_length.point = nextPoint;
     };
     d3_geo_length.lineEnd = function() {
       d3_geo_length.point = d3_geo_length.lineEnd = d3_noop;
     };
-    function nextPoint(Î», Ï†) {
-      var sinÏ† = Math.sin(Ï† *= d3_radians), cosÏ† = Math.cos(Ï†), t = abs((Î» *= d3_radians) - Î»0), cosÎ”Î» = Math.cos(t);
-      d3_geo_lengthSum += Math.atan2(Math.sqrt((t = cosÏ† * Math.sin(t)) * t + (t = cosÏ†0 * sinÏ† - sinÏ†0 * cosÏ† * cosÎ”Î») * t), sinÏ†0 * sinÏ† + cosÏ†0 * cosÏ† * cosÎ”Î»);
-      Î»0 = Î», sinÏ†0 = sinÏ†, cosÏ†0 = cosÏ†;
+    function nextPoint(λ, φ) {
+      var sinφ = Math.sin(φ *= d3_radians), cosφ = Math.cos(φ), t = abs((λ *= d3_radians) - λ0), cosΔλ = Math.cos(t);
+      d3_geo_lengthSum += Math.atan2(Math.sqrt((t = cosφ * Math.sin(t)) * t + (t = cosφ0 * sinφ - sinφ0 * cosφ * cosΔλ) * t), sinφ0 * sinφ + cosφ0 * cosφ * cosΔλ);
+      λ0 = λ, sinφ0 = sinφ, cosφ0 = cosφ;
     }
   }
   function d3_geo_azimuthal(scale, angle) {
-    function azimuthal(Î», Ï†) {
-      var cosÎ» = Math.cos(Î»), cosÏ† = Math.cos(Ï†), k = scale(cosÎ» * cosÏ†);
-      return [ k * cosÏ† * Math.sin(Î»), k * Math.sin(Ï†) ];
+    function azimuthal(λ, φ) {
+      var cosλ = Math.cos(λ), cosφ = Math.cos(φ), k = scale(cosλ * cosφ);
+      return [ k * cosφ * Math.sin(λ), k * Math.sin(φ) ];
     }
     azimuthal.invert = function(x, y) {
-      var Ï = Math.sqrt(x * x + y * y), c = angle(Ï), sinc = Math.sin(c), cosc = Math.cos(c);
-      return [ Math.atan2(x * sinc, Ï * cosc), Math.asin(Ï && y * sinc / Ï) ];
+      var ρ = Math.sqrt(x * x + y * y), c = angle(ρ), sinc = Math.sin(c), cosc = Math.cos(c);
+      return [ Math.atan2(x * sinc, ρ * cosc), Math.asin(ρ && y * sinc / ρ) ];
     };
     return azimuthal;
   }
-  var d3_geo_azimuthalEqualArea = d3_geo_azimuthal(function(cosÎ»cosÏ†) {
-    return Math.sqrt(2 / (1 + cosÎ»cosÏ†));
-  }, function(Ï) {
-    return 2 * Math.asin(Ï / 2);
+  var d3_geo_azimuthalEqualArea = d3_geo_azimuthal(function(cosλcosφ) {
+    return Math.sqrt(2 / (1 + cosλcosφ));
+  }, function(ρ) {
+    return 2 * Math.asin(ρ / 2);
   });
   (d3.geo.azimuthalEqualArea = function() {
     return d3_geo_projection(d3_geo_azimuthalEqualArea);
   }).raw = d3_geo_azimuthalEqualArea;
-  var d3_geo_azimuthalEquidistant = d3_geo_azimuthal(function(cosÎ»cosÏ†) {
-    var c = Math.acos(cosÎ»cosÏ†);
+  var d3_geo_azimuthalEquidistant = d3_geo_azimuthal(function(cosλcosφ) {
+    var c = Math.acos(cosλcosφ);
     return c && c / Math.sin(c);
   }, d3_identity);
   (d3.geo.azimuthalEquidistant = function() {
     return d3_geo_projection(d3_geo_azimuthalEquidistant);
   }).raw = d3_geo_azimuthalEquidistant;
-  function d3_geo_conicConformal(Ï†0, Ï†1) {
-    var cosÏ†0 = Math.cos(Ï†0), t = function(Ï†) {
-      return Math.tan(Ï€ / 4 + Ï† / 2);
-    }, n = Ï†0 === Ï†1 ? Math.sin(Ï†0) : Math.log(cosÏ†0 / Math.cos(Ï†1)) / Math.log(t(Ï†1) / t(Ï†0)), F = cosÏ†0 * Math.pow(t(Ï†0), n) / n;
+  function d3_geo_conicConformal(φ0, φ1) {
+    var cosφ0 = Math.cos(φ0), t = function(φ) {
+      return Math.tan(π / 4 + φ / 2);
+    }, n = φ0 === φ1 ? Math.sin(φ0) : Math.log(cosφ0 / Math.cos(φ1)) / Math.log(t(φ1) / t(φ0)), F = cosφ0 * Math.pow(t(φ0), n) / n;
     if (!n) return d3_geo_mercator;
-    function forward(Î», Ï†) {
-      var Ï = abs(abs(Ï†) - halfÏ€) < Îµ ? 0 : F / Math.pow(t(Ï†), n);
-      return [ Ï * Math.sin(n * Î»), F - Ï * Math.cos(n * Î») ];
+    function forward(λ, φ) {
+      var ρ = abs(abs(φ) - halfπ) < ε ? 0 : F / Math.pow(t(φ), n);
+      return [ ρ * Math.sin(n * λ), F - ρ * Math.cos(n * λ) ];
     }
     forward.invert = function(x, y) {
-      var Ï0_y = F - y, Ï = d3_sgn(n) * Math.sqrt(x * x + Ï0_y * Ï0_y);
-      return [ Math.atan2(x, Ï0_y) / n, 2 * Math.atan(Math.pow(F / Ï, 1 / n)) - halfÏ€ ];
+      var ρ0_y = F - y, ρ = d3_sgn(n) * Math.sqrt(x * x + ρ0_y * ρ0_y);
+      return [ Math.atan2(x, ρ0_y) / n, 2 * Math.atan(Math.pow(F / ρ, 1 / n)) - halfπ ];
     };
     return forward;
   }
   (d3.geo.conicConformal = function() {
     return d3_geo_conic(d3_geo_conicConformal);
   }).raw = d3_geo_conicConformal;
-  function d3_geo_conicEquidistant(Ï†0, Ï†1) {
-    var cosÏ†0 = Math.cos(Ï†0), n = Ï†0 === Ï†1 ? Math.sin(Ï†0) : (cosÏ†0 - Math.cos(Ï†1)) / (Ï†1 - Ï†0), G = cosÏ†0 / n + Ï†0;
-    if (abs(n) < Îµ) return d3_geo_equirectangular;
-    function forward(Î», Ï†) {
-      var Ï = G - Ï†;
-      return [ Ï * Math.sin(n * Î»), G - Ï * Math.cos(n * Î») ];
+  function d3_geo_conicEquidistant(φ0, φ1) {
+    var cosφ0 = Math.cos(φ0), n = φ0 === φ1 ? Math.sin(φ0) : (cosφ0 - Math.cos(φ1)) / (φ1 - φ0), G = cosφ0 / n + φ0;
+    if (abs(n) < ε) return d3_geo_equirectangular;
+    function forward(λ, φ) {
+      var ρ = G - φ;
+      return [ ρ * Math.sin(n * λ), G - ρ * Math.cos(n * λ) ];
     }
     forward.invert = function(x, y) {
-      var Ï0_y = G - y;
-      return [ Math.atan2(x, Ï0_y) / n, G - d3_sgn(n) * Math.sqrt(x * x + Ï0_y * Ï0_y) ];
+      var ρ0_y = G - y;
+      return [ Math.atan2(x, ρ0_y) / n, G - d3_sgn(n) * Math.sqrt(x * x + ρ0_y * ρ0_y) ];
     };
     return forward;
   }
   (d3.geo.conicEquidistant = function() {
     return d3_geo_conic(d3_geo_conicEquidistant);
   }).raw = d3_geo_conicEquidistant;
-  var d3_geo_gnomonic = d3_geo_azimuthal(function(cosÎ»cosÏ†) {
-    return 1 / cosÎ»cosÏ†;
+  var d3_geo_gnomonic = d3_geo_azimuthal(function(cosλcosφ) {
+    return 1 / cosλcosφ;
   }, Math.atan);
   (d3.geo.gnomonic = function() {
     return d3_geo_projection(d3_geo_gnomonic);
   }).raw = d3_geo_gnomonic;
-  function d3_geo_mercator(Î», Ï†) {
-    return [ Î», Math.log(Math.tan(Ï€ / 4 + Ï† / 2)) ];
+  function d3_geo_mercator(λ, φ) {
+    return [ λ, Math.log(Math.tan(π / 4 + φ / 2)) ];
   }
   d3_geo_mercator.invert = function(x, y) {
-    return [ x, 2 * Math.atan(Math.exp(y)) - halfÏ€ ];
+    return [ x, 2 * Math.atan(Math.exp(y)) - halfπ ];
   };
   function d3_geo_mercatorProjection(project) {
     var m = d3_geo_projection(project), scale = m.scale, translate = m.translate, clipExtent = m.clipExtent, clipAuto;
@@ -32066,7 +32066,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       var v = clipExtent.apply(m, arguments);
       if (v === m) {
         if (clipAuto = _ == null) {
-          var k = Ï€ * scale(), t = translate();
+          var k = π * scale(), t = translate();
           clipExtent([ [ t[0] - k, t[1] - k ], [ t[0] + k, t[1] + k ] ]);
         }
       } else if (clipAuto) {
@@ -32085,17 +32085,17 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
   (d3.geo.orthographic = function() {
     return d3_geo_projection(d3_geo_orthographic);
   }).raw = d3_geo_orthographic;
-  var d3_geo_stereographic = d3_geo_azimuthal(function(cosÎ»cosÏ†) {
-    return 1 / (1 + cosÎ»cosÏ†);
-  }, function(Ï) {
-    return 2 * Math.atan(Ï);
+  var d3_geo_stereographic = d3_geo_azimuthal(function(cosλcosφ) {
+    return 1 / (1 + cosλcosφ);
+  }, function(ρ) {
+    return 2 * Math.atan(ρ);
   });
   (d3.geo.stereographic = function() {
     return d3_geo_projection(d3_geo_stereographic);
   }).raw = d3_geo_stereographic;
-  function d3_geo_transverseMercator(Î», Ï†) {
-    var B = Math.cos(Ï†) * Math.sin(Î»);
-    return [ Math.log((1 + B) / (1 - B)) / 2, Math.atan2(Math.tan(Ï†), Math.cos(Î»)) ];
+  function d3_geo_transverseMercator(λ, φ) {
+    var B = Math.cos(φ) * Math.sin(λ);
+    return [ Math.log((1 + B) / (1 - B)) / 2, Math.atan2(Math.tan(φ), Math.cos(λ)) ];
   }
   d3_geo_transverseMercator.invert = function(x, y) {
     return [ Math.atan2(d3_sinh(x), Math.cos(y)), d3_asin(Math.sin(y) / d3_cosh(x)) ];
@@ -32281,7 +32281,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     }, previous = beach.P, next = beach.N, disappearing = [ beach ];
     d3_geom_voronoiDetachBeach(beach);
     var lArc = previous;
-    while (lArc.circle && abs(x - lArc.circle.x) < Îµ && abs(y - lArc.circle.cy) < Îµ) {
+    while (lArc.circle && abs(x - lArc.circle.x) < ε && abs(y - lArc.circle.cy) < ε) {
       previous = lArc.P;
       disappearing.unshift(lArc);
       d3_geom_voronoiDetachBeach(lArc);
@@ -32290,7 +32290,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     disappearing.unshift(lArc);
     d3_geom_voronoiDetachCircle(lArc);
     var rArc = next;
-    while (rArc.circle && abs(x - rArc.circle.x) < Îµ && abs(y - rArc.circle.cy) < Îµ) {
+    while (rArc.circle && abs(x - rArc.circle.x) < ε && abs(y - rArc.circle.cy) < ε) {
       next = rArc.N;
       disappearing.push(rArc);
       d3_geom_voronoiDetachBeach(rArc);
@@ -32314,19 +32314,19 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     var x = site.x, directrix = site.y, lArc, rArc, dxl, dxr, node = d3_geom_voronoiBeaches._;
     while (node) {
       dxl = d3_geom_voronoiLeftBreakPoint(node, directrix) - x;
-      if (dxl > Îµ) node = node.L; else {
+      if (dxl > ε) node = node.L; else {
         dxr = x - d3_geom_voronoiRightBreakPoint(node, directrix);
-        if (dxr > Îµ) {
+        if (dxr > ε) {
           if (!node.R) {
             lArc = node;
             break;
           }
           node = node.R;
         } else {
-          if (dxl > -Îµ) {
+          if (dxl > -ε) {
             lArc = node.P;
             rArc = node;
-          } else if (dxr > -Îµ) {
+          } else if (dxr > -ε) {
             lArc = node;
             rArc = node.N;
           } else {
@@ -32406,18 +32406,18 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       while (iHalfEdge < nHalfEdges) {
         end = halfEdges[iHalfEdge].end(), x3 = end.x, y3 = end.y;
         start = halfEdges[++iHalfEdge % nHalfEdges].start(), x2 = start.x, y2 = start.y;
-        if (abs(x3 - x2) > Îµ || abs(y3 - y2) > Îµ) {
-          halfEdges.splice(iHalfEdge, 0, new d3_geom_voronoiHalfEdge(d3_geom_voronoiCreateBorderEdge(cell.site, end, abs(x3 - x0) < Îµ && y1 - y3 > Îµ ? {
+        if (abs(x3 - x2) > ε || abs(y3 - y2) > ε) {
+          halfEdges.splice(iHalfEdge, 0, new d3_geom_voronoiHalfEdge(d3_geom_voronoiCreateBorderEdge(cell.site, end, abs(x3 - x0) < ε && y1 - y3 > ε ? {
             x: x0,
-            y: abs(x2 - x0) < Îµ ? y2 : y1
-          } : abs(y3 - y1) < Îµ && x1 - x3 > Îµ ? {
-            x: abs(y2 - y1) < Îµ ? x2 : x1,
+            y: abs(x2 - x0) < ε ? y2 : y1
+          } : abs(y3 - y1) < ε && x1 - x3 > ε ? {
+            x: abs(y2 - y1) < ε ? x2 : x1,
             y: y1
-          } : abs(x3 - x1) < Îµ && y3 - y0 > Îµ ? {
+          } : abs(x3 - x1) < ε && y3 - y0 > ε ? {
             x: x1,
-            y: abs(x2 - x1) < Îµ ? y2 : y0
-          } : abs(y3 - y0) < Îµ && x3 - x0 > Îµ ? {
-            x: abs(y2 - y0) < Îµ ? x2 : x0,
+            y: abs(x2 - x1) < ε ? y2 : y0
+          } : abs(y3 - y0) < ε && x3 - x0 > ε ? {
+            x: abs(y2 - y0) < ε ? x2 : x0,
             y: y0
           } : null), cell.site, null));
           ++nHalfEdges;
@@ -32439,7 +32439,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     if (lSite === rSite) return;
     var bx = cSite.x, by = cSite.y, ax = lSite.x - bx, ay = lSite.y - by, cx = rSite.x - bx, cy = rSite.y - by;
     var d = 2 * (ax * cy - ay * cx);
-    if (d >= -Îµ2) return;
+    if (d >= -ε2) return;
     var ha = ax * ax + ay * ay, hc = cx * cx + cy * cy, x = (cy * ha - ay * hc) / d, y = (ax * hc - cx * ha) / d, cy = y + by;
     var circle = d3_geom_voronoiCirclePool.pop() || new d3_geom_voronoiCircle();
     circle.arc = arc;
@@ -32479,7 +32479,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     var edges = d3_geom_voronoiEdges, clip = d3_geom_clipLine(extent[0][0], extent[0][1], extent[1][0], extent[1][1]), i = edges.length, e;
     while (i--) {
       e = edges[i];
-      if (!d3_geom_voronoiConnectEdge(e, extent) || !clip(e) || abs(e.a.x - e.b.x) < Îµ && abs(e.a.y - e.b.y) < Îµ) {
+      if (!d3_geom_voronoiConnectEdge(e, extent) || !clip(e) || abs(e.a.x - e.b.x) < ε && abs(e.a.y - e.b.y) < ε) {
         e.a = e.b = null;
         edges.splice(i, 1);
       }
@@ -32850,8 +32850,8 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     function sites(data) {
       return data.map(function(d, i) {
         return {
-          x: Math.round(fx(d, i) / Îµ) * Îµ,
-          y: Math.round(fy(d, i) / Îµ) * Îµ,
+          x: Math.round(fx(d, i) / ε) * ε,
+          y: Math.round(fy(d, i) / ε) * ε,
           i: i
         };
       });
@@ -33232,7 +33232,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     };
   }
   function d3_ease_sin(t) {
-    return 1 - Math.cos(t * halfÏ€);
+    return 1 - Math.cos(t * halfπ);
   }
   function d3_ease_exp(t) {
     return Math.pow(2, 10 * (t - 1));
@@ -33243,9 +33243,9 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
   function d3_ease_elastic(a, p) {
     var s;
     if (arguments.length < 2) p = .45;
-    if (arguments.length) s = p / Ï„ * Math.asin(1 / a); else a = 1, s = p / 4;
+    if (arguments.length) s = p / τ * Math.asin(1 / a); else a = 1, s = p / 4;
     return function(t) {
-      return 1 + a * Math.pow(2, -10 * t) * Math.sin((t - s) * Ï„ / p);
+      return 1 + a * Math.pow(2, -10 * t) * Math.sin((t - s) * τ / p);
     };
   }
   function d3_ease_back(s) {
@@ -33479,7 +33479,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
           });
         });
       }
-      k = (Ï„ - padding * n) / k;
+      k = (τ - padding * n) / k;
       x = 0, i = -1;
       while (++i < n) {
         x0 = x, j = -1;
@@ -33930,7 +33930,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     return d3_layout_hierarchyRebind(partition, hierarchy);
   };
   d3.layout.pie = function() {
-    var value = Number, sort = d3_layout_pieSortByValue, startAngle = 0, endAngle = Ï„;
+    var value = Number, sort = d3_layout_pieSortByValue, startAngle = 0, endAngle = τ;
     function pie(data) {
       var values = data.map(function(d, i) {
         return +value.call(pie, d, i);
@@ -34755,10 +34755,10 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     };
   }
   d3.random = {
-    normal: function(Âµ, Ïƒ) {
+    normal: function(µ, σ) {
       var n = arguments.length;
-      if (n < 2) Ïƒ = 1;
-      if (n < 1) Âµ = 0;
+      if (n < 2) σ = 1;
+      if (n < 1) µ = 0;
       return function() {
         var x, y, r;
         do {
@@ -34766,7 +34766,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
           y = Math.random() * 2 - 1;
           r = x * x + y * y;
         } while (!r || r > 1);
-        return Âµ + Ïƒ * x * Math.sqrt(-2 * Math.log(r) / r);
+        return µ + σ * x * Math.sqrt(-2 * Math.log(r) / r);
       };
     },
     logNormal: function() {
@@ -35270,7 +35270,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     var innerRadius = d3_svg_arcInnerRadius, outerRadius = d3_svg_arcOuterRadius, startAngle = d3_svg_arcStartAngle, endAngle = d3_svg_arcEndAngle;
     function arc() {
       var r0 = innerRadius.apply(this, arguments), r1 = outerRadius.apply(this, arguments), a0 = startAngle.apply(this, arguments) + d3_svg_arcOffset, a1 = endAngle.apply(this, arguments) + d3_svg_arcOffset, da = (a1 < a0 && (da = a0,
-      a0 = a1, a1 = da), a1 - a0), df = da < Ï€ ? "0" : "1", c0 = Math.cos(a0), s0 = Math.sin(a0), c1 = Math.cos(a1), s1 = Math.sin(a1);
+      a0 = a1, a1 = da), a1 - a0), df = da < π ? "0" : "1", c0 = Math.cos(a0), s0 = Math.sin(a0), c1 = Math.cos(a1), s1 = Math.sin(a1);
       return da >= d3_svg_arcMax ? r0 ? "M0," + r1 + "A" + r1 + "," + r1 + " 0 1,1 0," + -r1 + "A" + r1 + "," + r1 + " 0 1,1 0," + r1 + "M0," + r0 + "A" + r0 + "," + r0 + " 0 1,0 0," + -r0 + "A" + r0 + "," + r0 + " 0 1,0 0," + r0 + "Z" : "M0," + r1 + "A" + r1 + "," + r1 + " 0 1,1 0," + -r1 + "A" + r1 + "," + r1 + " 0 1,1 0," + r1 + "Z" : r0 ? "M" + r1 * c0 + "," + r1 * s0 + "A" + r1 + "," + r1 + " 0 " + df + ",1 " + r1 * c1 + "," + r1 * s1 + "L" + r0 * c1 + "," + r0 * s1 + "A" + r0 + "," + r0 + " 0 " + df + ",0 " + r0 * c0 + "," + r0 * s0 + "Z" : "M" + r1 * c0 + "," + r1 * s0 + "A" + r1 + "," + r1 + " 0 " + df + ",1 " + r1 * c1 + "," + r1 * s1 + "L0,0" + "Z";
     }
     arc.innerRadius = function(v) {
@@ -35299,7 +35299,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     };
     return arc;
   };
-  var d3_svg_arcOffset = -halfÏ€, d3_svg_arcMax = Ï„ - Îµ;
+  var d3_svg_arcOffset = -halfπ, d3_svg_arcMax = τ - ε;
   function d3_svg_arcInnerRadius(d) {
     return d.innerRadius;
   }
@@ -35538,7 +35538,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     var tangents = [], d, a, b, s, m = d3_svg_lineFiniteDifferences(points), i = -1, j = points.length - 1;
     while (++i < j) {
       d = d3_svg_lineSlope(points[i], points[i + 1]);
-      if (abs(d) < Îµ) {
+      if (abs(d) < ε) {
         m[i] = m[i + 1] = 0;
       } else {
         a = m[i] / d;
@@ -35686,7 +35686,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       return a.a0 == b.a0 && a.a1 == b.a1;
     }
     function arc(r, p, a) {
-      return "A" + r + "," + r + " 0 " + +(a > Ï€) + ",1 " + p;
+      return "A" + r + "," + r + " 0 " + +(a > π) + ",1 " + p;
     }
     function curve(r0, p0, r1, p1) {
       return "Q 0,0 " + p1;
@@ -35791,7 +35791,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     return "circle";
   }
   function d3_svg_symbolCircle(size) {
-    var r = Math.sqrt(size / Ï€);
+    var r = Math.sqrt(size / π);
     return "M0," + r + "A" + r + "," + r + " 0 1,1 0," + -r + "A" + r + "," + r + " 0 1,1 0," + r + "Z";
   }
   var d3_svg_symbols = d3.map({
@@ -36108,7 +36108,7 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
       g.each(function() {
         var g = d3.select(this);
         var scale0 = this.__chart__ || scale, scale1 = this.__chart__ = scale.copy();
-        var ticks = tickValues == null ? scale1.ticks ? scale1.ticks.apply(scale1, tickArguments_) : scale1.domain() : tickValues, tickFormat = tickFormat_ == null ? scale1.tickFormat ? scale1.tickFormat.apply(scale1, tickArguments_) : d3_identity : tickFormat_, tick = g.selectAll(".tick").data(ticks, scale1), tickEnter = tick.enter().insert("g", ".domain").attr("class", "tick").style("opacity", Îµ), tickExit = d3.transition(tick.exit()).style("opacity", Îµ).remove(), tickUpdate = d3.transition(tick).style("opacity", 1), tickTransform;
+        var ticks = tickValues == null ? scale1.ticks ? scale1.ticks.apply(scale1, tickArguments_) : scale1.domain() : tickValues, tickFormat = tickFormat_ == null ? scale1.tickFormat ? scale1.tickFormat.apply(scale1, tickArguments_) : d3_identity : tickFormat_, tick = g.selectAll(".tick").data(ticks, scale1), tickEnter = tick.enter().insert("g", ".domain").attr("class", "tick").style("opacity", ε), tickExit = d3.transition(tick.exit()).style("opacity", ε).remove(), tickUpdate = d3.transition(tick).style("opacity", 1), tickTransform;
         var range = d3_scaleRange(scale1), path = g.selectAll(".domain").data([ 0 ]), pathUpdate = (path.enter().append("path").attr("class", "domain"),
         d3.transition(path));
         tickEnter.append("line");
@@ -41799,7 +41799,7 @@ nv.models.indentedTree = function() {
       tree.size([height, depth * childIndent]); //TODO: see if this is necessary at all
 
 
-      // Update the nodesâ€¦
+      // Update the nodes…
       var node = tbody.selectAll('tr')
           // .data(function(d) { return d; }, function(d) { return d.id || (d.id == ++i)});
           .data(function(d) { return d.filter(function(d) { return (filterZero && !d.children) ? filterZero(d) :  true; } )}, function(d,i) { return d.id || (d.id || ++idx)});
@@ -56213,7 +56213,7 @@ function initializeMargin(scope, attrs){
              * 1) the lowest value,
              * 2) the 25th percentile (i.e., the point at and below which the lowest 25% of the values reside),
              * 3) the median (a.k.a., the 50th percentile, the point at and below which 50% of the values reside),
-             * 4) the 75th percentile (i.e., theÂ point at and below which 75% of the values reside), and
+             * 4) the 75th percentile (i.e., the point at and below which 75% of the values reside), and
              * 5) the highest value.
              */
             return {
@@ -61073,7 +61073,7 @@ if (typeof define !== 'undefined' && define.amd) {
     slugify: function(str) {
       if (str == null) return '';
 
-      var from  = "Ä…Ã Ã¡Ã¤Ã¢Ã£Ã¥Ã¦ÄƒÄ‡Ä™Ã¨Ã©Ã«ÃªÃ¬Ã­Ã¯Ã®Å‚Å„Ã²Ã³Ã¶Ã´ÃµÃ¸Å›È™È›Ã¹ÃºÃ¼Ã»Ã±Ã§Å¼Åº",
+      var from  = "ąàáäâãåæăćęèéëêìíïîłńòóöôõøśșțùúüûñçżź",
           to    = "aaaaaaaaaceeeeeiiiilnoooooosstuuuunczz",
           regex = new RegExp(defaultToWhiteSpace(from), 'g');
 
@@ -67331,7 +67331,7 @@ angular.forEach(HGESTURES, function(eventName, directiveName) {
         }, {
           id: "14524",
           name: "Alternative Apparel",
-          synonyms: ["ã‚ªãƒ«ã‚¿ãƒŠãƒ†ã‚£ãƒ–", "Alternative"],
+          synonyms: ["オルタナティブ", "Alternative"],
           type: "brand"
         }, {
           id: "12130",
@@ -68899,7 +68899,7 @@ angular.module("modules/search/search.tpl.html", []).run(["$templateCache", func
     "      <div class=\"filter-bar-content\">\n" +
     "        <div class=\"search-content\" ng-show=\"mode.name == 'search'\">\n" +
     "          <div class=\"search-input-container\">\n" +
-    "            <!-- <div class=\"loading-icon\" ng-class=\"{ show: searchState.loading }\">âœª</div> -->\n" +
+    "            <!-- <div class=\"loading-icon\" ng-class=\"{ show: searchState.loading }\">✪</div> -->\n" +
     "            <input tabindex=\"1\" id=\"search-products\" ng-model=\"query.value\" ng-keyup=\"searchKeypress($event)\" type=\"search\" results=\"5\" placeholder=\" Search products...\" class=\"search-input\">\n" +
     "          </div>\n" +
     "\n" +
@@ -69044,7 +69044,7 @@ angular.module("modules/search/search.tpl.html", []).run(["$templateCache", func
     "\n" +
     "    <div ng-class=\"{ 'widgets-open': widgets.active }\" class=\"search-and-widgets-container\">\n" +
     "      <div outlet=\"resultsContainer\" class=\"search-results-container\" infinite-scroll=\"paginate($event)\" threshold=\"400\">\n" +
-    "        <div class=\"loading-icon\" ng-class=\"{ show: searchState.loading }\">âœª</div>\n" +
+    "        <div class=\"loading-icon\" ng-class=\"{ show: searchState.loading }\">✪</div>\n" +
     "        <div class=\"search-results-wrapper\" ng-style=\"{ height:  containerHeight + 'px' }\">\n" +
     "          <div class=\"no-results fade\" ng-class=\"{ fade: results.length || searchState.loading || searchState.firstLoad }\">No results, please try another search</div>\n" +
     "          <div ng-mouseenter=\"result.mouseover = true\" ng-mouseleave=\"result.mouseover = false\" ng-class=\"{ fade: searchState.loading && !paginating }\" ng-style=\"{ top: tops[$index], left: lefts[$index] }\" class=\"product search-result\" ng-repeat=\"result in results\">\n" +
@@ -69162,7 +69162,7 @@ angular.module("modules/tools/tools.tpl.html", []).run(["$templateCache", functi
     "          </div>\n" +
     "        </div>\n" +
     "      </div>\n" +
-    "      <!-- <div class=\"loading-icon\" ng-class=\"{ show: state.loading }\">âœª</div> -->\n" +
+    "      <!-- <div class=\"loading-icon\" ng-class=\"{ show: state.loading }\">✪</div> -->\n" +
     "      <div class=\"widget-preview\" ng-class=\"{ fade: state.loading, nowrap: boutique.options.showInfo.model != 'Best Fit' }\">\n" +
     "        <div ng-show=\"!selectedProducts.length\" class=\"no-results center block well\">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your widget</div>\n" +
     "\n" +
@@ -69216,7 +69216,7 @@ angular.module("templates/main-tab-content.tpl.html", []).run(["$templateCache",
     "            <img class=\"product-image\" ng-src=\"{{findLink.productOnPage.image.sizes.Large.url}}\">\n" +
     "          </div>\n" +
     "          <div class=\"product-info selectable\">\n" +
-    "            {{findLink.productOnPage.name}} â€¢\n" +
+    "            {{findLink.productOnPage.name}} •\n" +
     "            {{findLink.productOnPage.priceLabel}}\n" +
     "          </div>\n" +
     "          <div class=\"product-options\">\n" +
@@ -69242,7 +69242,7 @@ angular.module("templates/main-tab-content.tpl.html", []).run(["$templateCache",
     "                <img class=\"product-image\" ng-src=\"{{product.image.sizes.Large.url}}\">\n" +
     "              </div>\n" +
     "              <div class=\"product-info selectable\">\n" +
-    "                {{product.name}} â€¢\n" +
+    "                {{product.name}} •\n" +
     "                {{product.priceLabel}}\n" +
     "              </div>\n" +
     "              <div class=\"product-options\">\n" +
@@ -69294,9 +69294,9 @@ angular.module("templates/main-tab-content.tpl.html", []).run(["$templateCache",
     "            <div class=\"post-content\" ng-repeat=\"product in selectedProducts\">\n" +
     "              <a target=\"_blank\" href=\"{{product.clickUrl}}\">\n" +
     "                <span ng-if=\"show.showName\" class=\"product-name\">{{product.name}}</span>\n" +
-    "                <span ng-if=\"show.showBrand\" class=\"product-brand\">â€¢ {{product.brand.name}}</span>\n" +
-    "                <span ng-if=\"show.showPrice\" class=\"product-price\">â€¢ {{product.priceLabel}}</span>\n" +
-    "                <span ng-if=\"show.showLink\" class=\"product-link\">â€¢ {{product.clickUrl}}</span>\n" +
+    "                <span ng-if=\"show.showBrand\" class=\"product-brand\">• {{product.brand.name}}</span>\n" +
+    "                <span ng-if=\"show.showPrice\" class=\"product-price\">• {{product.priceLabel}}</span>\n" +
+    "                <span ng-if=\"show.showLink\" class=\"product-link\">• {{product.clickUrl}}</span>\n" +
     "              </a>\n" +
     "            </div>\n" +
     "          </div>\n" +
@@ -69433,8 +69433,8 @@ angular.module("templates/tag-photo.tpl.html", []).run(["$templateCache", functi
     "            <img class=\"product-image\" ng-src=\"{{tag.product.image.sizes.Large.url}}\">\n" +
     "            <span class=\"product-info\">\n" +
     "              {{tag.product.name}}\n" +
-    "              <!-- â€¢ {{tag.brand.name}} -->\n" +
-    "              <!-- â€¢ {{tag.brand.salePrice}} -->\n" +
+    "              <!-- • {{tag.brand.name}} -->\n" +
+    "              <!-- • {{tag.brand.salePrice}} -->\n" +
     "            </span>\n" +
     "          </div>\n" +
     "        </div>\n" +

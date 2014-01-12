@@ -23,7 +23,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 ## Example
 
-### Angular template input
+#### Angular template input
 ```html
 <a ng-repeat="product in products" ng-click="activeProduct = product">
   <img src="{{user.image}}" ng-show="foo && bar">
@@ -41,7 +41,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 {{ foo && bar }}
 ```
 
-### Compiled temlpate output
+#### Compiled temlpate output
 Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angular interpolations
 ```html
 {{#forEach 'foo' in bar}}
@@ -69,7 +69,7 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
 </span>
 ```
 
-### State & Route Configuration
+#### State & Route Configuration
 Configure your state and routes in one place and Compilr
 will compile them into application logic for both your client and server.
 

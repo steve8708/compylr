@@ -1,7 +1,11 @@
 ![Compilr](http://i.imgur.com/sgvfBB7.png)
 
-Compiles angular apps to run on any server, regardless of language or platform, with server side rendering, SEO support, route logic sharing, and state persistence.
-Maximum performance, minimal load times, optimal development efficiency, 100% SEO support
+Compiles angular apps for rendering on any backend, regardless of language or platform.
+Server side rendering, full angular expression support, 100% SEO comparible, client/server route logic sharing, and environment agnostic state persistence.
+
+Maximum performance, minimal load times, optimal development efficiency, 100% SEO support.
+
+Build apps that load fast and feel amazing.
 
 ## Purpose
 * Write your angular app, auto compile to your backend, never think about SEO again.
@@ -189,7 +193,7 @@ will compile them into application logic for both your client and server
 ```
 
 ## Project Status
-Functional demo complete. Working on production ready v1
+Functional demo complete. Working on production ready v1.0.0
 
 ## Usage
 `compilr src/path/* dest/path/*`
@@ -198,8 +202,8 @@ Functional demo complete. Working on production ready v1
 We need more adapters! Node + express is built. We need python, ruby, and more!
 
 ## Todo
-Support for angular filters
-Maybe compile adapters - e.g. maybe jinja for flask, etc
+* Support for angular filters.
+* Support for other templating languages (e.g. jinja on python)
 
 ## Demo
 Coming soon...

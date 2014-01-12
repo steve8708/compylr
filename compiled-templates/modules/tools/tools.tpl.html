@@ -1,99 +1,99 @@
 <div class="tools-container">
 
-    <div class="left-nav-container">
-        <a ng-class="{ active: activeTab.name == 'Boutique' }" ng-click="activeTab.name = 'Boutique'" class="left-nav-link"><i class="icon fa fa-th"></i>Boutique<i class="fa right-caret fa-caret-right"></i></a>
-        <a ng-class="{ active: activeTab.name == 'Lookbook' }" ng-click="activeTab.name = 'Lookbook'" class="left-nav-link"><i class="icon fa fa-th-large"></i>Lookbook<i class="fa right-caret fa-caret-right"></i></a>
-        <a ng-class="{ active: activeTab.name == 'Shop' }" ng-click="activeTab.name = 'Shop'" class="left-nav-link"><i class="icon fa fa-ellipsis-h"></i>Shop My Post<i class="fa right-caret fa-caret-right"></i></a>
-        <a ng-class="{ active: activeTab.name == 'Photo' }" ng-click="activeTab.name = 'Photo'" class="left-nav-link"><i class="icon fa fa-circle-o"></i>Tagged Photo<i class="fa right-caret fa-caret-right"></i></a>
+  <div class="left-nav-container">
+    <a ng-class="{ active: activeTab.name == 'Boutique' }" ng-click="activeTab.name = 'Boutique'" class="left-nav-link"><i class="icon fa fa-th"></i>Boutique<i class="fa right-caret fa-caret-right"></i></a>
+    <a ng-class="{ active: activeTab.name == 'Lookbook' }" ng-click="activeTab.name = 'Lookbook'" class="left-nav-link"><i class="icon fa fa-th-large"></i>Lookbook<i class="fa right-caret fa-caret-right"></i></a>
+    <a ng-class="{ active: activeTab.name == 'Shop' }" ng-click="activeTab.name = 'Shop'" class="left-nav-link"><i class="icon fa fa-ellipsis-h"></i>Shop My Post<i class="fa right-caret fa-caret-right"></i></a>
+    <a ng-class="{ active: activeTab.name == 'Photo' }" ng-click="activeTab.name = 'Photo'" class="left-nav-link"><i class="icon fa fa-circle-o"></i>Tagged Photo<i class="fa right-caret fa-caret-right"></i></a>
 
 
-    </div>
-    <div class="content-container">
+  </div>
+  <div class="content-container">
 
-        <div class="tab-content" ng-show="activeTab.name == 'Boutique'">
-            <div class="widget-options">
-                <div class="presets">
-                    <a class="preset fa fa-square" ng-model="preset.name" btn-radio="'lookbook'" class="preset"></a>
-                    <a class="preset fa fa-th" ng-model="preset.name" btn-radio="'grid'" class="preset"></a>
-                    <a class="preset fa fa-ellipsis-h" ng-model="preset.name" btn-radio="'row'" class="preset"></a>
-                </div>
-                {{#forEach 'option' in boutique.sortedOptions}}
-                    <div data-option="<span ng-bind=" option.name.toLowerCase() ">{{expression "option.name.toLowerCase() "}}</span>" class="widget-option" ng-repeat="option in boutique.sortedOptions" ng-attr-data-option="&#123;&#123;option.name.toLowerCase()&#125;&#125;">
-
-                        <div class="name"><span ng-bind="option.name">{{option.name}}</span>
-                        </div>
-                        <input ng-if="option.type == 'checkbox'" type="checkbox" ng-model="option.model">
-                        <span class="range-value" ng-if="option.type == 'range'"><span ng-bind="option.model">{{option.model}}</span></span>
-                        <input ng-if="option.type == 'range'" type="range" min="<span ng-bind=" option.min ">{{option.min}}</span>" max="<span ng-bind=" option.max ">{{option.max}}</span>" step="<span ng-bind=" option.step ">{{option.step}}</span>" ng-model="option.model">
-                        <select ng-class="{ pink: option.name == 'Collection' }" dir="rtl" ng-if="option.type == 'select'" ng-model="option.model" ng-options="option for option in option.options"></select>
-                    </div>
-                {{/forEach}}
-
-                <div class="widget-option">
-                    <span class="name">Widget Size</span>
-                    <span class="widget-size"><span ng-bind="boutique.containerSize.width + 60">{{expression "boutique.containerSize.width + 60"}}</span> x <span ng-bind="boutique.containerSize.height">{{boutique.containerSize.height}}</span></span>
-                </div>
-
-                <div class="share-embed">
-                    <div class="share-container">
-                        <div class="share-label">Share</div>
-                        <div class="share-buttons">
-                            <a ng-click="toolShare('facebook')" class="fa fa-facebook social-icon"></a>
-                            <a ng-click="toolShare('twitter')" class="fa fa-twitter social-icon"></a>
-                            <a ng-click="toolShare('tumblr')" class="fa fa-tumblr social-icon"></a>
-
-                            <a ng-click="toolShare('pinterest')" class="fa fa-pinterest social-icon"></a>
-                            <a ng-click="toolShare('mail')" class="fa fa-envelope social-icon"></a>
-                        </div>
-                    </div>
-                    <div class="code-container">
-                        <div class="code-label">Embed</div>
-
-                        <textarea ng-click="clickEmbedCode($event)" ng-keypress="keypressEmbedCode($event)" class="code">
-                            <div data-ss-widget="grid" data-ss-widget-options='{ "columns": <span ng-bind="boutique.options.columns.model">{{boutique.options.columns.model}}</span>, "rows": <span ng-bind="boutique.options.rows.model">{{boutique.options.rows.model}}</span>, "showBrand": <span ng-bind="boutique.options.showBrand.model">{{boutique.options.showBrand.model}}</span>, "showInfo": <span ng-bind="boutique.options.showInfo.model">{{boutique.options.showInfo.model}}</span>, "showPrice": <span ng-bind="boutique.options.showPrice.model">{{boutique.options.showPrice.model}}</span>, "size": <span ng-bind="boutique.options.size.model">{{boutique.options.size.model}}</span> } '></div>
-                            <script src=""></script>
-                        </textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="widget-preview" ng-class="{ fade: state.loading, nowrap: boutique.options.showInfo.model != 'Best Fit' }">
-                <div ng-show="!selectedProducts.length" class="no-results center block well">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your widget</div>
-
-                <div data-ss-widget class="widget-wrapper" ng-style="{ width: boutique.containerSize.width + 80 + 'px', height: boutique.containerSize.height + 'px'}">
-                    <div class="widget-wrapper">
-                        <i ng-show="boutique.pages.length > 1" ng-class="{disabled: boutique.currentPage == 0}" class="fa fa-chevron-left previous-page" ng-click="navigateGallery('left')"></i>
-                        <i ng-show="boutique.pages.length > 1" ng-class="{disabled: boutique.currentPage == boutique.pages.length - 1}" class="fa fa-chevron-right next-page" ng-click="navigateGallery('right')"></i>
-                    </div>
-                    <div class="widget-wrapper">
-                        <div class="widget-container" ng-style="{ width: boutique.containerSize.width + 'px', height: boutique.containerSize.height + 'px' }">
-                            <div class="widget-scroller" ng-style="{ width: boutique.options.size.model * selectedProducts.length + 100 + 'px', height: boutique.containerSize.height + 'px', 'margin-left': '-' + (boutique.containerSize.width * boutique.currentPage) + 'px'}">
-                                <div ng-repeat="page in boutique.pages" ng-style="{ width: boutique.containerSize.width + 'px', height: boutique.containerSize.height + 'px'}" class="widget-page">
-                                    <div class="boutique-widget-span" ng-repeat="result in page">
-                                        <div ng-style="{ width: boutique.options.size.model + 'px', height: boutique.options.size.model + 'px' }" data-show-on-hover="<span ng-bind=" boutique.options.showInfo.model ">{{boutique.options.showInfo.model}}</span>" data-show-brand="<span ng-bind="
-                                        boutique.options.showBrand.model ">{{boutique.options.showBrand.model}}</span>" data-show-price="<span ng-bind=" boutique.options.showPrice.model ">{{boutique.options.showPrice.model}}</span>" class="widget-image boutique-widget">
-                                            <div class="image-container">
-                                                <img ng-src="&#123;&#123;result.image.sizes.Original.url&#125;&#125;" src="ng-src">
-                                            </div>
-                                            <div class="details">
-                                                {{#unless outique.options.showBrand.model}}
-                                                    <div ng-if="boutique.options.showBrand.model" class="brand-name">
-                                                        <span ng-bind="result.brand.name">{{result.brand.name}}</span>
-                                                    </div>
-                                                {{/unless}}
-
-                                                <div ng-if="boutique.options.showPrice.model" class="retailer-name"><span ng-bind="result.salePriceLabel || result.priceLabel">{{expression "result.salePriceLabel || result.priceLabel"}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+    <div class="tab-content" ng-show="activeTab.name == 'Boutique'">
+      <div class="widget-options">
+        <div class="presets">
+          <a class="preset fa fa-square" ng-model="preset.name" btn-radio="'lookbook'" class="preset"></a>
+          <a class="preset fa fa-th" ng-model="preset.name" btn-radio="'grid'" class="preset"></a>
+          <a class="preset fa fa-ellipsis-h" ng-model="preset.name" btn-radio="'row'" class="preset"></a>
         </div>
+        {{#forEach 'option' in boutique.sortedOptions}}
+          <div data-option="<span ng-bind=" option.name.toLowerCase() ">{{expression "option.name.toLowerCase() "}}</span>" class="widget-option" ng-repeat="option in boutique.sortedOptions" ng-attr-data-option="&#123;&#123;option.name.toLowerCase()&#125;&#125;">
+
+            <div class="name"><span ng-bind="option.name">{{option.name}}</span>
+            </div>
+            <input ng-if="option.type == 'checkbox'" type="checkbox" ng-model="option.model">
+            <span class="range-value" ng-if="option.type == 'range'"><span ng-bind="option.model">{{option.model}}</span></span>
+            <input ng-if="option.type == 'range'" type="range" min="<span ng-bind=" option.min ">{{option.min}}</span>" max="<span ng-bind=" option.max ">{{option.max}}</span>" step="<span ng-bind=" option.step ">{{option.step}}</span>" ng-model="option.model">
+            <select ng-class="{ pink: option.name == 'Collection' }" dir="rtl" ng-if="option.type == 'select'" ng-model="option.model" ng-options="option for option in option.options"></select>
+          </div>
+        {{/forEach}}
+
+        <div class="widget-option">
+          <span class="name">Widget Size</span>
+          <span class="widget-size"><span ng-bind="boutique.containerSize.width + 60">{{expression "boutique.containerSize.width + 60"}}</span> x <span ng-bind="boutique.containerSize.height">{{boutique.containerSize.height}}</span></span>
+        </div>
+
+        <div class="share-embed">
+          <div class="share-container">
+            <div class="share-label">Share</div>
+            <div class="share-buttons">
+              <a ng-click="toolShare('facebook')" class="fa fa-facebook social-icon"></a>
+              <a ng-click="toolShare('twitter')" class="fa fa-twitter social-icon"></a>
+              <a ng-click="toolShare('tumblr')" class="fa fa-tumblr social-icon"></a>
+
+              <a ng-click="toolShare('pinterest')" class="fa fa-pinterest social-icon"></a>
+              <a ng-click="toolShare('mail')" class="fa fa-envelope social-icon"></a>
+            </div>
+          </div>
+          <div class="code-container">
+            <div class="code-label">Embed</div>
+
+            <textarea ng-click="clickEmbedCode($event)" ng-keypress="keypressEmbedCode($event)" class="code">
+              <div data-ss-widget="grid" data-ss-widget-options='{ "columns": <span ng-bind="boutique.options.columns.model">{{boutique.options.columns.model}}</span>, "rows": <span ng-bind="boutique.options.rows.model">{{boutique.options.rows.model}}</span>, "showBrand": <span ng-bind="boutique.options.showBrand.model">{{boutique.options.showBrand.model}}</span>, "showInfo": <span ng-bind="boutique.options.showInfo.model">{{boutique.options.showInfo.model}}</span>, "showPrice": <span ng-bind="boutique.options.showPrice.model">{{boutique.options.showPrice.model}}</span>, "size": <span ng-bind="boutique.options.size.model">{{boutique.options.size.model}}</span> } '></div>
+              <script src=""></script>
+            </textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="widget-preview" ng-class="{ fade: state.loading, nowrap: boutique.options.showInfo.model != 'Best Fit' }">
+        <div ng-show="!selectedProducts.length" class="no-results center block well">You have no products selected! First search for products and click 'Add to Quicklist' to add items to your widget</div>
+
+        <div data-ss-widget class="widget-wrapper" ng-style="{ width: boutique.containerSize.width + 80 + 'px', height: boutique.containerSize.height + 'px'}">
+          <div class="widget-wrapper">
+            <i ng-show="boutique.pages.length > 1" ng-class="{disabled: boutique.currentPage == 0}" class="fa fa-chevron-left previous-page" ng-click="navigateGallery('left')"></i>
+            <i ng-show="boutique.pages.length > 1" ng-class="{disabled: boutique.currentPage == boutique.pages.length - 1}" class="fa fa-chevron-right next-page" ng-click="navigateGallery('right')"></i>
+          </div>
+          <div class="widget-wrapper">
+            <div class="widget-container" ng-style="{ width: boutique.containerSize.width + 'px', height: boutique.containerSize.height + 'px' }">
+              <div class="widget-scroller" ng-style="{ width: boutique.options.size.model * selectedProducts.length + 100 + 'px', height: boutique.containerSize.height + 'px', 'margin-left': '-' + (boutique.containerSize.width * boutique.currentPage) + 'px'}">
+                <div ng-repeat="page in boutique.pages" ng-style="{ width: boutique.containerSize.width + 'px', height: boutique.containerSize.height + 'px'}" class="widget-page">
+                  <div class="boutique-widget-span" ng-repeat="result in page">
+                    <div ng-style="{ width: boutique.options.size.model + 'px', height: boutique.options.size.model + 'px' }" data-show-on-hover="<span ng-bind=" boutique.options.showInfo.model ">{{boutique.options.showInfo.model}}</span>" data-show-brand="<span ng-bind="
+                    boutique.options.showBrand.model ">{{boutique.options.showBrand.model}}</span>" data-show-price="<span ng-bind=" boutique.options.showPrice.model ">{{boutique.options.showPrice.model}}</span>" class="widget-image boutique-widget">
+                      <div class="image-container">
+                        <img ng-src="&#123;&#123;result.image.sizes.Original.url&#125;&#125;" src="ng-src">
+                      </div>
+                      <div class="details">
+                        {{#if boutique.options.showBrand.model}}
+                          <div ng-if="boutique.options.showBrand.model" class="brand-name">
+                            <span ng-bind="result.brand.name">{{result.brand.name}}</span>
+                          </div>
+                        {{/if}}
+
+                        <div ng-if="boutique.options.showPrice.model" class="retailer-name"><span ng-bind="result.salePriceLabel || result.priceLabel">{{expression "result.salePriceLabel || result.priceLabel"}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>

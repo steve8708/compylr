@@ -1,71 +1,71 @@
 <div class="insights-container">
-    <div class="left-navbar">
-        <a ng-class="{ active: activeTab.name == 'earnings' }" ng-model="activeTab.name" btn-radio="'earnings'" class="left-nav-link">Earnings<i class="fa fa-caret-right"></i></a>
-        <a ng-class="{ active: activeTab.name == 'payments' }" ng-model="activeTab.name" btn-radio="'payments'" class="left-nav-link">Payments<i class="fa fa-caret-right"></i></a>
-        <a ng-class="{ active: activeTab.name == 'referalls' }" ng-model="activeTab.name" btn-radio="'referalls'" class="left-nav-link">Referrals<i class="fa fa-caret-right"></i></a>
-    </div>
-    <div class="tab-content">
-        <div ng-show="activeTab.name == 'earnings'" class="charts-container">
-            <div class="row numbers">
-                <div class="col-sm-3 col-xs-6">
-                    <div class="number">$10.55</div>
-                    <div class="number-label">Earned Today</div>
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                    <div class="number">$34.50</div>
-                    <div class="number-label">Earned This Week</div>
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                    <div class="number">$85.15</div>
-                    <div class="number-label">Earned This MOnth</div>
-                </div>
-                <div class="col-sm-3 col-xs-6">
-                    <div class="number">$100.00</div>
-                    <div class="number-label">Earned All Time</div>
-                </div>
+  <div class="left-navbar">
+    <a ng-class="{ active: activeTab.name == 'earnings' }" ng-model="activeTab.name" btn-radio="'earnings'" class="left-nav-link">Earnings<i class="fa fa-caret-right"></i></a>
+    <a ng-class="{ active: activeTab.name == 'payments' }" ng-model="activeTab.name" btn-radio="'payments'" class="left-nav-link">Payments<i class="fa fa-caret-right"></i></a>
+    <a ng-class="{ active: activeTab.name == 'referalls' }" ng-model="activeTab.name" btn-radio="'referalls'" class="left-nav-link">Referrals<i class="fa fa-caret-right"></i></a>
+  </div>
+  <div class="tab-content">
+    <div ng-show="activeTab.name == 'earnings'" class="charts-container">
+      <div class="row numbers">
+        <div class="col-sm-3 col-xs-6">
+          <div class="number">$10.55</div>
+          <div class="number-label">Earned Today</div>
+        </div>
+        <div class="col-sm-3 col-xs-6">
+          <div class="number">$34.50</div>
+          <div class="number-label">Earned This Week</div>
+        </div>
+        <div class="col-sm-3 col-xs-6">
+          <div class="number">$85.15</div>
+          <div class="number-label">Earned This MOnth</div>
+        </div>
+        <div class="col-sm-3 col-xs-6">
+          <div class="number">$100.00</div>
+          <div class="number-label">Earned All Time</div>
+        </div>
+      </div>
+
+      <div nvd3-line-chart id="nvEarningsChart" data="data.earningsData" resize="true" height="400" interactive="true" tooltips="true" showXAxis="true" showYAxis="true" xAxisOrient="bottom" tooltipcontent="toolTipContentFunction()" xAxisTickFormat="xAxisTickFormatFunction()"
+      yAxisTickFormat="yAxisTickFormatFunction()" xAxisTickValues="xTickValues" yAxisTickValues="yTickValues" xAxisShowMaxMin="true">
+        <div class="controls">
+          <div class="earnings-type-switch">
+            <div ng-class="{ active: controls.type == 'all' }" ng-click=" controls.type = 'all' " class="all-earnings type-option">All Earnings</div>
+            <div ng-class="{ active: controls.type == 'social' }" ng-click=" controls.type = 'social' " class="social-earnings type-option">Social Earnings</div>
+          </div>
+          <div class="selector date-selector">
+            <div class="selected">
+              Last <span ng-bind="controls.date">{{controls.date}}</span> Days
             </div>
-
-            <div nvd3-line-chart id="nvEarningsChart" data="data.earningsData" resize="true" height="400" interactive="true" tooltips="true" showXAxis="true" showYAxis="true" xAxisOrient="bottom" tooltipcontent="toolTipContentFunction()" xAxisTickFormat="xAxisTickFormatFunction()"
-            yAxisTickFormat="yAxisTickFormatFunction()" xAxisTickValues="xTickValues" yAxisTickValues="yTickValues" xAxisShowMaxMin="true">
-                <div class="controls">
-                    <div class="earnings-type-switch">
-                        <div ng-class="{ active: controls.type == 'all' }" ng-click=" controls.type = 'all' " class="all-earnings type-option">All Earnings</div>
-                        <div ng-class="{ active: controls.type == 'social' }" ng-click=" controls.type = 'social' " class="social-earnings type-option">Social Earnings</div>
-                    </div>
-                    <div class="selector date-selector">
-                        <div class="selected">
-                            Last <span ng-bind="controls.date">{{controls.date}}</span> Days
-                        </div>
-                        <div class="selection">
-                            <div ng-class="{ active: controls.date == '3' }" ng-click=" controls.date = '3' ">
-                                Last 3 Days
-                            </div>
-                            <div ng-class="{ active: controls.date == '7' }" ng-click=" controls.date = '7' ">
-                                Last 7 Days
-                            </div>
-                            <div ng-class="{ active: controls.date == '30' }" ng-click=" controls.date = '30' ">
-                                Last 30 days
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <svg></svg>
+            <div class="selection">
+              <div ng-class="{ active: controls.date == '3' }" ng-click=" controls.date = '3' ">
+                Last 3 Days
+              </div>
+              <div ng-class="{ active: controls.date == '7' }" ng-click=" controls.date = '7' ">
+                Last 7 Days
+              </div>
+              <div ng-class="{ active: controls.date == '30' }" ng-click=" controls.date = '30' ">
+                Last 30 days
+              </div>
             </div>
-            <div class="series-selector">
-                {{#forEach 'series' in data.earningsData " class="series-container}}
-                    <div ng-repeat="series in data.earningsData" class="series-container">
+          </div>
+        </div>
 
-                        <div ng-class="{inactive: series.disabled}" ng-click="toggleSeries(series)">
-                            <div class="series-color" style="background-color: <span ng-bind=" series.color ">{{series.color}}</span>" ng-attr-style="background-color: &#123;&#123;series.color&#125;&#125;"></div>
-                            <div class="series-name"><span ng-bind="series.key">{{series.key}}</span>
-                            </div>
-                        </div>
-                    </div>
-                {{/forEach}}
+        <svg></svg>
+      </div>
+      <div class="series-selector">
+        {{#forEach 'series' in data.earningsData}}
+          <div ng-repeat="series in data.earningsData" class="series-container">
 
+            <div ng-class="{inactive: series.disabled}" ng-click="toggleSeries(series)">
+              <div class="series-color" style="background-color: <span ng-bind=" series.color ">{{series.color}}</span>" ng-attr-style="background-color: &#123;&#123;series.color&#125;&#125;"></div>
+              <div class="series-name"><span ng-bind="series.key">{{series.key}}</span>
+              </div>
             </div>
-            <h3 class="best-performers">
+          </div>
+        {{/forEach}}
+
+      </div>
+      <h3 class="best-performers">
         <span class="text">Best Performers</span>
         <div class="selector date-selector">
         <div class="selected">
@@ -85,59 +85,59 @@
       </div>
 
       </h3>
-            <div class="row">
-                <div class="col-md-4">
-                    <h4>Best Category</h4>
-                    <div nvd3-pie-chart data="data.best.categories" id="exampleId1" resize="true" width="354" height="360" x="xFunction()" y="yFunction()" showLegend="true" tooltips="true" tooltipcontent="toolTipBestContentFunction()" color="colorFunction()">
-                        <svg></svg>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <h4>Best Weekday</h4>
-                    <div nvd3-pie-chart data="data.best.weekDays" id="exampleId2" resize="true" width="354" height="360" x="xFunction()" y="yFunction()" showLegend="true" tooltips="true" tooltipcontent="toolTipBestContentFunction()" color="colorFunction()">
-                        <svg></svg>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <h4>Best Social Network</h4>
-                    <div nvd3-pie-chart data="data.best.socialNetworks" id="exampleId3" resize="true" width="354" height="380" x="xFunction()" y="yFunction()" showLegend="true" tooltips="true" tooltipcontent="toolTipBestContentFunction()" color="colorFunction()">
-                        <svg></svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-6">
-                    <h4>Top Brands</h4>
-                    <ul class="list-unstyled">
-                        <li class="top-list-item" ng-repeat="brand in data.best.brands|orderBy: '-y'">
-                            <a href="<span ng-bind=" brand.url ">{{brand.url}}</span>" target="_blank">
-                                <span class="name"><span ng-bind="brand.key">{{brand.key}}</span></span>
-                            </a>
-                            <span class="value">$<span ng-bind="brand.y">{{brand.y}}</span></span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-6">
-                    <h4>Top Retailers</h4>
-                    <ul class="list-unstyled">
-                        <li class="top-list-item" ng-repeat="retailer in data.best.retailers|orderBy: '-y'">
-                            <a href="<span ng-bind=" retailer.url ">{{retailer.url}}</span>" target="_blank">
-                                <span class="name"><span ng-bind="retailer.key">{{retailer.key}}</span></span>
-                            </a>
-                            <span class="value">$<span ng-bind="retailer.y">{{retailer.y}}</span></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+      <div class="row">
+        <div class="col-md-4">
+          <h4>Best Category</h4>
+          <div nvd3-pie-chart data="data.best.categories" id="exampleId1" resize="true" width="354" height="360" x="xFunction()" y="yFunction()" showLegend="true" tooltips="true" tooltipcontent="toolTipBestContentFunction()" color="colorFunction()">
+            <svg></svg>
+          </div>
         </div>
-
-        <div ng-show="activeTab.name == 'payments'" class="payments-container">
-            <div class="padded">TODO...</div>
+        <div class="col-md-4">
+          <h4>Best Weekday</h4>
+          <div nvd3-pie-chart data="data.best.weekDays" id="exampleId2" resize="true" width="354" height="360" x="xFunction()" y="yFunction()" showLegend="true" tooltips="true" tooltipcontent="toolTipBestContentFunction()" color="colorFunction()">
+            <svg></svg>
+          </div>
         </div>
-
-        <div ng-show="activeTab.name == 'referalls'" class="referalls-container">
-            <div class="padded">TODO...</div>
+        <div class="col-md-4">
+          <h4>Best Social Network</h4>
+          <div nvd3-pie-chart data="data.best.socialNetworks" id="exampleId3" resize="true" width="354" height="380" x="xFunction()" y="yFunction()" showLegend="true" tooltips="true" tooltipcontent="toolTipBestContentFunction()" color="colorFunction()">
+            <svg></svg>
+          </div>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <h4>Top Brands</h4>
+          <ul class="list-unstyled">
+            <li class="top-list-item" ng-repeat="brand in data.best.brands|orderBy: '-y'">
+              <a href="<span ng-bind=" brand.url ">{{brand.url}}</span>" target="_blank">
+                <span class="name"><span ng-bind="brand.key">{{brand.key}}</span></span>
+              </a>
+              <span class="value">$<span ng-bind="brand.y">{{brand.y}}</span></span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-6">
+          <h4>Top Retailers</h4>
+          <ul class="list-unstyled">
+            <li class="top-list-item" ng-repeat="retailer in data.best.retailers|orderBy: '-y'">
+              <a href="<span ng-bind=" retailer.url ">{{retailer.url}}</span>" target="_blank">
+                <span class="name"><span ng-bind="retailer.key">{{retailer.key}}</span></span>
+              </a>
+              <span class="value">$<span ng-bind="retailer.y">{{retailer.y}}</span></span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
+
+    <div ng-show="activeTab.name == 'payments'" class="payments-container">
+      <div class="padded">TODO...</div>
+    </div>
+
+    <div ng-show="activeTab.name == 'referalls'" class="referalls-container">
+      <div class="padded">TODO...</div>
+    </div>
+  </div>
 </div>

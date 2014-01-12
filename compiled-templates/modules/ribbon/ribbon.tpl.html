@@ -1,16 +1,16 @@
 <div class="shopsense-search-container" ng-show="showSearch" ng-class="{ active: showSearch, 'not-active': !showSearch }" ng-controller="SearchCtrl" ng-include="'modules/search/search.tpl.html'">
-    {{> modules/search/search}}</div>
+  {{> modules/search/search}}</div>
 <div class="ribbon-content-container" ng-include="'templates/main-tab-content.tpl.html'"></div>
 
 <div class="ribbon-body" ng-class="{ 'on-shopstyle': onShopstyle, 'no-product-found': !findLink.productOnPage }">
 
-    <a target="_blank" href="http://proto.shopsense.s3-website-us-west-2.amazonaws.com/">
-        <img class="shopsense-logo" src="https://shopsense.shopstyle.com/7b280/im/shopsense/logo.png">
-    </a>
+  <a target="_blank" href="http://proto.shopsense.s3-website-us-west-2.amazonaws.com/">
+    <img class="shopsense-logo" src="https://shopsense.shopstyle.com/7b280/im/shopsense/logo.png">
+  </a>
 
-    <div class="btn-group ribbon-options">
-        {{#if !onShopstyle}}
-            <a ng-if="!onShopstyle" ng-class="{ active: openTab.name == 'link' }" ng-click="openTab.name = openTab.name == 'link' ? null : 'link'" class="btn link-btn">
+  <div class="btn-group ribbon-options">
+    {{#unless onShopstyle}}
+      <a ng-if="!onShopstyle" ng-class="{ active: openTab.name == 'link' }" ng-click="openTab.name = openTab.name == 'link' ? null : 'link'" class="btn link-btn">
 
         <img ng-show="findLink.productOnPage" class="get-link-img" ng-src="<span ng-bind="findLink.productOnPage.image.sizes.Small.url">{{findLink.productOnPage.image.sizes.Small.url}}</span>" ng-attr-ng-src="&#123;&#123;findLink.productOnPage.image.sizes.Small.url&#125;&#125;">
         <input ng-keypress="$event.preventDefault()" ng-click="selectTarget($event)" ng-show="findLink.productOnPage" class="get-link-input" value="<span ng-bind="findLink.productOnPage.clickUrl">{{findLink.productOnPage.clickUrl}}</span>">
@@ -19,28 +19,28 @@
           Product Link
         
       </a>
-        {{/if}}
+    {{/unless}}
 
-        <a ng-class="{ active: openTab.name == 'account' }" ng-click="openTab.name = openTab.name == 'account' ? null : 'account'" class="btn"><i class="fa fa-user"></i> Account</a>
-        <a ng-class="{ active: openTab.name == 'insights' }" ng-click="openTab.name = openTab.name == 'insights' ? null : 'insights'" class="btn"><i class="fa fa-bar-chart-o"></i> Insights</a>
+    <a ng-class="{ active: openTab.name == 'account' }" ng-click="openTab.name = openTab.name == 'account' ? null : 'account'" class="btn"><i class="fa fa-user"></i> Account</a>
+    <a ng-class="{ active: openTab.name == 'insights' }" ng-click="openTab.name = openTab.name == 'insights' ? null : 'insights'" class="btn"><i class="fa fa-bar-chart-o"></i> Insights</a>
 
-        <a ng-if="!onShopstyle" ng-class="{ active: openTab.name == 'search' }" ng-click="openTab.name = openTab.name == 'search' ? null : 'search'" class="btn"><i class="fa fa-search"></i> Search</a>
+    <a ng-if="!onShopstyle" ng-class="{ active: openTab.name == 'search' }" ng-click="openTab.name = openTab.name == 'search' ? null : 'search'" class="btn"><i class="fa fa-search"></i> Search</a>
 
-        <a ng-class="{ active: openTab.name == 'tag' }" ng-click="openTab.name = openTab.name == 'tag' ? null : 'tag'" class="btn"><i class="fa fa-circle-o"></i> Tag Photo</a>
-        <a ng-class="{ active: openTab.name == 'tools' }" ng-click="openTab.name = openTab.name == 'tools' ? null : 'tools'" class="btn"><i class="fa fa-th"></i> Widget</a>
-        <a ng-class="{ active: openTab.name == 'post' }" ng-click="openTab.name = openTab.name == 'post' ? null : 'post'" class="btn"><i class="fa fa-plus"></i> Post</a>
-    </div>
+    <a ng-class="{ active: openTab.name == 'tag' }" ng-click="openTab.name = openTab.name == 'tag' ? null : 'tag'" class="btn"><i class="fa fa-circle-o"></i> Tag Photo</a>
+    <a ng-class="{ active: openTab.name == 'tools' }" ng-click="openTab.name = openTab.name == 'tools' ? null : 'tools'" class="btn"><i class="fa fa-th"></i> Widget</a>
+    <a ng-class="{ active: openTab.name == 'post' }" ng-click="openTab.name = openTab.name == 'post' ? null : 'post'" class="btn"><i class="fa fa-plus"></i> Post</a>
+  </div>
 
-    <span class="selected-products-container">
+  <span class="selected-products-container">
       <a ng-show="selectedProducts.length" class="btn fa fa-times clear-selected-products-button" ng-click="utils.clear(selectedProducts)"></a>
       <span class="selected-products">
-        {{#forEach 'product' in selectedProducts" class="selected-product" ng-style="{ 'background-image': 'url(' + product.image.sizes.Small.url + ')' }}}
+        {{#forEach 'product' in selectedProducts}}
 <a ng-click="utils.remove(selectedProducts, product)" ng-repeat="product in selectedProducts" class="selected-product" ng-style="{ 'background-image': 'url(' + product.image.sizes.Small.url + ')' }">
 </a>
 {{/forEach}}
 
       </span>
-    </span>
+  </span>
 </div>
 
 <!-- <a ng-click="hideRibbon = false" ng-show="hideRibbon" class="mini-ribbon">

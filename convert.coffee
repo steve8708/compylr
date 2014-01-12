@@ -10,10 +10,18 @@
 #   - options
 #     - no prettify
 #     - no strip comments
+#
+
+
+config =
+  verbose: false
 
 argv = require('optimist').argv
 fs = require 'fs'
 beautifyHtml = require('js-beautify').html
+
+verboseLog = (args...) ->
+  console.info args... if config.verbose
 
 stripComments = (str) ->
   str.replace(/<!--[\s\S]*?-->/g, '')
@@ -21,7 +29,7 @@ stripComments = (str) ->
 convert = (options) ->
   filePath = argv.file or options.filePath
   if filePath
-    console.log 'filePath', filePath
+    verboseLog 'filePath', filePath
     file = fs.readFileSync filePath, 'utf8'
   else
     file = options.string or options
@@ -39,7 +47,10 @@ convert = (options) ->
       modifier = if type is '#' then '' else '/'
       "<#{modifier}##{body}>"
 
-    pretty = beautifyHtml str
+    pretty = beautifyHtml str,
+      indent_size: 2
+      indent_inner_html: true
+      preserve_newlines: false
 
     pretty = pretty
       .replace /<(\/?#)(.*)>/g, (match, modifier, body) ->
@@ -120,8 +131,8 @@ convert = (options) ->
     throw new Error 'infinite update loop' if i++ > maxIters
 
     interpolated = interpolated
-      .replace(/<[^>]*?ng\-repeat="(.*?)">([\S\s]+)/gi, (match, text, post) ->
-        console.log 'match 1'
+      .replace(/<[^>]*?ng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
+        verboseLog 'match 1'
         updated = true
         varName = text
         varNameSplit = varName.split ' '
@@ -136,12 +147,12 @@ convert = (options) ->
       )
       # TODO: 'ifExpression' separate from  'if'
       .replace(/<[^>]*?ng-if="(.*?)".*?>([\S\s]+)/, (match, varName, post) ->
-        console.log 'match 2'
+        verboseLog 'match 2'
         updated = true
         varName = varName.trim()
         # TODO: expressions
         tagName = if varName.split(' ')[1] then 'ifExpression' else 'if'
-        if varName.indexOf('!') and tagName is 'if'
+        if varName.indexOf('!') is 0 and tagName is 'if'
           tagName = 'unless'
           varName = varName.substr 1
         else if tagName is 'ifExpression'
@@ -154,20 +165,20 @@ convert = (options) ->
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
       )
       .replace(/<[^>]*?ng-include="'(.*)'".*?>/, (match, includePath, post) ->
-        console.log 'match 3'
+        verboseLog 'match 3'
         updated = true
         includePath = includePath.replace '.tpl.html', ''
         escapeReplacement "#{match}\n{{> #{includePath}}}"
       )
       .replace(/(ng-src|ng-href|ng-value)="(.*)"/, (match, src) ->
-        console.log 'match 4'
+        verboseLog 'match 4'
         updated = true
         escapedMatch = escapeCurlyBraces match
         escapeReplacement """#{escapedMatch} src="#{src}" """
       )
       # FIXME: this doesn't support multiple interpolations in one tag
       .replace(/<[^>]*?([\w\-_]+)\s*?=\s*?"([^">]*?\{\{[^">]+\}\}[^">*]?)".*?>/, (match, attrName, attrVal) ->
-        console.log 'match 5'
+        verboseLog 'match 5'
         # Match without the final '#'
         trimmedMatch = match.substr 0, match.length - 1
         trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
@@ -189,7 +200,7 @@ convert = (options) ->
 
       interpolated = interpolated
         .replace(/\{\{([^#\/>_][\s\S]*?)\}\}/g, (match, body) ->
-          console.log 'match 7'
+          verboseLog 'match 7'
           body = body.trim()
           words = body.match /[\w\.]+/
           if body.indexOf('expression') isnt 0
@@ -197,7 +208,7 @@ convert = (options) ->
             prefix = ''
             suffix = ''
             if words and words[0].length isnt body.length
-              console.log 'body', body
+              verboseLog 'body', body
               prefix = 'expression "'
               suffix = '"'
             escapeBraces """<span ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""

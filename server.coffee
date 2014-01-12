@@ -46,7 +46,6 @@ for type in ['templates', 'modules/account', 'modules/home', 'modules/insights',
 handlebars.registerHelper "ifExpression", (expression, options) ->
   fn = new Function expression
   value = null
-  # console.log 'pageData', pageData
 
   # TODO: there are better ways to do this, borrow angular eval function
   ast = parse(expression).body[0].expression
@@ -60,7 +59,6 @@ handlebars.registerHelper "ifExpression", (expression, options) ->
 handlebars.registerHelper "expression", (expression, options) ->
   fn = new Function expression
   value = null
-  # console.log 'pageData', pageData
 
   # TODO: there are better ways to do this, borrow angular eval function
   ast = parse(expression).body[0].expression

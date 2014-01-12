@@ -1,0 +1,5 @@
+<a class="category-name" ng-class="{ active: data.active }"  ng-click="clickCategory( data )">{{data.name}}</a>
+<i class="fa fa-check check-icon" ng-if="data.active"></i>
+<ul class="list-unstyled tree-ul">
+  <li ng-if="data.visible" ng-repeat="data in data.children" ng-include="'modules/search/tree-view.tpl.html'"></li>
+</ul>

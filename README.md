@@ -1,7 +1,7 @@
 ![Imgur](http://i.imgur.com/XeaMTNW.png)
 
-Compiles angular apps to be run on any backend. SEO is not longer a problem
-for single page apps. Maximum performance, minimal load times, optimal development efficiency.
+Compiles angular apps to run on any server, regardless of language or platform, with server side rendering, SEO support, route logic sharing, and state persistence.
+Maximum performance, minimal load times, optimal development efficiency, 100% SEO support
 
 ## How it works
 * Compiles Angular Templates to Handlebars Templates

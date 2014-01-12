@@ -4,6 +4,7 @@ Compiles angular apps to run on any server, regardless of language or platform, 
 Maximum performance, minimal load times, optimal development efficiency, 100% SEO support
 
 ## How it works
+* 100% automatic - configure your routes, compile your app, enjoy.
 * Compiles Angular Templates to Handlebars Templates
 * Standardizes route configuration using JSON for angular and any backend (via an adapter)
 * Standardizes state management with angular and any backend (via an adapter)
@@ -30,38 +31,38 @@ Maximum performance, minimal load times, optimal development efficiency, 100% SE
     to handlebars expressions and to ng-attributes so the template
     can be immediately displayed in the browser but angular can still
     find all necessary hooks to take control of the application once loaded
-  * e.g. '{{foo}}' -> '<span ng-bind="foo">{{foo}}<span>'
+  * e.g. '{{foo}}' ➜ '<span ng-bind="foo">{{foo}}<span>'
 
 ## Supports
 * **ng-repeat**
-  * `<a ng-repeat="foo in bar"></a>` -> `{{#forEach 'foo' in bar}}<a ng-repeat="foo in bar"></a>{{/forEach}}`
+  * `<a ng-repeat="foo in bar"></a>` ➜ `{{#forEach 'foo' in bar}}<a ng-repeat="foo in bar"></a>{{/forEach}}`
 * **ng-include**
-  * `<div ng-include="'path/to/partial'"></div>` -> `{{> path/to/partial}}`
+  * `<div ng-include="'path/to/partial'"></div>` ➜ `{{> path/to/partial}}`
 * **ng-show**
-  * `<img ng-show="foo && bar">` -> `<img ng-show="foo" {{hbsShow "foo && bar"}}>`
+  * `<img ng-show="foo && bar">` ➜ `<img ng-show="foo" {{hbsShow "foo && bar"}}>`
 * **ng-hide**
-  * `<input ng-show="foo || bar">` -> `<input ng-show="foo" {{hbsHide "foo || bar"}}>`
+  * `<input ng-show="foo || bar">` ➜ `<input ng-show="foo" {{hbsHide "foo || bar"}}>`
 * **ng-if**
-  * `<img ng-if="foo.length">` -> `{{#if foo.length}}<img ng-if="foo.length">{{/if}}`
-  * `<img ng-if="foo && bar">` -> `{{#ifExpression "foo && bar"}}<img ng-if="foo.length">{{/ifExpression}}`
+  * `<img ng-if="foo.length">` ➜ `{{#if foo.length}}<img ng-if="foo.length">{{/if}}`
+  * `<img ng-if="foo && bar">` ➜ `{{#ifExpression "foo && bar"}}<img ng-if="foo.length">{{/ifExpression}}`
 * **ng-click**
-  * `<a ng-click="foo = !bar">` -> `<a href="?action=foo!%3Dbar"></a>`
+  * `<a ng-click="foo = !bar">` ➜ `<a href="?action=foo!%3Dbar"></a>`
 * **ng-class**
-  * `<img class="small" ng-class="{ active: imgVisible }">` -> `<img class="small {{#if imgVisible}}active{{/if}}`
+  * `<img class="small" ng-class="{ active: imgVisible }">` ➜ `<img class="small {{#if imgVisible}}active{{/if}}`
 * **ng-style**
-  * `<img ng-style="{ color: mainColor }">` -> `<img style="{{styleExpression '{ color: mainColor }'}}`
+  * `<img ng-style="{ color: mainColor }">` ➜ `<img style="{{styleExpression '{ color: mainColor }'}}`
 * **ng-attr-***
-  * `<img ng-attr-src="{{logo}}">` -> `<img src="{{logo}}">`
+  * `<img ng-attr-src="{{logo}}">` ➜ `<img src="{{logo}}">`
 * **ng-href, ng-value, ng-src**
-  * `<a ng-href="{{home}}"></a>` -> `<a href="{{home}}"></a>`
+  * `<a ng-href="{{home}}"></a>` ➜ `<a href="{{home}}"></a>`
 * **ng-bind**
-  * `<span ng-bind="user.name"></span>` -> `<span>{{user.name}}</span>`
+  * `<span ng-bind="user.name"></span>` ➜ `<span>{{user.name}}</span>`
 * **Interpolations**
-  * `{{foo}}` -> '<span ng-bind="foo"></span>'
-  * `<img name="{{foo}}">` -> `<img ng-attr-name="{{foo}}">`
+  * `{{foo}}` ➜ '<span ng-bind="foo"></span>'
+  * `<img name="{{foo}}">` ➜ `<img ng-attr-name="{{foo}}">`
 * **Expressions**
-  * `{{ foo && bar }}` -> `{{expression "foo && bar"}}`
-  * `<img src="{{ foo[bar] || attributes }}>"` -> `<img src="{{expression 'foo[bar] || attributes'}}>`
+  * `{{ foo && bar }}` ➜ `{{expression "foo && bar"}}`
+  * `<img src="{{ foo[bar] || attributes }}>"` ➜ `<img src="{{expression 'foo[bar] || attributes'}}>`
 
 ## State & Route Configuration
 Configure your state and routes in one place and Compilr

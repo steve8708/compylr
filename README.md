@@ -1,4 +1,4 @@
-# Angular App Compiler
+# Compilr
 Compiles angular apps to be run on any backend. SEO is not longer a problem
 for single page apps. Maximum performance, load times, development efficiency.
 

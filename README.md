@@ -1,15 +1,15 @@
 ![Compilr](http://i.imgur.com/sgvfBB7.png)
 
 Compiles angular apps for rendering on any backend, regardless of language or platform.
-Server side rendering, full angular expression support, 100% SEO comparible, client/server route logic sharing, and environment agnostic state persistence.
-
-Maximum performance, minimal load times, optimal development efficiency, 100% SEO support.
+Server side rendering, full angular expression support, 100% SEO comparible,
+client/server route logic sharing, and environment agnostic state persistence.
 
 Build apps that load fast and feel amazing.
 
 ## Purpose
-* Write your angular app, auto compile to your backend, never think about SEO again.
-* Maximum performance (don't run a bunch of frontend-specific code just to render your templates for faster loadtimes and SEO)
+* Simplicity: you write your angular app, let Compilr do the rest
+* Maximum performance
+* Minimal pageload times
 * Backend agnostic
 
 ## How it works
@@ -72,7 +72,7 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
 ```html
 {{#forEach 'foo' in bar}}
   <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">
-    <img src="{{user.image}}" ng-attr-src="&amp;#123;&amp;#123;user.image&amp;#123;&amp;#123;" ng-show="foo" {{hbsShow "foo && bar"}}>
+    <img src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}} ng-attr-src="&amp;#123;&amp;#123;user.image&amp;#123;&amp;#123;">
 
     <span ng-bind="foo">{{foo}}</span>
 

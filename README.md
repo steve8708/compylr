@@ -8,10 +8,11 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 
 ## Purpose
-* Simplicity: you write your angular app, let Compilr do the rest
+* Simplicity (write your angular app, let Compilr do the rest)
 * Maximum performance
 * Minimal pageload times
 * Backend agnostic
+* Easily share state and route logic on client and server
 
 
 ## How it works

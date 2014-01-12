@@ -1,7 +1,7 @@
 <div class="search-page-container">
-  <div ng-class="{ show: activeProduct.product && !hideModal }" class="modal-container" ng-click="$event.target == $event.currentTarget ? closeModal() : null">
+  <div ng-show="activeProduct.product" class="modal-container show" ng-click="$event.target == $event.currentTarget ? closeModal() : null">
     <div class="modal-body selectable">
-      <a ng-click="closeModal()" class="close-modal-button">+</a>
+      <a href="/{{openTab.name}}/{{activeTab.name}}" ng-click="closeModal()" class="close-modal-button">+</a>
       <div class="preview-image-container">
         <img ng-if="activeProduct.product" load-animation="fade" class="preview-image" ng-src="{{activeProduct.product.image.sizes.Original.url}}">
         <!-- <img load-animation="fade" class="preview-image" ng-src="{{activeProduct.product.image.sizes.Original.url}}"> -->
@@ -228,7 +228,7 @@
             </div>
             <!-- FIXME: height and width info is clearly broken -->
             <div class="product-image-container">
-              <a href="/{{openTab.name}}/{{mode.name}}/{{product.id}}">
+              <a href="/{{openTab.name}}/{{mode.name}}/{{result.id}}">
                 <img ng-click="showModal(result)" load-animation="fade" class="search-result-image" ng-src="{{result.image.sizes.Large.url}}">
               </a>
             </div>

@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link rel="stylesheet" type="text/css" href="http://localhost:5100/ribbon/shopsense-proto-0.0.1.css">
-    <script type="text/javascript" src="http://localhost:5100/ribbon/shopsense-proto-0.0.1.js"></script>
+    <script ng-if="!noJS" type="text/javascript" src="http://localhost:5100/ribbon/shopsense-proto-0.0.1.js"></script>
 
     {{#interpolatedScript type="text/javascript"}}
       window.bootstrappedData = {{json $data}};
@@ -26,7 +26,7 @@
   </head>
   <body ui-event="{ dragover: '$event.preventDefault()', drop: '$event.preventDefault()' }">
     <header class="header hidden-xs">
-      <img class="logo" src="assets/images/shopsense-logo.png">
+      <img class="logo" src="http://proto.shopsense.s3-website-us-west-2.amazonaws.com/assets/images/shopsense-logo.png">
 
       <nav class="navbar navbar-default main-nav" role="navigation">
         <ul class="nav navbar-nav">
@@ -52,9 +52,9 @@
             <a href="/post" ng-model="openTab.name" btn-radio="'post'"><i class="fa fa-plus"></i> Post</a>
           </li>
           <li class="main-selected-products-container">
-            <a ng-show="selectedProducts.length" class="btn fa fa-times clear-selected-products-button" ng-click="utils.clear(selectedProducts)"></a>
+            <a click-action="selectedProducts = []" ng-show="selectedProducts.length" class="btn fa fa-times clear-selected-products-button" ng-click="utils.clear(selectedProducts)"></a>
 
-            <a ng-click="utils.remove(selectedProducts, product)" class="main-selected-product" ng-repeat="product in selectedProducts">
+            <a click-action="toggleSelectedProduct({{product.id}})" ng-click="utils.remove(selectedProducts, product)" class="main-selected-product" ng-repeat="product in selectedProducts">
               <img src="{{product.image.sizes.Small.url}}">
             </a>
           </li>

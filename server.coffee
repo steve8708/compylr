@@ -14,6 +14,9 @@ app = express()
 templatesDir = 'compiled-templates'
 preCompiledTemplatesDir = 'templates'
 
+app.use express.cookieParser()
+app.use express.session secret: 'foobar', store: new express.session.MemoryStore
+
 app.engine 'html', exphbs
   defaultLayout: 'main'
   layoutsDir: './'
@@ -22,8 +25,6 @@ app.engine 'html', exphbs
 
 app.set 'view engine', 'handlebars'
 app.set 'views', __dirname
-
-fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompiledTemplatesDir}/index.tpl.html"
 
 expressionCache = {}
 
@@ -34,7 +35,13 @@ evalExpression = (expression, context) ->
   expressionCache[expression] = expressionBody unless expressionCache[expression]
   try
     value = evaluate expressionBody, context
+  catch error
+    console.warn 'Expression error', error
   value
+
+console.info 'Compiling templates...'
+
+fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompiledTemplatesDir}/index.tpl.html"
 
 # TODO: make this recursively support infinite depth
 # TODO: move this to convert.coffee and allow recursive src and dest options
@@ -46,6 +53,7 @@ for type in ['templates', 'modules/account', 'modules/home', 'modules/insights',
     partialName = "#{type}/#{fileName}"
     mkdirp.sync "./#{templatesDir}/#{type}"
     fs.writeFileSync "./#{templatesDir}/#{partialName}", convert file: "#{path}#{fileName}"
+console.info 'Compiling done.'
 
 handlebars.registerHelper "ifExpression", (expression, options) ->
   fn = new Function expression
@@ -74,7 +82,8 @@ handlebars.registerHelper "hbsHide", (expression, options) ->
   value = evalExpression expression, @
   if value then 'data-hbs-hide' else 'data-hbs-show'
 
-handlebars.registerHelper "json", (obj) ->
+handlebars.registerHelper "json", (args..., options) ->
+  obj = args[0] or @
   new handlebars.SafeString JSON.stringify obj, null, 2
 
 handlebars.registerHelper "interpolatedScript", (options) ->
@@ -87,6 +96,7 @@ handlebars.registerHelper "interpolatedScript", (options) ->
 
 # TODO: looping through options
 #   (key, value) in bar
+# TODO: eachIndex
 handlebars.registerHelper "forEach", (name, _in, context) ->
   options = _.last arguments
   fn = options.fn
@@ -131,51 +141,78 @@ handlebars.registerHelper "forEach", (name, _in, context) ->
 cache =
   results: {}
 
-resultsSuccess = (req, res, results, localData) ->
-  localData.results = localData.$data.results = results
-  localData.selectedProducts = results.slice 0, 6
+resultsSuccess = (req, res, results) ->
+  sessionData = req.session.pageData or= _.cloneDeep pageData
+  sessionData.results = results
+  # unless sessionData.selectedProducts.length
+  #   sessionData.selectedProducts.unshift results.slice(0, 6)...
   product = req.params.product
   if product
-    focus = localData.activeProduct.product = _.find results, (item) ->
+    sessionData.activeProduct.product = _.find results, (item) ->
       "#{item.id}" is "#{product}"
+  else
+    sessionData.activeProduct.product = null
 
-  res.render "#{templatesDir}/index.tpl.html", localData
+  res.render "#{templatesDir}/index.tpl.html", sessionData
+
+currentReq = null
+
+toggleSelectedProduct = (product) ->
+  sessionData = currentReq.session.pageData or= _.cloneDeep pageData
+  id = product and product.id or product
+  foundProduct = _.find sessionData.selectedProducts, (item) ->
+    item and "#{item.id}" is "#{id}"
+  if product
+    sessionData.selectedProducts.unshift product
+  else
+    sessionData.selectedProducts.splice sessionData.selectedProducts.indexOf(product), 1
+
+
 
 app.get '/:page?/:tab?/:product?', (req, res) ->
+  currentReq = req
   page = req.params.page or 'search'
   tab = req.params.tab
   product = req.params.product
-  query = req.query.fts
+  query = req.query.fts or ''
+  sessionData = req.session.pageData or= _.cloneDeep pageData
+
   if page and not tab and tabDefaults[page]
     return res.redirect "/#{page}/#{tabDefaults[page]}"
-  localData = _.cloneDeep pageData
-  localData.openTab.name = page
-  localData.activeTab.name = localData.accountTab = localData.mode.name = tab
-  _.extend localData, $data: _.cloneDeep localData
-  # localData.activeTab.name = 'earnings'
-  localData.query.value = query
+
+  action = req.query.action
+  if action
+    console.log 'action 1', action, pageData
+    # evalExpression action, pageData
+    # FIXME: get eval out of here
+    `with (sessionData) {
+      eval(action);
+    }`
+    console.log 'action 2', action, pageData
+
+  sessionData.noJS = req.query.nojs
+  sessionData.openTab.name = page
+  sessionData.urlPath = req._parsedUrl.path.replace /\/$/, ''
+  sessionData.urlPathList = sessionData.urlPath.split '/'
+  sessionData.activeTab.name = sessionData.accountTab = sessionData.mode.name = tab
+  # _.extend sessionData, $data: sessionData
+  # sessionData.activeTab.name = 'earnings'
+  sessionData.query.value = query
 
   pid = 'uid5204-23781302-79'
   urlBase = "http://api.shopstyle.com/api/v2"
   url = "#{urlBase}/products/?pid=#{pid}&limit=30&sort=Popular&fts=#{query or ''}"
 
-  if page is 'search'
-    cached = cache.results[query]
-    if cached
-      resultsSuccess req, res, cached, localData
-    request.get url, (err, response, body) ->
-      console.log 'NOT CACHED'
-      results = JSON.parse(body).products
-      cache.results[query] = results
-      resultsSuccess req, res, results, localData
-      null
+  cached = cache.results[query]
+  if cached
+    resultsSuccess req, res, cached
+  request.get url, (err, response, body) ->
+    results = JSON.parse(body).products
+    cache.results[query] = results
+    resultsSuccess req, res, results
+    null
 
-
-  else
-    res.render "#{templatesDir}/index.tpl.html", localData
-
-
-console.info 'Listening in port 3000...'
+console.info 'Listening on port 3000...'
 app.listen 3000
 
 
@@ -184,8 +221,12 @@ tabDefaults =
   account: 'settings'
   search: 'search'
 
-
+# Sync these with session: expression sessino
 pageData =
+  show:
+    showPrice: true
+    showBrand: true
+    showName: true
   activeProduct: {}
   query: value: ''
   mode: name: 'search'

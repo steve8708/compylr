@@ -70,7 +70,7 @@
         <div ng-if="selectedProducts.length" class="post-container">
           <h3 class="post-title">Post</h3>
           <div ng-init="show = {}; show.showPrice = true; show.showBrand = true; show.showName = true" class="options">
-            <label for="showPrice">Show Product Name</label>
+            <label for="showName">Show Product Name</label>
             <input name="showName" type="checkbox" ng-model="show.showName">
 
             &nbsp;&nbsp;&nbsp;
@@ -81,7 +81,7 @@
             &nbsp;&nbsp;&nbsp;
 
             <label for="showPrice">Show Price</label>
-            <input name="showPrice" type="checkbox" ng-model="show.showPrice">
+            <input value="{{show.showPrice}}" name="showPrice" type="checkbox" ng-model="show.showPrice">
 
             &nbsp;&nbsp;&nbsp;
 

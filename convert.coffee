@@ -1,18 +1,5 @@
 #!/usr/bin/env coffee
 
-# TODO:
-#   - crawl full directory of templates and partials and output new tree of files
-#   - partials (crawl and map directory this script gets pointed to)
-#   - flask server render whole app backend a page at a time
-#   - angular hook into page post-render
-#   - prettify output
-#
-#   - options
-#     - no prettify
-#     - no strip comments
-#
-
-
 config =
   verbose: false
 
@@ -65,6 +52,7 @@ convert = (options) ->
   #   replace '\n' with '\n  ' where '  ' is 2 spaces * depth
   #   Maybe prettify at very end instead
   getCloseTag = (string) ->
+    string = string.trim()
     index = 0
     depth = 0
     open = string.match(/<.*?>/)[0]
@@ -74,9 +62,8 @@ convert = (options) ->
     if tagName in selfClosingTags
       out =
         before: open
-        after: string.substr open.length
+        after: string
       return out
-
 
     for char, index in string
       # Close tag
@@ -191,12 +178,25 @@ convert = (options) ->
         match = match.replace /\sng-include=/, ' data-ng-include='
         "#{match}\n{{> #{includePath}}}"
       )
-      .replace(/\s(ng-src|ng-href|ng-value)="(.*)"/, (match, attrName, attrValue) ->
+      .replace(/\s(ng-src|ng-href|ng-value)="(.*)"/, (match, attrName, attrVal) ->
         verboseLog 'match 4'
         updated = true
         escapedMatch = escapeCurlyBraces match
-        escapedAttrValue = escapeBraces attrValue
-        """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrValue}" """
+        escapedAttrVal = escapeBraces attrVal
+        """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
+      )
+      .replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, (match, tagName, attrName, attrVal) ->
+        verboseLog 'match 7', attrName: attrName, attrVal: attrVal
+        updated = true
+        anchorStr = escapeBraces """<a href="{{urlPath}}?action=#{encodeURIComponent attrVal}" """
+
+        if tagName is 'a'
+          # TODO: preserve other url query params - keep a hash in data and add to url
+          match.replace("<a", anchorStr).replace attrName, escapeBasicAttribute attrName
+        else
+          close = getCloseTag match
+          "#{anchorStr}>\n#{close.before.replace attrName, escapeBasicAttribute attrName}\n</a>\n#{close.after}"
+
       )
       # FIXME: this doesn't support multiple interpolations in one tag
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)".*?>/, (match, attrName, attrVal) ->

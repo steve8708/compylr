@@ -41,8 +41,9 @@
           <select ng-change="toggleList(activeProduct.product)" ng-model="activeProduct.product.list" ng-show="activeProduct.product.favorite" class="favorite-text input-sm" ng-options="list.name for list in lists | orderBy:'-sort'">
             <option value="">-- Add to List --</option>
           </select>
-          <a ng-class="{ active: !productSelected(activeProduct.product) }" ng-click="toggleSelectedProduct(activeProduct.product)" class="btn btn-basic add-to-widget-btn">
-            {{productSelected(activeProduct.product) ? 'Remove From Quicklist' : 'Add to Quicklist' }}
+          <a click-action="toggleSelectedProduct(activeProduct.product)" ng-class="{ active: !productSelected(activeProduct.product) }" ng-click="toggleSelectedProduct(activeProduct.product)" class="btn btn-basic add-to-widget-btn">
+            <!-- {{productSelected(activeProduct.product) ? 'Remove From Quicklist' : 'Add to Quicklist' }} -->
+            Add to Quiclist
           </a>
         </div>
 

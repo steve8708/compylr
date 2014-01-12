@@ -1,2 +1,4 @@
 node_modules/
 template-output/
+compiled-templates/
+.DS_Store

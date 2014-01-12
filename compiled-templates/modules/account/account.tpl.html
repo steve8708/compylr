@@ -1,1 +1,16 @@
-undefined
+<div class="insights-container">
+    <div ng-init="accountTab = 'settings'" class="left-navbar">
+        <a ng-class="{ active: accountTab == 'settings' }" ng-model="accountTab" btn-radio="'settings'" class="left-nav-link">Settings<i class="fa fa-caret-right"></i></a>
+        <a ng-class="{ active: accountTab == 'walkthrough' }" ng-model="accountTab" btn-radio="'walkthrough'" class="left-nav-link">Product Tour<i class="fa fa-caret-right"></i></a>
+        <a ng-class="{ active: accountTab == 'faq' }" ng-model="accountTab" btn-radio="'faq'" class="left-nav-link">FAQ<i class="fa fa-caret-right"></i></a>
+        <a ng-class="{ active: accountTab == 'support' }" ng-model="accountTab" btn-radio="'support'" class="left-nav-link">Support<i class="fa fa-caret-right"></i></a>
+        <a ng-class="{ active: accountTab == 'api' }" ng-model="accountTab" btn-radio="'api'" class="left-nav-link">API<i class="fa fa-caret-right"></i></a>
+        <a ng-class="{ active: accountTab == 'app' }" ng-model="accountTab" btn-radio="'app'" class="left-nav-link">iOS App<i class="fa fa-caret-right"></i></a>
+
+    </div>
+    <div class="tab-content">
+        <div class="padded">
+            TODO...
+        </div>
+    </div>
+</div>

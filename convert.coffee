@@ -86,51 +86,124 @@ convert = (options) ->
           continue
         depth++
 
-  interpolated = stripComments(file)
-    .replace(/<[^>]*?ng\-repeat="(.*?)">([\S\s]+)/gi, (match, text, post) ->
-      varName = text
-      varNameSplit = varName.split ' '
-      varNameSplit[0] = "'#{varNameSplit[0]}'"
-      varName = varNameSplit.join ' '
-      # varName = text.split(' in ')[1]
-      close = getCloseTag match
-      if close
-        "{{#forEach #{varName}}}\n#{close.before}\n{{/forEach}}\n#{close.after}"
-      else
-        throw new Error 'Parse error! Could not find close tag for ng-repeat'
-    )
-    .replace(/<[^>]*?ng\-if="(.*)".*?>([\S\s]+)/, (match, varName, post) ->
-      # Unless
-      if varName.indexOf('!') is 0
-        varName = varName.substr 1
+  escapeReplacement = (str) ->
+    str.replace /ng-/g, '__NG__'
+
+  unescapeReplacements = (str) ->
+    str.replace /__NG__/g, 'ng-'
+
+  escapeBasicAttribute = (str) ->
+    '__ATTR__' + str + '__ATTR__'
+
+  unescapeBasicAttributes = (str) ->
+    str.replace /__ATTR__/g, ''
+
+  escapeBraces = (str) ->
+    str
+      .replace(/\{\{/g, '__{{__')
+      .replace(/\}\}/g, '__}}__')
+
+  unescapeBraces = (str) ->
+    str
+      .replace(/__\{\{__/g, '{{')
+      .replace(/__\}\}__/g, '}}')
+
+  updated = true
+  interpolated = stripComments file
+  i = 0
+  maxIters = 10000
+
+  while updated
+    updated = false
+    firstLoop = false
+
+    throw new Error 'infinite update loop' if i++ > maxIters
+
+    interpolated = interpolated
+      .replace(/<[^>]*?ng\-repeat="(.*?)">([\S\s]+)/gi, (match, text, post) ->
+        console.log 'match 1'
+        updated = true
+        varName = text
+        varNameSplit = varName.split ' '
+        varNameSplit[0] = "'#{varNameSplit[0]}'"
+        varName = varNameSplit.join ' '
+        # varName = text.split(' in ')[1]
         close = getCloseTag match
         if close
-          "{{#unless #{varName}}}\n#{close.before}\n{{/unless}}\n#{close.after}"
+          "{{#forEach #{varName}}}\n#{escapeReplacement close.before}\n{{/forEach}}\n#{close.after}"
         else
-          throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
-      else
+          throw new Error 'Parse error! Could not find close tag for ng-repeat'
+      )
+      # TODO: 'ifExpression' separate from  'if'
+      .replace(/<[^>]*?ng-if="(.*?)".*?>([\S\s]+)/, (match, varName, post) ->
+        console.log 'match 2'
+        updated = true
+        varName = varName.trim()
+        # TODO: expressions
+        tagName = if varName.split(' ')[1] then 'ifExpression' else 'if'
+        if varName.indexOf('!') and tagName is 'if'
+          tagName = 'unless'
+          varName = varName.substr 1
+        else if tagName is 'ifExpression'
+          varName = "\"#{varName}\""
+
         close = getCloseTag match
         if close
-          "{{#if #{varName}}}\n#{close.before}\n{{/if}}\n#{close.after}"
+          "{{##{tagName} #{varName}}}\n#{escapeReplacement close.before}\n{{/#{tagName}}}\n#{close.after}"
         else
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
-    )
-    .replace(/<[^>]*?ng\-include="'(.*)'".*?>/, (match, includePath, post) ->
-      "#{match}\n{{> #{includePath}}}"
-    )
-    .replace(/(ng-src|ng-href|ng-value)="(.*)"/, (match, src) ->
-      escapedMatch = escapeCurlyBraces match
-      """#{escapedMatch} src="#{src}" """
-    )
-    # FIXME: this doesn't support multiple interpolations in one tag
-    .replace(/<[^>]*?(\w+)\s*?=\s*?"([^">]*?\{\{[^">]+\}\}[^">*]?)".*?>/, (match, attrName, attrVal) ->
-      # Match without the final '#'
-      trimmedMatch = match.substr 0, match.length - 1
-      if attrName.indexOf('ng-attr-') is 0
-        match
-      else
-        """#{trimmedMatch} ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
-    )
+      )
+      .replace(/<[^>]*?ng-include="'(.*)'".*?>/, (match, includePath, post) ->
+        console.log 'match 3'
+        updated = true
+        includePath = includePath.replace '.tpl.html', ''
+        escapeReplacement "#{match}\n{{> #{includePath}}}"
+      )
+      .replace(/(ng-src|ng-href|ng-value)="(.*)"/, (match, src) ->
+        console.log 'match 4'
+        updated = true
+        escapedMatch = escapeCurlyBraces match
+        escapeReplacement """#{escapedMatch} src="#{src}" """
+      )
+      # FIXME: this doesn't support multiple interpolations in one tag
+      .replace(/<[^>]*?([\w\-_]+)\s*?=\s*?"([^">]*?\{\{[^">]+\}\}[^">*]?)".*?>/, (match, attrName, attrVal) ->
+        console.log 'match 5'
+        # Match without the final '#'
+        trimmedMatch = match.substr 0, match.length - 1
+        trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
+        if attrName.indexOf('ng-attr-') is 0 or attrName.indexOf('__ATTR__') is 0
+          match
+        else
+          updated = true
+          escapeReplacement """#{trimmedMatch} ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
+
+      )
+
+    i = 0
+    maxIters = 100
+
+    while updated
+      updated = false
+
+      throw new Error 'infinite update loop' if i++ > maxIters
+
+      interpolated = interpolated
+        .replace(/\{\{([^#\/>_][\s\S]*?)\}\}/g, (match, body) ->
+          console.log 'match 7'
+          body = body.trim()
+          words = body.match /[\w\.]+/
+          if body.indexOf('expression') isnt 0
+            updated = true
+            prefix = ''
+            suffix = ''
+            if words and words[0].length isnt body.length
+              console.log 'body', body
+              prefix = 'expression "'
+              suffix = '"'
+            escapeBraces """<span ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
+          else
+            match
+        )
 
     # .replace(/<[^>]*?ng\-show="(.*)".*?>([\S\s]+)/g, (match, varName, post) ->
     #   close = getCloseTag match
@@ -147,7 +220,9 @@ convert = (options) ->
     #     throw new Error 'Parse error! Could not find close tag for ng-hide'
     # )
 
-
+  interpolated = unescapeReplacements interpolated
+  interpolated = unescapeBraces interpolated
+  interpolated = unescapeBasicAttributes interpolated
   beautified = beautify interpolated
 
   if argv.file and not argv['no-write']

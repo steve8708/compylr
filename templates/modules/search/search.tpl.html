@@ -65,8 +65,8 @@
     <div hm-swipe-left="filterBarActive = false" class="filter-bar" ng-class="{ active: filterBarActive }">
       <div class="search-feed-buttons">
         <div class="btn-group">
-          <button ng-model="mode.name" btn-radio="'search'" class="btn">Search</button>
-          <button ng-model="mode.name" btn-radio="'feed'" class="btn">My Feed</button>
+          <a href="/{{openTab.name}}/search" ng-model="mode.name" btn-radio="'search'" class="btn {{ mode.name == 'search' ? 'active' : '' }}">Search</a>
+          <a href="/{{openTab.name}}/feed" ng-model="mode.name" btn-radio="'feed'" class="btn {{ mode.name == 'feed' ? 'active' : '' }}">My Feed</a>
         </div>
       </div>
       <div class="filter-bar-content">
@@ -228,7 +228,9 @@
             </div>
             <!-- FIXME: height and width info is clearly broken -->
             <div class="product-image-container">
-              <img ng-click="showModal(result)" load-animation="fade" class="search-result-image" ng-src="{{result.image.sizes.Large.url}}">
+              <a href="/{{openTab.name}}/{{mode.name}}/{{product.id}}">
+                <img ng-click="showModal(result)" load-animation="fade" class="search-result-image" ng-src="{{result.image.sizes.Large.url}}">
+              </a>
             </div>
             <!-- <img load-animation="fade" class="search-result-image" ng-src="{{result.image.sizes.Large.url}}" height="{{result.image.sizes.Large.height}} width="{{result.image.sizes.Large.width}}"> -->
             <div class="product-info">

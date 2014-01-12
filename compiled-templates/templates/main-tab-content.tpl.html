@@ -34,7 +34,7 @@
 
             <div class="product-on-page">
               <div class="product-image-container">
-                <img class="product-image" data-ng-src="&#123;&#123;findLink.productOnPage.image.sizes.Large.url&#125;&#125;" src="{{findLink.productOnPage.image.sizes.Large.url}}" data-ng-attr-src="&#123;&#123;findLink.productOnPage.image.sizes.Large.url&#125;&#125;">
+                <img class="product-image" data-ng-src="&#123;&#123;findLink.productOnPage.image.sizes.Large.url&#125;&#125;" src="{{findLink.productOnPage.image.sizes.Large.url}}">
               </div>
               <div class="product-info selectable">
                 <span data-ng-bind="findLink.productOnPage.name">{{findLink.productOnPage.name}}</span> •
@@ -60,7 +60,7 @@
                   <div class="related-product" data-ng-repeat="product in findLink.relatedProducts">
 
                     <div class="product-image-container">
-                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Large.url&#125;&#125;" src="<span data-ng-bind=" product.image.sizes.Large.url ">{{product.image.sizes.Large.url}}</span>">
+                      <img class="product-image" data-ng-src="{{product.image.sizes.Large.url}}" data-ng-attr-ng-src="&#123;&#123;product.image.sizes.Large.url&#125;&#125;">
                     </div>
                     <div class="product-info selectable">
                       <span data-ng-bind="product.name">{{product.name}}</span> •
@@ -121,7 +121,7 @@
                 {{#forEach 'product' in selectedProducts}}
                   <div class="post-content" data-ng-repeat="product in selectedProducts">
 
-                    <a target="_blank" href="<span data-ng-bind=" product.clickUrl ">{{product.clickUrl}}</span>">
+                    <a target="_blank" href="{{product.clickUrl}}" data-ng-attr-href="&#123;&#123;product.clickUrl&#125;&#125;">
                       {{#if show.showName}}
                         <span data-ng-if="show.showName" class="product-name">
 <span data-ng-bind="product.name">{{product.name}}</span></span>
@@ -163,13 +163,13 @@
                   <tr class="post-content" data-ng-repeat="product in selectedProducts">
 
                     <td>
-                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="<span data-ng-bind=" product.image.sizes.Small.url ">{{product.image.sizes.Small.url}}</span>">
+                      <img class="product-image" data-ng-src="&#123;&#123;product.image.sizes.Small.url&#125;&#125;" src="{{product.image.sizes.Small.url}}">
                     </td>
                     <td>
                       <span class="product-name"><span data-ng-bind="product.name">{{product.name}}</span></span>
                     </td>
                     <td>
-                      <input size="50" data-ng-click="selectTarget($event)" class="product-url" value="<span data-ng-bind=" product.clickUrl ">{{product.clickUrl}}</span>">
+                      <input size="50" data-ng-click="selectTarget($event)" class="product-url" value="{{product.clickUrl}}" data-ng-attr-value="&#123;&#123;product.clickUrl&#125;&#125;">
                     </td>
                     <td class="share-buttons-td">
                       <div class="share-buttons">

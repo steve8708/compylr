@@ -1,16 +1,20 @@
 <div class="insights-container">
   <div data-ng-init="accountTab = 'settings'" class="left-navbar">
-    <a data-ng-class="{ active: accountTab == 'settings' }" data-ng-model="accountTab" btn-radio="'settings'" class="left-nav-link">Settings<i class="fa fa-caret-right"></i></a>
-    <a data-ng-class="{ active: accountTab == 'walkthrough' }" data-ng-model="accountTab" btn-radio="'walkthrough'" class="left-nav-link">Product Tour<i class="fa fa-caret-right"></i></a>
-    <a data-ng-class="{ active: accountTab == 'faq' }" data-ng-model="accountTab" btn-radio="'faq'" class="left-nav-link">FAQ<i class="fa fa-caret-right"></i></a>
-    <a data-ng-class="{ active: accountTab == 'support' }" data-ng-model="accountTab" btn-radio="'support'" class="left-nav-link">Support<i class="fa fa-caret-right"></i></a>
-    <a data-ng-class="{ active: accountTab == 'api' }" data-ng-model="accountTab" btn-radio="'api'" class="left-nav-link">API<i class="fa fa-caret-right"></i></a>
-    <a data-ng-class="{ active: accountTab == 'app' }" data-ng-model="accountTab" btn-radio="'app'" class="left-nav-link">iOS App<i class="fa fa-caret-right"></i></a>
+    <a href="/{{openTab.name}}/settings" class="left-nav-link {{expression ' accountTab == \'settings\' ? \'active\' : \'\' '}}" data-ng-model="accountTab" btn-radio="'settings'" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/settings" data-ng-attr-class="left-nav-link &#123;&#123; accountTab == 'settings' ? 'active' : '' &#125;&#125;">Settings<i class="fa fa-caret-right"></i></a>
+    <a href="/{{openTab.name}}/walkthrough" class="left-nav-link {{expression ' accountTab == \'walkthrough\' ? \'active\' : \'\' '}}" data-ng-model="accountTab" btn-radio="'walkthrough'" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/walkthrough"
+    data-ng-attr-class="left-nav-link &#123;&#123; accountTab == 'walkthrough' ? 'active' : '' &#125;&#125;">Product Tour<i class="fa fa-caret-right"></i></a>
+    <a href="/{{openTab.name}}/faq" class="left-nav-link {{expression ' accountTab == \'faq\' ? \'active\' : \'\' '}}" data-ng-model="accountTab" btn-radio="'faq'" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/faq" data-ng-attr-class="left-nav-link &#123;&#123; accountTab == 'faq' ? 'active' : '' &#125;&#125;">FAQ<i class="fa fa-caret-right"></i></a>
+    <a href="/{{openTab.name}}/support" class="left-nav-link {{expression ' accountTab == \'support\' ? \'active\' : \'\' '}}" data-ng-model="accountTab" btn-radio="'support'" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/support" data-ng-attr-class="left-nav-link &#123;&#123; accountTab == 'support' ? 'active' : '' &#125;&#125;">Support<i class="fa fa-caret-right"></i></a>
+    <a href="/{{openTab.name}}/api" class="left-nav-link {{expression ' accountTab == \'api\' ? \'active\' : \'\' '}}" data-ng-model="accountTab" btn-radio="'api'" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/api" data-ng-attr-class="left-nav-link &#123;&#123; accountTab == 'api' ? 'active' : '' &#125;&#125;">API<i class="fa fa-caret-right"></i></a>
+    <a href="/{{openTab.name}}/app" class="left-nav-link {{expression ' accountTab == \'app\' ? \'active\' : \'\' '}}" data-ng-model="accountTab" btn-radio="'app'" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/app" data-ng-attr-class="left-nav-link &#123;&#123; accountTab == 'app' ? 'active' : '' &#125;&#125;">iOS App<i class="fa fa-caret-right"></i></a>
 
   </div>
   <div class="tab-content">
     <div class="padded">
-      TODO...
+      <h1><span data-ng-bind="accountTab">{{accountTab}}</span></h1>
+      <p>
+        TODO...
+        <p>
     </div>
   </div>
 </div>

@@ -10,7 +10,7 @@
   </div>
   <div class="content-container">
     <!-- Boutique Tab -->
-    <div class="tab-content" ng-show="activeTab.name == 'Boutique'">
+    <div class="tab-content">
       <div class="widget-options">
         <div class="presets">
           <a class="preset fa fa-square" ng-model="preset.name" btn-radio="'lookbook'" class="preset"></a>
@@ -19,10 +19,10 @@
         </div>
         <div data-option="{{option.name.toLowerCase()}}" class="widget-option" ng-repeat="option in boutique.sortedOptions">
           <div class="name">{{option.name}}</div>
-          <input ng-if="option.type == 'checkbox'" type="checkbox" ng-model="option.model">
-          <span class="range-value" ng-if="option.type == 'range'">{{option.model}}</span>
-          <input ng-if="option.type == 'range'" type="range" min="{{option.min}}" max="{{option.max}}" step="{{option.step}}" ng-model="option.model">
-          <select ng-class="{ pink: option.name == 'Collection' }" dir="rtl" ng-if="option.type == 'select'" ng-model="option.model" ng-options="option for option in option.options"></select>
+          <!-- <input ng-if="option.type == 'checkbox'" type="checkbox" ng-model="option.model">
+          <span class="range-value" ng-if="option.type == 'range'">{{option.model}}</span> -->
+          <!-- <input ng-if="option.type == 'range'" type="range" min="{{option.min}}" max="{{option.max}}" step="{{option.step}}" ng-model="option.model"> -->
+          <!-- <select ng-class="{ pink: option.name == 'Collection' }" dir="rtl" ng-if="option.type == 'select'" ng-model="option.model" ng-options="option for option in option.options"></select> -->
         </div>
         <div class="widget-option">
           <span class="name">Widget Size</span>

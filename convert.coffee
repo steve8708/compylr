@@ -75,7 +75,6 @@ convert = (options) ->
       out =
         before: open
         after: string.substr open.length
-      # console.log 'out', out
       return out
 
 
@@ -196,10 +195,11 @@ convert = (options) ->
         verboseLog 'match 4'
         updated = true
         escapedMatch = escapeCurlyBraces match
-        """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{attrValue}" """
+        escapedAttrValue = escapeBraces attrValue
+        """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrValue}" """
       )
       # FIXME: this doesn't support multiple interpolations in one tag
-      .replace(/<[^>]*?([\w\-_]+)\s*=\s*"([^">]*?\{\{[^">]+\}\}[^">]*?)".*?>/, (match, attrName, attrVal) ->
+      .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)".*?>/, (match, attrName, attrVal) ->
         verboseLog 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '#'
         trimmedMatch = match.substr 0, match.length - 1
@@ -208,21 +208,18 @@ convert = (options) ->
           match
         else
           updated = true
-          # console.log 'attrVal', attrVal
           newAttrVal = attrVal.replace /\{\{([\s\S]+?)\}\}/g, (match, expression) ->
-            # console.log 'attrValMatch', expression
             match = match.trim()
             if expression.length isnt expression.match(/[\w\.]+/)[0].length
-              "{{expression \"#{expression}\"}}"
+              "{{expression '#{expression.replace /'/g, "\\'"}'}}"
             else
-              # console.log 'attrVal not expression', expression
               match
 
-          trimmedMatch = trimmedMatch.replace attrVal, newAttrVal
-
-          """#{escapeBraces trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
+          trimmedMatch = trimmedMatch.replace attrVal, escapeBraces newAttrVal
+          """#{trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
       )
       .replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
+        updated = true
         hbsTagType = if showOrHide is 'ng-show' then 'hbsShow' else 'hbsHide'
         match = match.replace ' ' + showOrHide, " data-#{showOrHide}"
         "#{match} {{#{hbsTagType} \"#{expression}\"}}"
@@ -236,7 +233,7 @@ convert = (options) ->
     throw new Error 'infinite update loop' if i++ > maxIters
 
     interpolated = interpolated
-      .replace(/\{\{([^#\/>_][\s\S]*?)\}\}/g, (match, body) ->
+      .replace(/\{\{([^#\/>_][\s\S]*?[^_])\}\}/g, (match, body) ->
         verboseLog 'match 7'
         updated = true
         body = body.trim()
@@ -249,7 +246,7 @@ convert = (options) ->
             verboseLog 'body', body
             prefix = 'expression "'
             suffix = '"'
-          escapeBraces """<span ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
+          escapeBraces """<span data-ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
         else
           escapeBraces match
       )

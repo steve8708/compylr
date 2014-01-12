@@ -1,8 +1,8 @@
 <div class="insights-container">
   <div class="left-navbar">
-      <a ng-class="{ active: activeTab.name == 'earnings' }" ng-model="activeTab.name" btn-radio="'earnings'" class="left-nav-link">Earnings<i class="fa fa-caret-right"></i></a>
-      <a ng-class="{ active: activeTab.name == 'payments' }" ng-model="activeTab.name" btn-radio="'payments'" class="left-nav-link">Payments<i class="fa fa-caret-right"></i></a>
-      <a ng-class="{ active: activeTab.name == 'referalls' }" ng-model="activeTab.name" btn-radio="'referalls'" class="left-nav-link">Referrals<i class="fa fa-caret-right"></i></a>
+      <a href="/{{openTab.name}}/earnings" class="left-nav-link {{ activeTab.name == 'earnings' ? 'active' : '' }}" ng-model="activeTab.name" btn-radio="'earnings'">Earnings<i class="fa fa-caret-right"></i></a>
+      <a href="/{{openTab.name}}/payments" class="left-nav-link {{ activeTab.name == 'payments' ? 'active' : '' }}" ng-model="activeTab.name" btn-radio="'payments'">Payments<i class="fa fa-caret-right"></i></a>
+      <a href="/{{openTab.name}}/referalls" class="left-nav-link {{ activeTab.name == 'referalls' ? 'active' : '' }}" ng-model="activeTab.name" btn-radio="'referalls'">Referrals<i class="fa fa-caret-right"></i></a>
   </div>
   <div class="tab-content">
     <div ng-show="activeTab.name == 'earnings'" class="charts-container">

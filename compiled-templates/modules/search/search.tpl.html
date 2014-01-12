@@ -4,7 +4,7 @@
       <a data-ng-click="closeModal()" class="close-modal-button">+</a>
       <div class="preview-image-container">
         {{#if activeProduct.product}}
-          <img data-ng-if="activeProduct.product" load-animation="fade" class="preview-image" data-ng-src="&#123;&#123;activeProduct.product.image.sizes.Original.url&#125;&#125;" src="{{activeProduct.product.image.sizes.Original.url}}" data-ng-attr-src="&#123;&#123;activeProduct.product.image.sizes.Original.url&#125;&#125;">
+          <img data-ng-if="activeProduct.product" load-animation="fade" class="preview-image" data-ng-src="&#123;&#123;activeProduct.product.image.sizes.Original.url&#125;&#125;" src="{{activeProduct.product.image.sizes.Original.url}}">
         {{/if}}
         <span class="price">
           <b><span data-ng-bind="activeProduct.product.salePriceLabel || activeProduct.product.priceLabel">{{expression "activeProduct.product.salePriceLabel || activeProduct.product.priceLabel"}}</span>
@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <input value="<span data-ng-bind=" activeProduct.product.clickUrl ">{{activeProduct.product.clickUrl}}</span>" class="link-input" data-ng-keypress="keypressProductLinkInput($event)" data-ng-click="clickProductLinkInput($event)">
+        <input value="{{activeProduct.product.clickUrl}}" class="link-input" data-ng-keypress="keypressProductLinkInput($event)" data-ng-click="clickProductLinkInput($event)" data-ng-attr-value="&#123;&#123;activeProduct.product.clickUrl&#125;&#125;">
 
         <div>
           <a data-ng-click="toggleFavorite(activeProduct.product)" data-ng-class="{'fa-heart': activeProduct.product.favorite, 'fa-heart-o': !activeProduct.product.favorite}" class="favorite favorite-large fa fa-heart-o"></a>
@@ -69,8 +69,8 @@
     <div hm-swipe-left="filterBarActive = false" class="filter-bar" data-ng-class="{ active: filterBarActive }">
       <div class="search-feed-buttons">
         <div class="btn-group">
-          <button data-ng-model="mode.name" btn-radio="'search'" class="btn">Search</button>
-          <button data-ng-model="mode.name" btn-radio="'feed'" class="btn">My Feed</button>
+          <a href="/{{openTab.name}}/search" data-ng-model="mode.name" btn-radio="'search'" class="btn {{expression ' mode.name == \'search\' ? \'active\' : \'\' '}}" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/search" data-ng-attr-class="btn &#123;&#123; mode.name == 'search' ? 'active' : '' &#125;&#125;">Search</a>
+          <a href="/{{openTab.name}}/feed" data-ng-model="mode.name" btn-radio="'feed'" class="btn {{expression ' mode.name == \'feed\' ? \'active\' : \'\' '}}" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/feed" data-ng-attr-class="btn &#123;&#123; mode.name == 'feed' ? 'active' : '' &#125;&#125;">My Feed</a>
         </div>
       </div>
       <div class="filter-bar-content">
@@ -82,7 +82,7 @@
 
           <div data-ng-show="activeFilters.length" {{hbsShow "activeFilters.length"}} class="active-filters-container">
             {{#forEach 'filter' in activeFilters}}
-              <a data-ng-click="removeFilter(filter)" class="active-filter <span data-ng-bind=" filter.type ">{{filter.type}}</span>" data-ng-repeat="filter in activeFilters">
+              <a data-ng-click="removeFilter(filter)" class="active-filter {{filter.type}}" data-ng-repeat="filter in activeFilters" data-ng-attr-class="active-filter &#123;&#123;filter.type&#125;&#125;">
 
                 <span data-ng-bind="filter.name">{{filter.name}}</span>
                 <i class="fa fa-times"></i>
@@ -277,8 +277,9 @@
               </div>
 
               <div class="product-image-container">
-                <img data-ng-click="showModal(result)" load-animation="fade" class="search-result-image" data-ng-src="&#123;&#123;result.image.sizes.Large.url&#125;&#125;" src="<span data-ng-bind=" result.image.sizes.Large.url
-                ">{{result.image.sizes.Large.url}}</span>">
+                <a href="/{{openTab.name}}/{{mode.name}}/{{product.id}}" data-ng-attr-href="/&#123;&#123;openTab.name&#125;&#125;/&#123;&#123;mode.name&#125;&#125;/&#123;&#123;product.id&#125;&#125;">
+                  <img data-ng-click="showModal(result)" load-animation="fade" class="search-result-image" data-ng-src="&#123;&#123;result.image.sizes.Large.url&#125;&#125;" src="{{result.image.sizes.Large.url}}">
+                </a>
               </div>
 
               <div class="product-info">

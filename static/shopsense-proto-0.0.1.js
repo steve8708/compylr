@@ -66026,11 +66026,12 @@ angular.forEach(HGESTURES, function(eventName, directiveName) {
     utils = $injector.get('utils');
     persist = $injector.get('persist');
     $scope.appState = {};
-    console.log('hi');
     $scope.$on('$locationChangeSuccess', function() {
       var path;
+      console.log('locationChange');
       path = $location.path().split('/').splice(1);
-      return $scope.openTab.name = path[0];
+      $scope.openTab.name = path[0];
+      return $scope.urlPath = $location.path();
     });
     $scope.$watch('openTab.name', function(newVal) {
       return $location.path('/' + newVal);
@@ -66074,10 +66075,8 @@ angular.forEach(HGESTURES, function(eventName, directiveName) {
       clickGetLink: function() {
         return alert('The link has been copied to your clipboard');
       },
-      reloadPage: function() {
-        return _.defer(function() {
-          return location.reload();
-        });
+      redirect: function(event) {
+        return location.href = event.currentTarget.getAttribute('href');
       },
       selectTarget: function(eventOrEl) {
         var el, range, sel;

@@ -67,7 +67,7 @@
             </a>
           </li>
           <li>
-            <a class="btn js-button btn-basic" style="background-color: gray;" ng-style="{ backgroundColor: js && 'white' }" ng-click="reloadPage()" click-action="js = !js">{{ js ? 'JS ON' : 'JS OFF' }}</a>
+            <a class="btn js-button btn-basic" style="background-color: gray;" ng-style="{ backgroundColor: js && 'white' }" ng-click="redirect($event)" click-action="js = !js">{{ js ? 'JS ON' : 'JS OFF' }}</a>
           </li>
         </ul>
       </nav>

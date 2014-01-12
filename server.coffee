@@ -37,10 +37,8 @@ evalExpression = (expression, context) ->
   try
     value = evaluate expressionBody, context
   catch error
-    console.warn 'Expression error', error
   value
 
-console.info 'Compiling templates...'
 
 mkdirp.sync "./#{templatesDir}"
 fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompiledTemplatesDir}/index.tpl.html"
@@ -55,7 +53,6 @@ for type in ['templates', 'modules/account', 'modules/home', 'modules/insights',
     partialName = "#{type}/#{fileName}"
     mkdirp.sync "./#{templatesDir}/#{type}"
     fs.writeFileSync "./#{templatesDir}/#{partialName}", convert file: "#{path}#{fileName}"
-console.info 'Compiling done.'
 
 handlebars.registerHelper "ifExpression", (expression, options) ->
   fn = new Function expression
@@ -155,7 +152,8 @@ resultsSuccess = (req, res, results) ->
   else
     sessionData.activeProduct.product = null
 
-  res.render "#{templatesDir}/index.tpl.html", sessionData
+  unless res.headerSent
+    res.render "#{templatesDir}/index.tpl.html", sessionData
 
 currentReq = null
 
@@ -170,7 +168,6 @@ toggleSelectedProduct = (product) ->
     sessionData.selectedProducts.splice sessionData.selectedProducts.indexOf(product), 1
 
 
-
 app.get '/:page?/:tab?/:product?', (req, res) ->
   currentReq = req
   page = req.params.page or 'search'
@@ -178,9 +175,6 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
   product = req.params.product
   query = req.query.fts or ''
   sessionData = req.session.pageData or= _.cloneDeep pageData
-
-  if page and not tab and tabDefaults[page]
-    return res.redirect "/#{page}/#{tabDefaults[page]}"
 
   action = req.query.action
   if action
@@ -190,7 +184,10 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
       eval(action);
     }`
 
-    res.redirect req._parsedUrl.pathname
+    return res.redirect req._parsedUrl.pathname
+
+  if page and not tab and tabDefaults[page]
+    return res.redirect "/#{page}/#{tabDefaults[page]}"
 
   sessionData.noJS = req.query.nojs
   sessionData.openTab.name = page
@@ -215,7 +212,6 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
     null
 
 port = process.env.PORT || 5000
-console.info "Listening on port #{port}..."
 app.listen port
 
 tabDefaults =

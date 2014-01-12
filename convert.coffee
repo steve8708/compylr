@@ -188,7 +188,8 @@ convert = (options) ->
       .replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, (match, tagName, attrName, attrVal) ->
         verboseLog 'match 7', attrName: attrName, attrVal: attrVal
         updated = true
-        anchorStr = escapeBraces """<a href="{{urlPath}}?action=#{encodeURIComponent attrVal}" """
+        hrefStr = """href="{{urlPath}}?action=#{encodeURIComponent attrVal}" """
+        anchorStr = escapeBraces """<a #{hrefStr} data-ng-#{escapeCurlyBraces hrefStr}"""
 
         if tagName is 'a'
           # TODO: preserve other url query params - keep a hash in data and add to url

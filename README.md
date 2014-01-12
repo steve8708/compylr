@@ -97,31 +97,33 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
 
 ### State & Route Configuration
 Configure your state and routes in one place and Compilr
-will compile them into application logic for both your client and server
+will compile them into application logic for both your client and server.
+
+`compilr.json`
 
 ```javascript
 {
-  routes: {
-    '/:page/:tab/:product': {
-      data: {
-        showModal: true
+  "routes": {
+    "/:page/:tab/:product": {
+      "data": {
+        "showModal": true
       },
-      compute: {
-        'activeTab.name': '$params.tab',
-        activeProduct: 'results[$params.product]'
+      "compute": {
+        "activeTab.name": "$params.tab",
+        "activeProduct": "results[$params.product]"
       }
     }
   },
-  data: {
-    activeProduct: {},
-    query: {
-      value: ''
+  "data": {
+    "activeProduct": {},
+    "query": {
+      "value": ""†
     },
-    mode: {
-      name: 'search'
+    "mode": {
+      "name": "search"
     },
     openTab: {
-      name: 'insights'
+      "name": "insights"
     }
   }
 }
@@ -204,6 +206,9 @@ We need more adapters! Node + express is built. We need python, ruby, and more!
 ## Todo
 * Support for angular filters.
 * Support for other templating languages (e.g. jinja on python)
+* Supoprt for logic sharing
+  * On node through code sharing
+  * On other platforms (python, java, etc) through expression parsing
 
 ## Demo
 Coming soon...

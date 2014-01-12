@@ -1,1 +1,1 @@
-web: ./node_modules/.bin/coffee app.coffee
+web: ./node_modules/.bin/coffee lib/server.coffee

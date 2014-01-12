@@ -30,11 +30,10 @@ module.exports =
 
     # TODO: session data
     toggleSelectedProduct: (product) ->
-      console.log 'toggleSelectedProduct', product
       id = product and product.id or product
       foundProduct = _.find @selectedProducts, (item) ->
         item and "#{item.id}" is "#{id}"
-      if product
-        @selectedProducts.unshift product
-      else
+      if foundProduct
         @selectedProducts.splice @selectedProducts.indexOf(product), 1
+      else
+        @selectedProducts.unshift product

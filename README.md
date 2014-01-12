@@ -1,11 +1,13 @@
 # Compilr
 Compiles angular apps to be run on any backend. SEO is not longer a problem
-for single page apps. Maximum performance, load times, development efficiency.
+for single page apps. Maximum performance, minimal load times, optimal development efficiency.
 
 ## How it works
 * Compiles Angular Templates to Handlebars Templates
 * Standardizes route configuration using JSON for angular and any backend (via an adapter)
 * Standardizes state management with angular and any backend (via an adapter)
+* Keeps your life simple and happy. Build your angular app, don't even think about
+  your server. Compilr will do everything for you
 
 ## Key Components
 * 100% SEO friendly
@@ -14,6 +16,7 @@ for single page apps. Maximum performance, load times, development efficiency.
     Instead cross compile templates and sync state.
 * Client and server rendering (render on server, once app loaded renders on client)
 * Pushtate support (always keep urls in sync)
+* Simple state and route configuration
 * Shared session state on client and server with simple configuration
 * Shared route logic on client and server with simple configuration
 * Backend agnostic. Supports any backend with a simple adapter
@@ -59,6 +62,58 @@ for single page apps. Maximum performance, load times, development efficiency.
   * `{{ foo && bar }}` -> `{{expression "foo && bar"}}`
   * `<img src="{{ foo[bar] || attributes }}>"` -> `<img src="{{expression 'foo[bar] || attributes'}}>`
 
+## Route configuration
+Configure your state and routes in one place and Compilr
+will compile them into application logic for both your client and server
+```
+{
+  routes: {
+    '/:page/:tab/:product': {
+      data: {
+        showModal: true
+      },
+      compute: {
+        'activeTab.name': '@tab',
+        activeProduct: 'results[@product]',
+        foo: function(params, stateData) {
+          return foobar;
+        }
+      },
+      exec: ['getProducts']
+    }
+  },
+  data: {
+    activeProduct: {},
+    query: {
+      value: ''
+    },
+    mode: {
+      name: 'search'
+    },
+    openTab: {
+      name: 'insights'
+    },
+
+    toggleSelectedProduct: function(id) {
+      var product = _.find(this.selectedProducts, function(item) {
+        return item && ("" + item.id) === ("" + id);
+      });
+      if (product) {
+        return this.selectedProducts.unshift(product);
+      } else {
+        return this.remove(this.selectedProducts, product);
+      }
+    }
+  }
+}
+
+```
+
+## Usage
+`compilr src/path/* dest/path/*`
+
+## Contribution
+We need more adapters! Node + express is built. We need python, ruby, and more!
 
 ## Demo
 Coming soon...

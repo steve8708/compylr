@@ -12,7 +12,7 @@ handlebarsHelpers = require './handlebars-helpers'
 config            = require './config'
 evaluate          = require 'static-eval'
 esprima           = require 'esprima'
-appConfig         = require '../app-config'
+appConfig         = require '../compilr-config'
 
 
 # Setup  - - - - - - - - - - - - - - - - - - - - - - -

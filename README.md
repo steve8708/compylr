@@ -16,6 +16,9 @@ Maximum performance, minimal load times, optimal development efficiency, 100% SE
 * Ultra high performance
   * You don't need to run your whole app on the server to render a template. So don't.
     Instead cross compile templates and sync state.
+* Angular application logic
+  * Use ng-click to trigger client __and__ server actions
+  (e.g. changing states and routes) even without any browser javascript!
 * Client and server rendering (render on server, once app loaded renders on client)
 * Pushtate support (always keep urls in sync)
 * Simple state and route configuration
@@ -26,6 +29,8 @@ Maximum performance, minimal load times, optimal development efficiency, 100% SE
 * Event support - e.g. `ng-click="foo = !foo"`
 * Form support
 * Offline support
+* Templates compile to 100% valid handlebars
+  * Handlebars helpers comparible - extend with your own
 * Template resolution
   * All angular template attributes are 100% safe. They are converted
     to handlebars expressions and to ng-attributes so the template
@@ -33,36 +38,103 @@ Maximum performance, minimal load times, optimal development efficiency, 100% SE
     find all necessary hooks to take control of the application once loaded
   * e.g. '{{foo}}' ➜ '<span ng-bind="foo">{{foo}}<span>'
 
+## Example
+
+### Angular template input
+```html
+  <a ng-repeat="product in products" ng-click="activeProduct = product">
+    <img src="{{user.image}}" ng-show="foo && bar">
+
+    {{foo}}
+
+    <div ng-include="'path/to/partial'">
+    </div>
+  </a>
+
+
+  <img class="small" ng-class="{ active: imgVisible }" ng-if="foo.length">
+  <img ng-style="{ color: mainColor }" ng-if="foo && bar">
+
+  {{ foo && bar }}
+
+```
+
+### Compiled temlpate output
+Includes {{mustaches}} for handlebars and attributes + escaped {{mustaches}} (&#126;)for angular (escaped notation not displayed for readability)
+```html
+  {{#forEach 'foo' in bar}}
+    <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">
+      <img src="{{user.image}}" ng-attr-src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}}>
+
+      <span ng-bind="foo">{{foo}}</span>
+
+      <div ng-include="'path/to/partial'">
+        {{> path/to/partial}}
+      </div>
+    </a>
+  {{/forEach}}
+
+  {{#if foo.length}}
+    <img class="small {{#if imgVisible}}active{{/if}} ng-class="{ active: imgVisible }" ng-if="foo.length">
+  {{/if}}
+
+  {{#ifExpression "foo && bar"}}
+    <img ng-if="foo && bar" style="{{styleExpression '{ color: mainColor }'}}>
+  {{/ifExpression}}
+
+  <span ng-bind="foo && bar">
+    {{expression "foo && bar"}}
+  </span>
+```
+
+### State & Route Configuration
+Configure your state and routes in one place and Compilr
+will compile them into application logic for both your client and server
+
+```javascript
+{
+  routes: {
+    '/:page/:tab/:product': {
+      data: {
+        showModal: true
+      },
+      compute: {
+        'activeTab.name': '$params.tab',
+        activeProduct: 'results[$params.product]'
+      }
+    }
+  },
+  data: {
+    activeProduct: {},
+    query: {
+      value: ''
+    },
+    mode: {
+      name: 'search'
+    },
+    openTab: {
+      name: 'insights'
+    }
+  }
+}
+
+```
+
 ## Supports
+
 * **ng-repeat**
-  * `<a ng-repeat="foo in bar"></a>` ➜ `{{#forEach 'foo' in bar}}<a ng-repeat="foo in bar"></a>{{/forEach}}`
 * **ng-include**
-  * `<div ng-include="'path/to/partial'"></div>` ➜ `{{> path/to/partial}}`
 * **ng-show**
-  * `<img ng-show="foo && bar">` ➜ `<img ng-show="foo" {{hbsShow "foo && bar"}}>`
 * **ng-hide**
-  * `<input ng-show="foo || bar">` ➜ `<input ng-show="foo" {{hbsHide "foo || bar"}}>`
 * **ng-if**
-  * `<img ng-if="foo.length">` ➜ `{{#if foo.length}}<img ng-if="foo.length">{{/if}}`
-  * `<img ng-if="foo && bar">` ➜ `{{#ifExpression "foo && bar"}}<img ng-if="foo.length">{{/ifExpression}}`
 * **ng-click**
-  * `<a ng-click="foo = !bar">` ➜ `<a href="?action=foo!%3Dbar"></a>`
 * **ng-class**
-  * `<img class="small" ng-class="{ active: imgVisible }">` ➜ `<img class="small {{#if imgVisible}}active{{/if}}`
 * **ng-style**
-  * `<img ng-style="{ color: mainColor }">` ➜ `<img style="{{styleExpression '{ color: mainColor }'}}`
 * **ng-attr-***
-  * `<img ng-attr-src="{{logo}}">` ➜ `<img src="{{logo}}">`
 * **ng-href, ng-value, ng-src**
-  * `<a ng-href="{{home}}"></a>` ➜ `<a href="{{home}}"></a>`
 * **ng-bind**
-  * `<span ng-bind="user.name"></span>` ➜ `<span>{{user.name}}</span>`
 * **Interpolations**
-  * `{{foo}}` ➜ '<span ng-bind="foo"></span>'
-  * `<img name="{{foo}}">` ➜ `<img ng-attr-name="{{foo}}">`
 * **Expressions**
-  * `{{ foo && bar }}` ➜ `{{expression "foo && bar"}}`
-  * `<img src="{{ foo[bar] || attributes }}>"` ➜ `<img src="{{expression 'foo[bar] || attributes'}}>`
 
 ## State & Route Configuration
 Configure your state and routes in one place and Compilr
@@ -76,8 +148,8 @@ will compile them into application logic for both your client and server
         showModal: true
       },
       compute: {
-        'activeTab.name': '@tab',
-        activeProduct: 'results[@product]',
+        'activeTab.name': '$params.tab',
+        activeProduct: 'results[$params.product]',
         foo: function(params, stateData) {
           return foobar;
         }
@@ -120,6 +192,10 @@ Functional demo complete. Working on production ready v1
 
 ## Contributing
 We need more adapters! Node + express is built. We need python, ruby, and more!
+
+## Todo
+Support for angular filters
+Maybe compile adapters - e.g. maybe jinja for flask, etc
 
 ## Demo
 Coming soon...

@@ -1,6 +1,6 @@
 ![Compilr](http://i.imgur.com/sgvfBB7.png)
 
-Build apps that load fast and feel amazing, with ease.
+Easily build apps that load fast and feel amazing.
 
 Compile angular apps for rendering on any backend, regardless of language or platform.
 Server side rendering, full angular expression support, 100% SEO comparible,
@@ -33,7 +33,6 @@ client/server route and logic sharing, environment agnostic state persistence.
   <div ng-include="'path/to/partial'">
   </div>
 </a>
-
 
 <img class="small" ng-class="{ active: imgVisible }" ng-if="foo.length">
 <img ng-style="{ color: mainColor }" ng-if="foo && bar">
@@ -101,7 +100,6 @@ will compile them into application logic for both your client and server.
     }
   }
 }
-
 ```
 
 

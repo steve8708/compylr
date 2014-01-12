@@ -38,7 +38,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 ```
 
 ### Compiled temlpate output
-Includes {{}} for handlebars and attributes + escaped {{}} (&amp#123;) for angular interpolations
+Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angular interpolations
 ```html
 {{#forEach 'foo' in bar}}
   <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">

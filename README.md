@@ -68,11 +68,11 @@ Build apps that load fast and feel amazing.
 ```
 
 ### Compiled temlpate output
-Includes {{}} for handlebars and attributes + escaped {{}} for angular (escaped notation not displayed for readability)
+Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angular interpolations
 ```html
 {{#forEach 'foo' in bar}}
   <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">
-    <img src="{{user.image}}" ng-attr-src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}}>
+    <img src="{{user.image}}" ng-attr-src="&amp;#123;&amp;#123;user.image&amp;#123;&amp;#123;" ng-show="foo" {{hbsShow "foo && bar"}}>
 
     <span ng-bind="foo">{{foo}}</span>
 

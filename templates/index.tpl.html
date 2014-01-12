@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link rel="stylesheet" type="text/css" href="http://localhost:5100/ribbon/shopsense-proto-0.0.1.css">
-    <script ng-if="!noJS" type="text/javascript" src="http://localhost:5100/ribbon/shopsense-proto-0.0.1.js"></script>
+    <script ng-if="js" type="text/javascript" src="http://localhost:5100/ribbon/shopsense-proto-0.0.1.js"></script>
 
     {{#interpolatedScript type="text/javascript"}}
       window.bootstrappedData = {{json $data}};
@@ -20,6 +20,15 @@
       .no-js .search-result {
         position: relative !important;
         float: left !important;
+      }
+
+      .js-button {
+        position: fixed !important;
+        top: 5px;
+        right: 5px;
+        z-index: 100;
+        color: black !important;
+        line-height: 15px !important;
       }
     </style>
 
@@ -57,6 +66,9 @@
             <a click-action="toggleSelectedProduct({{product.id}})" ng-click="utils.remove(selectedProducts, product)" class="main-selected-product" ng-repeat="product in selectedProducts">
               <img src="{{product.image.sizes.Small.url}}">
             </a>
+          </li>
+          <li>
+            <a class="btn js-button btn-basic" style="background-color: gray;" ng-style="{ backgroundColor: js && 'white' }" ng-click="reloadPage()" click-action="js = !js">{{ js ? 'JS ON' : 'JS OFF' }}</a>
           </li>
         </ul>
       </nav>

@@ -73,8 +73,9 @@
       <div class="filter-bar-content">
         <div class="search-content" ng-show="mode.name == 'search'">
           <div class="search-input-container">
-            <!-- <div class="loading-icon" ng-class="{ show: searchState.loading }">✪</div> -->
-            <input tabindex="1" id="search-products" ng-model="query.value" ng-keyup="searchKeypress($event)" type="search" results="5" placeholder=" Search products..." class="search-input">
+            <form method="get">
+              <input name="fts" tabindex="1" id="search-products" ng-model="query.value" ng-keyup="searchKeypress($event)" type="search" results="5" placeholder=" Search products..." class="search-input">
+            </form>
           </div>
 
           <div ng-show="activeFilters.length" class="active-filters-container">

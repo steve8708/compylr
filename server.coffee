@@ -182,17 +182,17 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
 
   action = req.query.action
   if action
-    console.log 'action 1', action, pageData
     # evalExpression action, pageData
     # FIXME: get eval out of here
     `with (sessionData) {
       eval(action);
     }`
-    console.log 'action 2', action, pageData
+
+    res.redirect req._parsedUrl.pathname
 
   sessionData.noJS = req.query.nojs
   sessionData.openTab.name = page
-  sessionData.urlPath = req._parsedUrl.path.replace /\/$/, ''
+  sessionData.urlPath = req._parsedUrl.pathname.replace /\/$/, ''
   sessionData.urlPathList = sessionData.urlPath.split '/'
   sessionData.activeTab.name = sessionData.accountTab = sessionData.mode.name = tab
   # _.extend sessionData, $data: sessionData
@@ -223,10 +223,11 @@ tabDefaults =
 
 # Sync these with session: expression sessino
 pageData =
+  js: off
   show:
-    showPrice: true
-    showBrand: true
-    showName: true
+    showPrice: on
+    showBrand: on
+    showName: on
   activeProduct: {}
   query: value: ''
   mode: name: 'search'

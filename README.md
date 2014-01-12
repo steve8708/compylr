@@ -130,7 +130,7 @@ will compile them into application logic for both your client and server.
     to handlebars expressions and to ng-attributes so the template
     can be immediately displayed in the browser but angular can still
     find all necessary hooks to take control of the application once loaded
-  * e.g. '{{foo}}' ➜ '<span ng-bind="foo">{{foo}}<span>'
+  * e.g. `{{foo}}` ➜ `<span ng-bind="foo">{{foo}}<span>`
 
 
 ## Supported Attributes

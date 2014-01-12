@@ -2,6 +2,7 @@ handlebars = require 'handlebars'
 express = require 'express'
 exphbs  = require 'express3-handlebars'
 _  = require 'lodash'
+_str = require 'underscore.string'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
 request = require 'request'
@@ -10,6 +11,9 @@ evaluate = require("static-eval")
 parse = require("esprima").parse
 
 app = express()
+
+config =
+  verbose: false
 
 templatesDir = 'compiled-templates'
 preCompiledTemplatesDir = 'templates'
@@ -29,17 +33,37 @@ app.set 'views', __dirname
 
 expressionCache = {}
 
+evalWithContext = (expression, context, clone, returnNewContext) ->
+  context = _.cloneDeep context if clone
+  fn = new Function 'context', "with (context) { return #{expression} }"
+  try
+    output = fn context
+  if returnNewContext
+    context: context
+    output: output
+  else
+    output
+
+warnVerbose = (args...) ->
+  console.warn args... if config.verbose
+
 # In Java can use ScriptEngineManager to eval js
 # (http://stackoverflow.com/questions/2605032/using-eval-in-java)
 evalExpression = (expression, context) ->
-  expressionBody = expressionCache[expression] or parse(expression).body[0].expression
-  expressionCache[expression] = expressionBody unless expressionCache[expression]
+  try
+    expressionBody = expressionCache[expression] or parse(expression).body[0].expression
+    expressionCache[expression] = expressionBody unless expressionCache[expression]
+  catch error
+    console.warn 'Expression error', expression, error
+
   try
     value = evaluate expressionBody, context
   catch error
+    warnVerbose 'Eval expression error'
   value
 
 
+console.info 'Compiling templates...'
 mkdirp.sync "./#{templatesDir}"
 fs.writeFileSync "./#{templatesDir}/index.tpl.html", convert file: "#{preCompiledTemplatesDir}/index.tpl.html"
 
@@ -54,10 +78,29 @@ for type in ['templates', 'modules/account', 'modules/home', 'modules/insights',
     mkdirp.sync "./#{templatesDir}/#{type}"
     fs.writeFileSync "./#{templatesDir}/#{partialName}", convert file: "#{path}#{fileName}"
 
-handlebars.registerHelper "ifExpression", (expression, options) ->
-  fn = new Function expression
-  value = null
+console.info 'Done compiling templates.'
 
+handlebars.registerHelper "eachExpression", (name, _in, expression, options) ->
+  value = evalExpression expression, @
+  instance.helpers.forEach name, _in, value, options
+
+handlebars.registerHelper "styleExpression", (expression, options) ->
+  value = evalWithContext expression, @, true
+  console.log 'styleExpression', expression, value if value
+  out = ';'
+  for key, val of value
+    out += "#{_.str.dasherize key}: #{val};"
+  " #{out} "
+
+handlebars.registerHelper "classExpression", (expression, options) ->
+  value = evalWithContext expression, @, true
+  console.log 'classExpression', expression, value if value
+  out = []
+  for key, val of value
+    out.push key if val
+  ' ' + out.join(' ') + ' '
+
+handlebars.registerHelper "ifExpression", (expression, options) ->
   value = evalExpression expression, @
 
   if not options.hash.includeZero and not value
@@ -66,9 +109,6 @@ handlebars.registerHelper "ifExpression", (expression, options) ->
     options.fn @
 
 handlebars.registerHelper "expression", (expression, options) ->
-  fn = new Function expression
-  value = null
-
   # TODO: there are better ways to do @, borrow angular eval function
   value = evalExpression expression, @
   value
@@ -93,6 +133,12 @@ handlebars.registerHelper "interpolatedScript", (options) ->
 
   "#{scriptStr} #{options.fn @} </script>"
 
+capitalize = (str = '') ->
+  str[0].toUpperCase() + str.substr 1
+
+uncapitalize = (str = '') ->
+  str[0].toLowerCase() + str.substr 1
+
 # TODO: looping through options
 #   (key, value) in bar
 # TODO: eachIndex
@@ -112,7 +158,9 @@ handlebars.registerHelper "forEach", (name, _in, context) ->
       while i < j
         iterContext = _.cloneDeep ctx
         iterContext[name] = context[i]
+
         if data
+          data[name + 'Index'] = i
           data.index = i
           data.first = (i is 0)
           data.last = i is (iterContext.length - 1)
@@ -157,17 +205,6 @@ resultsSuccess = (req, res, results) ->
 
 currentReq = null
 
-toggleSelectedProduct = (product) ->
-  sessionData = currentReq.session.pageData or= _.cloneDeep pageData
-  id = product and product.id or product
-  foundProduct = _.find sessionData.selectedProducts, (item) ->
-    item and "#{item.id}" is "#{id}"
-  if product
-    sessionData.selectedProducts.unshift product
-  else
-    sessionData.selectedProducts.splice sessionData.selectedProducts.indexOf(product), 1
-
-
 app.get '/:page?/:tab?/:product?', (req, res) ->
   currentReq = req
   page = req.params.page or 'search'
@@ -178,12 +215,8 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
 
   action = req.query.action
   if action
-    # evalExpression action, pageData
-    # FIXME: get eval out of here
-    `with (sessionData) {
-      eval(action);
-    }`
-
+    evalWithContext action, sessionData
+    console.log 'action', action
     return res.redirect req._parsedUrl.pathname
 
   if page and not tab and tabDefaults[page]
@@ -212,6 +245,7 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
     null
 
 port = process.env.PORT || 5000
+console.info "Listening on part #{port}..."
 app.listen port
 
 tabDefaults =
@@ -232,3 +266,13 @@ pageData =
   openTab: name: 'insights'
   activeTab: {}
   selectedProducts: []
+
+  toggleSelectedProduct: (product) ->
+    sessionData = currentReq.session.pageData or= _.cloneDeep pageData
+    id = product and product.id or product
+    foundProduct = _.find sessionData.selectedProducts, (item) ->
+      item and "#{item.id}" is "#{id}"
+    if product
+      sessionData.selectedProducts.unshift product
+    else
+      sessionData.selectedProducts.splice sessionData.selectedProducts.indexOf(product), 1

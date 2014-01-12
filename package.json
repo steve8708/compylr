@@ -22,6 +22,7 @@
     "static-eval": "~0.1.0",
     "esprima": "~1.0.4",
     "request": "~2.31.0",
-    "coffee-script": "~1.6.3"
+    "coffee-script": "~1.6.3",
+    "underscore.string": "~2.3.3"
   }
 }

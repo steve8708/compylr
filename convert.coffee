@@ -6,7 +6,29 @@ config =
 argv = require('optimist').argv
 fs = require 'fs'
 _ = require 'lodash'
+_str = require 'underscore.string'
 beautifyHtml = require('js-beautify').html
+
+# E.g. <div ng-repeat="foo in bar"></div>
+getRefNames = (str, options) ->
+  tags = str.match(/<.*?>/g)
+  map = {}
+  return map unless tags
+  tags.reverse()
+  depth = 0
+  for tag in tags
+    if tag.indexOf('</')
+      depth--
+      return map if depth < 0
+    else
+      depth++
+      repeat = tag.match /\sng-repeat="(.*?)"/g
+      continue unless repeat
+      repeatText = RegExp.$1
+      split = repeatText.split ' in '
+      # product: selectedProducts
+      map[slit[0]] = split[1]
+  map
 
 verboseLog = (args...) ->
   console.info args... if config.verbose
@@ -102,6 +124,9 @@ convert = (options) ->
   convertNgToDataNg = (str) ->
     str.replace /\sng-/g, ' data-ng-'
 
+  convertDataNgToNg = (str) ->
+    str.replace /\sdata-ng-/g, ' ng-'
+
   unescapeReplacements = (str) ->
     str
     # str.replace /__NG__/g, 'ng-'
@@ -185,11 +210,34 @@ convert = (options) ->
         escapedAttrVal = escapeBraces attrVal
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       )
+      .replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
+        verboseLog 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
+        updated = true
+        type = attrName.substr 3 # 'class' or 'style'
+        typeMatch = match.match new RegExp "\\s#{type}=\"([\\s\\S]*?)\""
+        typeStr = typeMatch and typeMatch[0].substr(1) or "#{type}=\"\""
+        typeStrOpen = typeStr.substr 0, typeStr.length - 1
+        typeExpressionStr = """{{#{type}Expression "#{attrVal}"}}"""
+        if typeMatch
+          match = match.replace typeMatch, ''
+        match = match.replace new RegExp("\\sng-#{type}"), "data-ng-#{type}"
+
+        match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
+      )
+      # TODO: ng-click only on anchors
       .replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, (match, tagName, attrName, attrVal) ->
         verboseLog 'match 7', attrName: attrName, attrVal: attrVal
         updated = true
         hrefStr = """href="{{urlPath}}?action=#{encodeURIComponent attrVal}" """
         anchorStr = escapeBraces """<a #{hrefStr} data-ng-#{escapeCurlyBraces hrefStr}"""
+
+        index = interpolated.indexOf match
+        beforeStr = interpolated.substr 0, index
+        refs = getRefNames beforeStr
+        # FIXME: will break for things like 'product' and 'products'
+        for key, value of refs
+          # E.g. ng-click="activeProduct = product" -> ng-click="activeProduct = products[{{@activeProductIndex}}]"
+          attrVal = attrVal.replace key, "#{value}[{{@#{key}Index}}]"
 
         if tagName is 'a'
           # TODO: preserve other url query params - keep a hash in data and add to url
@@ -219,6 +267,7 @@ convert = (options) ->
           trimmedMatch = trimmedMatch.replace attrVal, escapeBraces newAttrVal
           """#{trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
       )
+
       .replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
         updated = true
         hbsTagType = if showOrHide is 'ng-show' then 'hbsShow' else 'hbsHide'
@@ -239,7 +288,7 @@ convert = (options) ->
         updated = true
         body = body.trim()
         words = body.match /[\w\.]+/
-        isHelper = words[0] in ['json', 'expression', 'hbsShow', 'hbsHide']
+        isHelper = words[0] in ['json', 'expression', 'hbsShow', 'hbsHide', 'classExpression', 'styleExpression']
         if not isHelper
           prefix = ''
           suffix = ''
@@ -271,6 +320,7 @@ convert = (options) ->
   interpolated = unescapeBraces interpolated
   interpolated = unescapeBasicAttributes interpolated
   # interpolated = convertNgToDataNg interpolated
+  interpolated = convertDataNgToNg interpolated
   beautified = beautify interpolated
 
   if argv.file and not argv['no-write']

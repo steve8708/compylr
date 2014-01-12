@@ -47,25 +47,25 @@
 
       <nav class="navbar navbar-default main-nav" role="navigation">
         <ul class="nav navbar-nav">
-          <li class="{{ openTab.name == 'search' ? 'active' : '' }}">
+          <li ng-class="{ active: openTab.name == 'search' }">
             <a href="/search" ng-model="openTab.name" btn-radio="'search'"><i class="fa fa-search"></i> Search</a>
           </li>
-          <!--           <li class="hidden-xs" class="dropdown" class="{{ openTab.name == 'tools' ? 'active' : '' }}">
+          <!--           <li class="hidden-xs" class="dropdown" ng-class="{ active: openTab.name == 'tools' }">
             <a href="#/tools">Tools</a>
           </li> -->
-          <li class="{{ openTab.name == 'insights' ? 'active' : '' }}">
+          <li ng-class="{ active: openTab.name == 'insights' }">
             <a href="/insights" ng-model="openTab.name" btn-radio="'insights'"><i class="fa fa-bar-chart-o"></i> Insights</a>
           </li>
-          <li class="{{ openTab.name == 'account' ? 'active' : '' }}">
+          <li ng-class="{ active: openTab.name == 'account' }">
             <a href="/account" ng-model="openTab.name" btn-radio="'account'"><i class="fa fa-user"></i> Account</a>
           </li>
-          <li class="{{ openTab.name == 'tag' ? 'active' : '' }}">
+          <li ng-class="{ active: openTab.name == 'tag' }">
             <a href="/tag" ng-model="openTab.name" btn-radio="'tag'"><i class="fa fa-circle-o"></i> Tag Photo</a>
           </li>
-          <li class="{{ openTab.name == 'tools' ? 'active' : '' }}">
+          <li ng-class="{ active: openTab.name == 'tools' }">
             <a href="/tools" ng-model="openTab.name" btn-radio="'tools'"><i class="fa fa-th"></i> Widget</a>
           </li>
-          <li class="{{ openTab.name == 'post' ? 'active' : '' }}">
+          <li ng-class="{ active: openTab.name == 'post' }">
             <a href="/post" ng-model="openTab.name" btn-radio="'post'"><i class="fa fa-plus"></i> Post</a>
           </li>
           <li class="main-selected-products-container">
@@ -84,7 +84,7 @@
 
     <nav class="mobile-nav visible-xs" role="navigation">
       <ul class="nav navbar-nav">
-        <li class="{{ openTab.name == 'search' ? 'active' : '' }}">
+        <li ng-class="{ active: openTab.name == 'search' }">
           <i class="fa fa-search"></i>
           <a href="/search">Products</a>
         </li>
@@ -92,11 +92,11 @@
           <i class="fa fa-star"></i>
           <a href="/tools">LinkStar</a>
         </li>
-        <li class="{{ openTab.name == 'insights' ? 'active' : '' }}">
+        <li ng-class="{ active: openTab.name == 'insights' }">
           <i class="fa fa-bar-chart-o"></i>
           <a href="/insights">Insights</a>
         </li>
-        <li class="{{ openTab.name == 'account' ? 'active' : '' }}">
+        <li ng-class="{ active: openTab.name == 'account' }">
           <i class="fa fa-cog"></i>
           <a href="/account">Account</a>
         </li>

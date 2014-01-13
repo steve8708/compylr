@@ -4,6 +4,7 @@ _ = require 'lodash'
 evaluate = require 'static-eval'
 
 expressionCache = {}
+evalFnCache: {}
 
 module.exports =
   warnVerbose: (args...) ->
@@ -14,7 +15,7 @@ module.exports =
 
   safeEvalWithContext: (expression, context, clone, thisArg = context, returnNewContext) ->
     context = _.cloneDeep context if clone
-    fn = new Function 'context', "with (context) { return #{expression} }"
+    fn = evalFnCache[expression] or= new Function 'context', "with (context) { return #{expression} }"
     try
       output = fn.call thisArg, context
     catch error

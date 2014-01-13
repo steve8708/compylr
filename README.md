@@ -9,7 +9,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 ## Purpose
 * Simplicity: write your angular app, let Compylr do the rest
-* Best of both worlds: first render on the server, then let angular take over once page is displayed
+* Best of both worlds: first render on the server, then let angular take over once the page is displayed
 * Minimal pageload times pre-load
 * Maximum performance post-load
 * Backend agnostic
@@ -17,7 +17,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 
 ## How it works
-* Compiles Angular Templates to Handlebars Templates
+* Compiles angular templates to handlebars templates
 * Standardizes route configuration using JSON for angular and any backend (via an adapter)
 * Standardizes state management with angular and any backend (via an adapter)
 
@@ -128,7 +128,9 @@ on the server and without JS when copiled by Compylr.
 Pre-compile:
 
 ```html
-<a ng-click="selectedProduct = product" ng-repeat="product in productResults">{{selectedProduct.name}}</a>
+<a ng-click="selectedProduct = product" ng-repeat="product in productResults">
+  {{selectedProduct.name}}
+</a>
 <div ng-if="selectedProduct">
   <h1>{{selectedProduct.name}}</h1>
   <p>{{selectedProduct.description}}</p>
@@ -139,7 +141,9 @@ Post-compile:
 
 ```html
 {{#forEach 'product' in productResults}}
-  <a ng-click="selectedProduct = product" ng-repeat="product in productResults" href="?action=selectedProduct%3Dproduct">{{selectedProduct.name}}</a>
+  <a  href="?action=selectedProduct%3Dproduct" ng-click="selectedProduct = product" ng-repeat="product in productResults" ng-bind="selectedProduct.name">
+    {{selectedProduct.name}}
+  </a>
 {{/forEach}}
 {{#if selectedProduct}}
   <div ng-if="selectedProduct">

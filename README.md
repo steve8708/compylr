@@ -1,4 +1,4 @@
-![Compylr](http://i.imgur.com/GfIITd3.png)
+![Compylr](http://i.imgur.com/A3XYEWM.png)
 
 Easily build apps that load fast and feel amazing.
 

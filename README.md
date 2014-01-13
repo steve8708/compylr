@@ -1,6 +1,6 @@
 ![Compylr](http://i.imgur.com/A3XYEWM.png)
 
-Angular.js apps without JS!
+Angular.js apps 100% on the server, no JS required!
 
 Compile angular apps for rendering on any backend, regardless of language or platform.
 Server side rendering, full angular expression support, 100% SEO comparible,

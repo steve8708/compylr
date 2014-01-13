@@ -1,6 +1,6 @@
 ![Compylr](http://i.imgur.com/A3XYEWM.png)
 
-Angular.js apps 100% on the server, no JS required!
+Angular.js apps 100% on the server, no node.js required!
 
 Compile angular apps for rendering on any backend, regardless of language or platform.
 Server side rendering, full angular expression support, 100% SEO comparible,
@@ -141,7 +141,7 @@ Post-compile:
 
 ```html
 {{#forEach 'product' in productResults}}
-  <a  href="?action=selectedProduct%3Dproduct" ng-click="selectedProduct = product" ng-repeat="product in productResults" ng-bind="selectedProduct.name">
+  <a href="?action=selectedProduct%3Dproduct" ng-click="selectedProduct = product" ng-repeat="product in productResults" ng-bind="selectedProduct.name">
     {{selectedProduct.name}}
   </a>
 {{/forEach}}
@@ -156,6 +156,9 @@ Post-compile:
 Note in the above example the key to this is in the href "?action=". This is compiled
 from your angular template and tells the server adapter the state and/or route
 changes to make
+
+This is all possible because of compylr's concept of a shared session state tree
+and route configuration
 
 
 ## Key Components

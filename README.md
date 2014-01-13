@@ -161,7 +161,7 @@ This is all possible because of compylr's concept of a shared session state tree
 and route configuration
 
 
-## Key Components
+## Key Features
 * 100% SEO friendly
 * Ultra high performance
   * You don't need to run your whole app on the server to render a template. So don't.

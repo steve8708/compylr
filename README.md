@@ -8,7 +8,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 
 ## Purpose
-* Simplicity: write your angular app, let compylr do the rest
+* Simplicity: write your angular app, let Compylr do the rest
 * Best of both worlds: first render on the server, then let angular take over once page is displayed
 * Minimal pageload times pre-load
 * Maximum performance post-load
@@ -70,7 +70,7 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
 ```
 
 #### State & Route Configuration
-Configure your state and routes in one place and compylr
+Configure your state and routes in one place and Compylr
 will compile them into application logic for both your client and server.
 
 `compylr.json`
@@ -119,10 +119,10 @@ And this will update state logic in your templates, such as
 
 This means your applications not only render on the server, but can
 function as fully standalone applications without any JS at all!
-This is all taken care of automatigically by compylr.
+This is all taken care of automatigically by Compylr.
 
 For example, this interactive webpage written in angular can function 100%
-on the server without JS with compylr.
+on the server and without JS when copiled by Compylr.
 
 
 Pre-compile:
@@ -139,7 +139,7 @@ Post-compile:
 
 ```html
 {{#forEach 'product' in productResults}}
-  <a ng-click="selectedProduct = product" ng-repeat="product in productResults">{{selectedProduct.name}}</a>
+  <a ng-click="selectedProduct = product" ng-repeat="product in productResults" href="?action=selectedProduct%3Dproduct">{{selectedProduct.name}}</a>
 {{/forEach}}
 {{#if selectedProduct}}
   <div ng-if="selectedProduct">
@@ -148,6 +148,10 @@ Post-compile:
   </div>
 {{/if}}
 ```
+
+Note in the above example the key to this is in the href "?action=". This is compiled
+from your angular template and tells the server adapter the state and/or route
+changes to make
 
 
 ## Key Components
@@ -201,7 +205,7 @@ Functional demo complete. Working on production ready v1.0.0
 
 
 ## Usage
-`compylr src/path/* dest/path/*`
+`Compylr src/path/* dest/path/*`
 
 
 ## Contributing
@@ -209,7 +213,7 @@ We need more adapters! Node + express is built. We need python, ruby, and more!
 
 
 ## Todo
-* Support for angular filters.
+* Support for angular filters
 * Support for other templating languages (e.g. jinja on python)
 * Supoprt for logic sharing
   * On node through code sharing

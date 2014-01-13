@@ -132,20 +132,20 @@ will compile them into application logic for both your client and server.
 
 
 ## Supported Attributes
-* **ng-repeat**
-* **ng-include**
-* **ng-show**
-* **ng-hide**
-* **ng-if**
-* **ng-click**
-* **ng-class**
-* **ng-style**
-* **ng-attr-***
-* **ng-href, ng-value, ng-src**
-* **ng-bind**
-* **interpolations**
+* ng-repeat
+* ng-include
+* ng-show
+* ng-hide
+* ng-if
+* ng-click
+* ng-class
+* ng-style
+* ng-attr-*
+* ng-href, ng-value, ng-src
+* ng-bind
+* interpolations
  * `{{foo}} <img src="{{bar}}.png">`
-* **expressions**
+* expressions
  * `{{foo && bar}} <img ng-show="bar || foo">`
 
 

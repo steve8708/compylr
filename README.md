@@ -212,7 +212,7 @@ Functional demo complete. Working on production ready v1.0.0
 
 
 ## Usage
-`Compylr src/path/* dest/path/*`
+`compylr src/path/* dest/path/*`
 
 
 ## Contributing

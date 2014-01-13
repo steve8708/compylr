@@ -1,4 +1,4 @@
-![Compilr](http://i.imgur.com/sgvfBB7.png)
+![Compylr](http://i.imgur.com/GfIITd3.png)
 
 Easily build apps that load fast and feel amazing.
 
@@ -8,7 +8,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 
 ## Purpose
-* Simplicity (write your angular app, let Compilr do the rest)
+* Simplicity (write your angular app, let compylr do the rest)
 * Maximum performance
 * Minimal pageload times
 * Backend agnostic
@@ -69,10 +69,10 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
 ```
 
 #### State & Route Configuration
-Configure your state and routes in one place and Compilr
+Configure your state and routes in one place and compylr
 will compile them into application logic for both your client and server.
 
-`compilr.json`
+`compylr.json`
 
 ```javascript
 {
@@ -154,7 +154,7 @@ Functional demo complete. Working on production ready v1.0.0
 
 
 ## Usage
-`compilr src/path/* dest/path/*`
+`compylr src/path/* dest/path/*`
 
 
 ## Contributing

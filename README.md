@@ -1,6 +1,6 @@
 ![Compylr](http://i.imgur.com/A3XYEWM.png)
 
-Easily build apps that load fast and feel amazing.
+Angular.js apps without JS!
 
 Compile angular apps for rendering on any backend, regardless of language or platform.
 Server side rendering, full angular expression support, 100% SEO comparible,
@@ -8,9 +8,10 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 
 ## Purpose
-* Simplicity (write your angular app, let compylr do the rest)
-* Maximum performance
-* Minimal pageload times
+* Simplicity: write your angular app, let compylr do the rest
+* Best of both worlds: first render on the server, then let angular take over once page is displayed
+* Minimal pageload times pre-load
+* Maximum performance post-load
 * Backend agnostic
 * Easily share state and route logic on client and server
 
@@ -23,7 +24,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 ## Example
 
-#### Angular template input
+#### Angular Template Input
 ```html
 <a ng-repeat="product in products" ng-click="activeProduct = product">
   <img src="{{user.image}}" ng-show="foo && bar">
@@ -40,7 +41,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 {{ foo && bar }}
 ```
 
-#### Compiled temlpate output
+#### Compiled Temlpate Output
 Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angular interpolations
 ```html
 {{#forEach 'foo' in bar}}
@@ -100,6 +101,52 @@ will compile them into application logic for both your client and server.
     }
   }
 }
+```
+
+
+#### Server Events & Actions
+Compilr runs your applications routes and states on both the client
+and the server. This means that you can run things like
+
+* `<a ng-click="selectedProduct = products[i]"></a>`
+* `<a ng-click="showModal = true"></a>`
+* `<a ng-click="user.loggedIn = false"></a>`
+
+And this will update state logic in your templates, such as
+* `<div class="modal" ng-show="showModal">...</div>`
+* `<h1>{{selectedProduct.name}}</h1><p>{{selectedProduct.description}}</p>`
+* `<div ng-if="user.loggedIn" id="main-container"></div>`
+
+This means your applications not only render on the server, but can
+function as fully standalone applications without any JS at all!
+This is all taken care of automatigically by compylr.
+
+For example, this interactive webpage written in angular can function 100%
+on the server without JS with compylr.
+
+
+Pre-compile:
+
+```html
+<a ng-click="selectedProduct = product" ng-repeat="product in productResults">{{selectedProduct.name}}</a>
+<div ng-if="selectedProduct">
+  <h1>{{selectedProduct.name}}</h1>
+  <p>{{selectedProduct.description}}</p>
+</div>
+```
+
+Post-compile:
+
+```html
+{{#forEach 'product' in productResults}}
+  <a ng-click="selectedProduct = product" ng-repeat="product in productResults">{{selectedProduct.name}}</a>
+{{/forEach}}
+{{#if selectedProduct}}
+  <div ng-if="selectedProduct">
+    <h1 ng-bind="selectedProduct.name">{{selectedProduct.name}}</h1>
+    <p ng-bind="selectedProduct.description">{{selectedProduct.description}}</p>
+  </div>
+{{/if}}
 ```
 
 

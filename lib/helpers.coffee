@@ -1,4 +1,9 @@
+esprima = require 'esprima'
 config = require './config'
+_ = require 'lodash'
+evaluate = require 'static-eval'
+
+expressionCache = {}
 
 module.exports =
   warnVerbose: (args...) ->
@@ -7,13 +12,13 @@ module.exports =
   logVerbose: (args...) ->
     console.info args... if config.verbose
 
-  safeEvalWithContext: (expression, context, clone, returnNewContext, thisArg = @) ->
+  safeEvalWithContext: (expression, context, clone, thisArg = context, returnNewContext) ->
     context = _.cloneDeep context if clone
     fn = new Function 'context', "with (context) { return #{expression} }"
     try
-      output = fn.call context
+      output = fn.call thisArg, context
     catch error
-      helpers.warnVerbose 'Action error', error
+      @warnVerbose 'Action error', error
 
     if returnNewContext
       context: context
@@ -35,5 +40,5 @@ module.exports =
     try
       value = evaluate expressionBody, context
     catch error
-      helpers.warnVerbose 'Eval expression error'
+      @warnVerbose 'Eval expression error'
     value

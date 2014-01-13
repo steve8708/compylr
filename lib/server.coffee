@@ -10,7 +10,6 @@ compile           = require './compile'
 helpers           = require './helpers'
 handlebarsHelpers = require './handlebars-helpers'
 config            = require './config'
-evaluate          = require 'static-eval'
 esprima           = require 'esprima'
 appConfig         = require '../compilr-config'
 
@@ -27,25 +26,23 @@ app.use express.session secret: 'foobar', store: new express.session.MemoryStore
 app.use express.static 'static'
 
 app.engine 'html', exphbs
-  layoutsDir: '../'
-  partialsDir: "../#{templatesDir}"
+  layoutsDir: './'
+  partialsDir: "./#{templatesDir}"
   extname: '.tpl.html'
 
 app.set 'view engine', 'handlebars'
-app.set 'views', __dirname
-
-expressionCache = {}
+app.set 'views', __dirname + '/..'
 
 
 # Compile templates - - - - - - - - - - - - - - - - - - - - - - -
 
 # TODO: file paths
-compile  src: preCompiledTemplatesDir, dest: templatesDir, recursive: true
+# compile  src: preCompiledTemplatesDir, dest: templatesDir, recursive: true
 
-console.info 'Compiling templates...'
+console.info 'Compiling templates..'
 
-mkdirp.sync "../#{templatesDir}"
-fs.writeFileSync "../#{templatesDir}/index.tpl.html", compile file: "#{preCompiledTemplatesDir}/index.tpl.html"
+mkdirp.sync "./#{templatesDir}"
+fs.writeFileSync "./#{templatesDir}/index.tpl.html", compile file: "#{preCompiledTemplatesDir}/index.tpl.html"
 
 # TODO: make this recursively support infinite depth
 # TODO: move this to compile.coffee and allow recursive src and dest options
@@ -56,12 +53,12 @@ directories = [
 ]
 
 for type in directories
-  path = "../#{preCompiledTemplatesDir}/#{type}/"
+  path = "./#{preCompiledTemplatesDir}/#{type}/"
   for fileName in fs.readdirSync path
     continue unless _.contains fileName, '.tpl.html'
     partialName = "#{type}/#{fileName}"
-    mkdirp.sync "../#{templatesDir}/#{type}"
-    fs.writeFileSync "../#{templatesDir}/#{partialName}", compile file: "#{path}#{fileName}"
+    mkdirp.sync "./#{templatesDir}/#{type}"
+    fs.writeFileSync "./#{templatesDir}/#{partialName}", compile file: "#{path}#{fileName}"
 
 console.info 'Done compiling templates.'
 
@@ -78,7 +75,7 @@ resultsSuccess = (req, res, results) ->
   sessionData = req.session.pageData or= _.cloneDeep appConfig.data
   sessionData.results = results
   # unless sessionData.selectedProducts.length
-  #   sessionData.selectedProducts.unshift results.slice(0, 6)...
+  #   sessionData.selectedProducts.unshift results.slice(0, 6)..
   product = req.params.product
   if product
     sessionData.activeProduct.product = _.find results, (item) ->
@@ -87,7 +84,9 @@ resultsSuccess = (req, res, results) ->
     sessionData.activeProduct.product = null
 
   unless res.headerSent
+    console.log 'render start'
     res.render "#{templatesDir}/index.tpl.html", sessionData
+    console.log 'render end'
 
 # TODO: route logic based on route definitions in app-config.coffee
 app.get '/:page?/:tab?/:product?', (req, res) ->
@@ -123,7 +122,11 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
   cached = cache.results[query]
   if cached
     resultsSuccess req, res, cached
+    return
+
+  console.log 'api request start'
   request.get url, (err, response, body) ->
+    console.log 'api request end'
     results = JSON.parse(body).products
     cache.results[query] = results
     resultsSuccess req, res, results
@@ -133,5 +136,5 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
 # Run - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 port = process.env.PORT || 5000
-console.info "Listening on part #{port}..."
+console.info "Listening on part #{port}.."
 app.listen port

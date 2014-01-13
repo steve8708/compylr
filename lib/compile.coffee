@@ -33,7 +33,7 @@ getRefNames = (str, options) ->
       map[slit[0]] = split[1]
   map
 
-stripComments = (str) ->
+stripComments = (str = '') ->
   str.replace(/<!--[\s\S]*?-->/g, '')
 
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,

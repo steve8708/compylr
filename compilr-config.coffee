@@ -30,6 +30,7 @@ module.exports =
 
     # TODO: session data
     toggleSelectedProduct: (product) ->
+      console.log 'toggleSelectedProduct', @selectedProducts
       id = product and product.id or product
       foundProduct = _.find @selectedProducts, (item) ->
         item and "#{item.id}" is "#{id}"

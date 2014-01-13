@@ -1,3 +1,4 @@
+_ = require 'lodash'
 handlebars = require 'handlebars'
 helpers = require './helpers'
 

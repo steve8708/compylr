@@ -24,6 +24,7 @@
     "request": "~2.31.0",
     "coffee-script": "~1.6.3",
     "underscore.string": "~2.3.3",
-    "glob": "~3.2.8"
+    "glob": "~3.2.8",
+    "webkit-devtools-agent": "~0.2.1"
   }
 }

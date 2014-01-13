@@ -3,7 +3,7 @@
 Angular.js apps 100% on the server, no node.js required!
 
 Compile angular apps for rendering on any backend, regardless of language or platform.
-Server side rendering, full angular expression support, 100% SEO comparible,
+Server side rendering, full angular expression support, 100% SEO compatible,
 client/server route and logic sharing, environment agnostic state persistence.
 
 
@@ -180,7 +180,7 @@ and route configuration
 * Form support
 * Offline support
 * Templates compile to 100% valid handlebars
-  * Handlebars helpers comparible - extend with your own
+  * Handlebars helpers compatible - extend with your own
 * Template resolution
   * All angular template attributes are 100% safe. They are converted
     to handlebars expressions and to ng-attributes so the template

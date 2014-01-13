@@ -13,8 +13,14 @@ config            = require './config'
 esprima           = require 'esprima'
 appConfig         = require '../compilr-config'
 
+console.info 'Running...'
+console.info 'Process id = ' + process.pid
 
 # Setup  - - - - - - - - - - - - - - - - - - - - - - -
+
+# If not on heroku let us debug with a webkit agent
+unless process.env.PORT
+  agent = require 'webkit-devtools-agent'
 
 app = express()
 
@@ -100,10 +106,11 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
   action = req.query.action
   if action
     helpers.safeEvalWithContext action, sessionData
-    console.log 'action', action
+    console.log 'redirect', req._parsedUrl.pathname
     return res.redirect req._parsedUrl.pathname
 
   if page and not tab and appConfig.data.tabDefaults[page]
+    console.log 'redirect', "/#{page}/#{appConfig.data.tabDefaults[page]}"
     return res.redirect "/#{page}/#{appConfig.data.tabDefaults[page]}"
 
   sessionData.noJS = req.query.nojs
@@ -130,7 +137,6 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
     results = JSON.parse(body).products
     cache.results[query] = results
     resultsSuccess req, res, results
-    null
 
 
 # Run - - - - - - - - - - - - - - - - - - - - - - - - - -

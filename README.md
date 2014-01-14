@@ -74,19 +74,16 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
 Render your template with handlebars
 and pass in any data you need
 
-Coffeescript Example
-
+**Coffeescript Example**
 ```coffeescript
 app.engine 'handlebars'
 res.render 'index', products: products
 ```
 
-Java Example
+**Java Example**
 ```java
 Handlebars handlebars = new Handlebars();
-
 Template template = handlebars.compile("index");
-
 System.out.println(template.apply("Handlebars.java"));
 ```
 

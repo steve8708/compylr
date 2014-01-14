@@ -4,7 +4,7 @@ Angular.js apps 100% on the server, no node.js required!
 
 Compile angular apps for rendering on any backend, regardless of language or platform.
 Server side rendering, full angular expression support, 100% SEO compatible,
-client/server route and logic sharing, environment agnostic state persistence.
+optional client/server route, logic, and state sharing.
 
 
 ## Purpose

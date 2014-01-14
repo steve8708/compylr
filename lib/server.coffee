@@ -19,8 +19,11 @@ console.info 'Process id = ' + process.pid
 # Setup  - - - - - - - - - - - - - - - - - - - - - - -
 
 # If not on heroku let us debug with a webkit agent
-unless process.env.PORT
-  agent = require 'webkit-devtools-agent'
+# unless process.env.PORT
+#   try
+#     agent = require 'webkit-devtools-agent'
+#   catch error
+#     console.warn 'Could\'t create node devtools agent', error
 
 app = express()
 
@@ -101,16 +104,18 @@ app.get '/:page?/:tab?/:product?', (req, res) ->
   tab = req.params.tab
   product = req.params.product
   query = req.query.fts or ''
+
+  if page is 'favicon.ico'
+    return res.send 200
+
   sessionData = req.session.pageData or= _.cloneDeep appConfig.data
 
   action = req.query.action
   if action
     helpers.safeEvalWithContext action, sessionData
-    console.log 'redirect', req._parsedUrl.pathname
     return res.redirect req._parsedUrl.pathname
 
   if page and not tab and appConfig.data.tabDefaults[page]
-    console.log 'redirect', "/#{page}/#{appConfig.data.tabDefaults[page]}"
     return res.redirect "/#{page}/#{appConfig.data.tabDefaults[page]}"
 
   sessionData.noJS = req.query.nojs

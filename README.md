@@ -14,6 +14,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 * Maximum performance post-load
 * Backend agnostic
 * Easily share state and route logic on client and server
+* Support full RESTful URL structure for optimal page crawling
 
 
 ## How it works
@@ -26,7 +27,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 #### Angular Template Input
 ```html
-<a ng-repeat="product in products" ng-click="activeProduct = product">
+<a ng-repeat="product in products" href="products/{{product.id}}">
   <img src="{{user.image}}" ng-show="foo && bar">
 
   {{foo}}
@@ -45,7 +46,7 @@ client/server route and logic sharing, environment agnostic state persistence.
 Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angular interpolations
 ```html
 {{#forEach 'foo' in bar}}
-  <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="?action=activeProduct%3Dproduct">
+  <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="products/{{product.id}}" ng-attr-href="&#123;&#123;products/{{product.id}}&#125;&#125;">
     <img src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}} ng-attr-src="&#123;&#123;user.image&#125;&#125;">
 
     <span ng-bind="foo">{{foo}}</span>
@@ -68,6 +69,27 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
   {{expression "foo && bar"}}
 </span>
 ```
+
+#### Render Your Template
+Render your template with handlebars
+and pass in any data you need
+
+Coffeescript Example
+
+```coffeescript
+app.engine 'handlebars'
+res.render 'index', products: products
+```
+
+Java Example
+```java
+Handlebars handlebars = new Handlebars();
+
+Template template = handlebars.compile("index");
+
+System.out.println(template.apply("Handlebars.java"));
+```
+
 
 #### State & Route Configuration (Optional)
 Configure your state and routes in one place and Compylr
@@ -104,7 +126,7 @@ will compile them into application logic for both your client and server.
 ```
 
 
-#### Server Events & Actions
+#### Server Events & Actions (Optional)
 Compilr runs your applications routes and states on both the client
 and the server. This means that you can run things like
 
@@ -195,7 +217,7 @@ and route configuration
 * ng-show
 * ng-hide
 * ng-if
-* ng-click
+* ng-click (With optional state syncing)
 * ng-class
 * ng-style
 * ng-attr-*

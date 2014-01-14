@@ -241,7 +241,7 @@ We need more adapters! Node + express is built. We need python, ruby, and more!
 ## Todo
 * Support for angular filters
 * Support for other templating languages (e.g. jinja on python)
-* Supoprt for logic sharing
+* Support for logic sharing
   * On node through code sharing
   * On other platforms (python, java, etc) through expression parsing
 

@@ -46,7 +46,7 @@ optional client/server route, logic, and state sharing.
 Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angular interpolations
 ```html
 {{#forEach 'foo' in bar}}
-  <a ng-repeat="foo in bar" ng-click="activeProduct = product" href="products/{{product.id}}" ng-attr-href="&#123;&#123;products/{{product.id}}&#125;&#125;">
+  <a ng-repeat="foo in bar" href="products/{{product.id}}" ng-href="&#123;&#123;products/{{product.id}}&#125;&#125;">
     <img src="{{user.image}}" ng-show="foo" {{hbsShow "foo && bar"}} ng-attr-src="&#123;&#123;user.image&#125;&#125;">
 
     <span ng-bind="foo">{{foo}}</span>

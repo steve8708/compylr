@@ -18,8 +18,8 @@ client/server route and logic sharing, environment agnostic state persistence.
 
 ## How it works
 * Compiles angular templates to handlebars templates
-* Standardizes route configuration using JSON for angular and any backend (via an adapter)
-* Standardizes state management with angular and any backend (via an adapter)
+* (Optionally) Standardizes route configuration using JSON for angular and any backend (via an adapter)
+* (Optionally) Standardizes state management with angular and any backend (via an adapter)
 
 
 ## Example
@@ -69,7 +69,7 @@ Includes {{}} for handlebars and attributes + escaped {{}} (&amp;#123;) for angu
 </span>
 ```
 
-#### State & Route Configuration
+#### State & Route Configuration (Optional)
 Configure your state and routes in one place and Compylr
 will compile them into application logic for both your client and server.
 

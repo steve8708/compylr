@@ -73,7 +73,7 @@ module.exports = (grunt) ->
 
     bump:
       options:
-        files: ['package.json', 'bower.json']
+        files: ['package.json']
         commit: false
         commitMessage: 'chore(release): v%VERSION%'
         commitFiles: ['package.json', 'client/bower.json']

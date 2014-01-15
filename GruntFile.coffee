@@ -1,5 +1,4 @@
 os = require 'os'
-userConfig = require './build.config.coffee'
 
 module.exports = (grunt) ->
 
@@ -8,14 +7,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-connect'
-  grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-compress'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-conventional-changelog'
   grunt.loadNpmTasks 'grunt-bump'
   grunt.loadNpmTasks 'grunt-coffeelint'
-  grunt.loadNpmTasks 'grunt-recess'
   grunt.loadNpmTasks 'grunt-karma'
 
 
@@ -40,6 +37,12 @@ module.exports = (grunt) ->
   # Config - - - - - - - - - - - - - - - - - - - - - - - - -
 
   taskConfig =
+    appFiles:
+      coffee: 'lib/**/*'
+
+    buildDir: 'dist'
+    compileDir: 'dist'
+
     connect:
       dev:
         options:
@@ -84,12 +87,12 @@ module.exports = (grunt) ->
 
     coffee:
       source:
-        # options:
-        #   bare: true
+        options:
+          bare: true
 
         expand: true
-        cwd: '.'
-        src: ['<%= appFiles.coffee %>']
+        cwd: './lib'
+        src: ['**/*']
         dest: '<%= buildDir %>'
         ext: '.js'
 
@@ -126,18 +129,12 @@ module.exports = (grunt) ->
 
       compile:
         dir: '<%= compileDir %>'
-        src: ['<%= concat.compileJs.dest %>'
-          '<%= vendorFiles.css %>'
-          '<%= recess.compile.dest %>'
-        ]
+        src: []
 
     karmaconfig:
       unit:
         dir: '<%= buildDir %>'
-        src: ['<%= vendorFiles.js %>'
-          '<%= html2js.app.dest %>'
-          '<%= html2js.common.dest %>'
-        ]
+        src: []
 
     delta:
       options:
@@ -160,9 +157,9 @@ module.exports = (grunt) ->
         options:
           livereload: false
 
-  grunt.initConfig grunt.util._.extend taskConfig, userConfig
+  grunt.initConfig taskConfig
   grunt.renameTask 'watch', 'delta'
-  grunt.registerTask ''
+  grunt.registerTask 'build', 'coffee:source'
 
 
   ###

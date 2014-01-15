@@ -1,15 +1,21 @@
 {
   "author": "Steve Sewell",
-  "name": "compilr",
+  "name": "compylr",
+  "description": "Compile angular apps to run on your server",
   "version": "0.0.1",
-  "bugs": "https://github.com/steve8708/compilr/issues",
+  "bugs": "https://github.com/steve8708/compylr/issues",
+  "main": "index.js",
   "repository": {
     "type": "git",
-    "url": " https://github.com/steve8708/compilr"
+    "url": " https://github.com/steve8708/compylr"
   },
   "engines": {
     "node": ">= 0.8.0"
   },
+  "bin": {
+    "compylr": "./bin/compylr"
+  },
+  "licsense": "MIT",
   "dependencies": {
     "optimist": "~0.6.0",
     "js-beautify": "~1.4.2",

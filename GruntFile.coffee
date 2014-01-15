@@ -14,6 +14,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-bump'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-karma'
+  grunt.loadNpmTasks 'grunt-npm'
 
 
   # Helpers - - - - - - - - - - - - - - - - - - - - - - - -
@@ -51,6 +52,8 @@ module.exports = (grunt) ->
           base: 'build'
 
     pkg: grunt.file.readJSON 'package.json'
+
+    'npm-publish': {}
 
     meta:
       banner:

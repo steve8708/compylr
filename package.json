@@ -1,7 +1,7 @@
 {
   "author": "Steve Sewell",
   "name": "compilr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "bugs": "https://github.com/steve8708/compilr/issues",
   "repository": {
     "type": "git",
@@ -24,7 +24,30 @@
     "request": "~2.31.0",
     "coffee-script": "~1.6.3",
     "underscore.string": "~2.3.3",
-    "glob": "~3.2.8",
-    "webkit-devtools-agent": "~0.2.1"
+    "glob": "~3.2.8"
+  },
+  "devDependencies": {
+    "webkit-devtools-agent": "~0.2.1",
+    "grunt": "~0.4.2",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-connect": "~0.6.0",
+    "grunt-bump": "0.0.13",
+    "grunt-contrib-coffee": "~0.8.0",
+    "grunt-conventional-changelog": "~1.0.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-compress": "~0.6.0",
+    "grunt-coffeelint": "0.0.8",
+    "karma-script-launcher": "~0.1.0",
+    "karma-chrome-launcher": "~0.1.2",
+    "karma-firefox-launcher": "~0.1.3",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.1.5",
+    "karma-coffee-preprocessor": "~0.1.2",
+    "requirejs": "~2.1.10",
+    "karma-requirejs": "~0.2.1",
+    "karma-phantomjs-launcher": "~0.1.1",
+    "karma": "~0.10.9",
+    "grunt-karma": "~0.6.2"
   }
 }

@@ -273,7 +273,7 @@ app.get 'index', (req, res) ->
 
 CLI (coming soon...)
 
-`compylr src/path/* dest/path/*`
+`compylr src/path/* dest/path/*`  
 `./node_modules/.bin/compylr src/path/* dest/path/*`
 
 

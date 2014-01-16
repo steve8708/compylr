@@ -341,6 +341,6 @@ compile = (options) ->
 
 
 compile.setHelpers = (handlebars) ->
-  require('./handlebars-helperss') handlebars
+  require('./handlebars-helpers') handlebars
 
 module.exports = compile

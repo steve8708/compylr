@@ -342,4 +342,8 @@ compile = function(options) {
   return beautified;
 };
 
+compile.setHelpers = function(handlebars) {
+  return require('./handlebars-helperss')(handlebars);
+};
+
 module.exports = compile;

@@ -237,7 +237,6 @@ Functional demo complete. Working on production ready v1.0.0
 
 ```coffeescript
 compylr = require 'compylr'
-
 compiled = compylr path: 'path/to/angular/template.html'
 ```
 
@@ -273,6 +272,7 @@ app.get 'index', (req, res) ->
 ```
 
 CLI (coming soon...)
+
 `compylr src/path/* dest/path/*`
 `./node_modules/.bin/compylr src/path/* dest/path/*`
 

@@ -40,11 +40,11 @@ module.exports = (handlebars) ->
 
   handlebars.registerHelper "hbsShow", (expression, options) ->
     value = helpers.safeEvalStaticExpression expression, @
-    if value then 'data-hbs-show' else 'data-hbs-hide'
+    if value then ' data-hbs-show ' else ' data-hbs-hide '
 
   handlebars.registerHelper "hbsHide", (expression, options) ->
     value = helpers.safeEvalStaticExpression expression, @
-    if value then 'data-hbs-hide' else 'data-hbs-show'
+    if value then ' data-hbs-hide ' else ' data-hbs-show '
 
   handlebars.registerHelper "json", (args..., options) ->
     obj = args[0] or @

@@ -343,7 +343,7 @@ compile = function(options) {
 };
 
 compile.setHelpers = function(handlebars) {
-  return require('./handlebars-helperss')(handlebars);
+  return require('./handlebars-helpers')(handlebars);
 };
 
 module.exports = compile;

@@ -1,5 +1,3 @@
-#!/usr/bin/env coffee
-
 argv         = require('optimist').argv
 fs           = require 'fs'
 _            = require 'lodash'
@@ -340,5 +338,9 @@ compile = (options) ->
     fs.writeFileSync 'template-output/output.html', beautified
 
   beautified
+
+
+compile.setHelpers = (handlebars) ->
+  require('./handlebars-helperss') handlebars
 
 module.exports = compile

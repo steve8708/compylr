@@ -244,13 +244,17 @@ compiled = compylr path: 'path/to/angular/template.html'
 Or, more a more complete example
 
 ```coffeescript
+# Load our dependencies
 compylr = require 'compylr'
 fs = require 'fs'
 expressHandlebars = require 'express3-handlebars'
 express = require 'express'
 handlebars = require 'handlebars'
 
+# Set handlebars as our rendering engine
 app.engine 'html', expressHandlebars templatesDir: './templates'
+
+# Specify our templates directory
 app.set 'views', './templates'
 
 # Write our main template
@@ -259,14 +263,17 @@ fs.writeFileSync 'templates/index.html', compylr path: 'path/to/angular/template
 # Load compylr handlebars heleprs for rendering
 compylr.setHelpers handelbars
 
+# Create an express app
 app = express()
 
+# Get the index route and render our compiled index.html with some data
 app.get 'index', (req, res) ->
   res.render 'index', foo: 'bar'
 
 ```
 
 CLI (coming soon...)
+`compylr src/path/* dest/path/*`
 `./node_modules/.bin/compylr src/path/* dest/path/*`
 
 

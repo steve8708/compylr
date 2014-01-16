@@ -52,18 +52,18 @@ module.exports = function(handlebars) {
     var value;
     value = helpers.safeEvalStaticExpression(expression, this);
     if (value) {
-      return 'data-hbs-show';
+      return ' data-hbs-show ';
     } else {
-      return 'data-hbs-hide';
+      return ' data-hbs-hide ';
     }
   });
   handlebars.registerHelper("hbsHide", function(expression, options) {
     var value;
     value = helpers.safeEvalStaticExpression(expression, this);
     if (value) {
-      return 'data-hbs-hide';
+      return ' data-hbs-hide ';
     } else {
-      return 'data-hbs-show';
+      return ' data-hbs-show ';
     }
   });
   handlebars.registerHelper("json", function() {

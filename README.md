@@ -238,7 +238,7 @@ Functional demo complete. Working on production ready v1.0.0
 ```coffeescript
 compylr = require 'compylr'
 
-compiled = compylr path: '/file/path'
+compiled = compylr path: '/path/to/angular/template.html'
 ```
 
 Or, more a more complete example
@@ -254,7 +254,7 @@ app.engine 'html', expressHandlebars templatesDir: './templates'
 app.set 'views', './templates'
 
 # Write our main template
-fs.writeFileSync 'templates/index', compylr path: '/file/path'
+fs.writeFileSync 'templates/index', compylr path: '/path/to/angular/template.html'
 
 # Load compylr handlebars heleprs for rendering
 compylr.setHelpers handelbars

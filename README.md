@@ -22,6 +22,9 @@ optional client/server route, logic, and state sharing.
 * (Optionally) Standardizes route configuration using JSON for angular and any backend (via an adapter)
 * (Optionally) Standardizes state management with angular and any backend (via an adapter)
 
+## Installation
+`npm install --save compylr`
+
 
 ## Example
 

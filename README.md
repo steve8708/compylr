@@ -276,10 +276,10 @@ CLI (coming soon...)
 `compylr src/path/* dest/path/*`  
 `./node_modules/.bin/compylr src/path/* dest/path/*`
 
-
+<!-- 
 ## Contributing
 We need more adapters! Node + express is built. We need python, ruby, and more!
-
+ -->
 
 ## Todo
 * Localization

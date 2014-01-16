@@ -234,7 +234,40 @@ Functional demo complete. Working on production ready v1.0.0
 
 
 ## Usage
-`compylr src/path/* dest/path/*`
+
+```coffeescript
+compylr = require 'compylr'
+
+compiled = compylr path: '/file/path'
+```
+
+Or, more a more complete example
+
+```coffeescript
+compylr = require 'compylr'
+fs = require 'fs'
+expressHandlebars = require 'express3-handlebars'
+express = require 'express'
+handlebars = require 'handlebars'
+
+app.engine 'html', expressHandlebars templatesDir: './templates'
+app.set 'views', './templates'
+
+# Write our main template
+fs.writeFileSync 'templates/index', compylr path: '/file/path'
+
+# Load compylr handlebars heleprs for rendering
+compylr.setHelpers handelbars
+
+app = express()
+
+app.get 'index', (req, res) ->
+  res.render 'index', foo: 'bar'
+
+```
+
+CLI (coming soon...)
+`./node_modules/.bin/compylr src/path/* dest/path/*`
 
 
 ## Contributing
@@ -243,6 +276,7 @@ We need more adapters! Node + express is built. We need python, ruby, and more!
 
 ## Todo
 * Localization
+* Compile whole directories with src and dest directories
 * Support for angular filters
 * Support for other templating languages (e.g. jinja on python)
 * Support for logic sharing

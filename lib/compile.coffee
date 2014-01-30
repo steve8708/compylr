@@ -176,8 +176,17 @@ compile = (options) ->
         # varName = text.split(' in ')[1]
         close = getCloseTag match
         filterStr = if filters.trim() then " filters=\"#{filters}\"" else ''
+        # TODO: hide the unless section
         if close
-          "{{#forEach #{varName}#{filterStr}}}\n#{close.before.replace /\sng-repeat/, ' data-ng-repeat'}\n{{/forEach}}\n#{close.after}"
+          """
+          {{#forEach #{varName}#{filterStr}}}
+          #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
+          {{/forEach}}
+          {{#unless #{_.last(varName.split /\s/)}.length}}
+          #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
+          {{/unless}}
+          #{close.after}
+          """
         else
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
       )
@@ -205,6 +214,7 @@ compile = (options) ->
 
       # ng-include - - - - - - - - - - - - - -
 
+      # FIXME: doesn't handle ng-include="'foo' + bar + 'baz'"
       .replace(/<[^>]*?\sng-include="'(.*)'".*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 3'
         updated = true

@@ -180,10 +180,12 @@ compile = (options) ->
         if close
           """
           {{#forEach #{varName}#{filterStr}}}
-          #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
+            #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
           {{/forEach}}
           {{#unless #{_.last(varName.split /\s/)}.length}}
-          #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
+            <span ng-cloak>
+              #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
+            </span>
           {{/unless}}
           #{close.after}
           """

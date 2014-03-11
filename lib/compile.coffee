@@ -249,7 +249,7 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, (match, openTag, contents, closeTag) ->
-        """#{openTag}{{translate "#{contents.replace /"/g, '\"' }"}}#{closeTag†}"""
+        """#{openTag}{{translate "#{contents.replace /"/g, '\"' }"}}#{closeTag}"""
 
       # ng-class, ng-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

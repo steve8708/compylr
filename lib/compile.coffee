@@ -175,6 +175,7 @@ compile = (options) ->
         updated = true
         varName = text
         varNameSplit = varName.split ' '
+        propName = varNameSplit[0]
         varNameSplit[0] = "'#{varNameSplit[0]}'"
         varName = varNameSplit.join ' '
         processedFilters = processFilters varName
@@ -189,7 +190,7 @@ compile = (options) ->
           {{#forEach #{varName}#{filterStr}}}
             #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
           {{/forEach}}
-          {{#unless #{_.last(varName.split /\s/)}.length}}
+          {{#unless #{_.last _.compact varName.split /\s/}.length}}
             <span ng-cloak>
               #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
             </span>
@@ -249,6 +250,7 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, (match, openTag, contents, closeTag) ->
+        updated = true
         """#{openTag}{{translate "#{contents.replace /"/g, '\"' }"}}#{closeTag}"""
 
       # ng-class, ng-style

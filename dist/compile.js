@@ -184,11 +184,12 @@ compile = function(options) {
       throw new Error('infinite update loop');
     }
     interpolated = interpolated.replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, function(match, text, post) {
-      var close, filterStr, filters, processedFilters, varName, varNameSplit;
+      var close, filterStr, filters, processedFilters, propName, varName, varNameSplit;
       helpers.logVerbose('match 1');
       updated = true;
       varName = text;
       varNameSplit = varName.split(' ');
+      propName = varNameSplit[0];
       varNameSplit[0] = "'" + varNameSplit[0] + "'";
       varName = varNameSplit.join(' ');
       processedFilters = processFilters(varName);
@@ -197,7 +198,7 @@ compile = function(options) {
       close = getCloseTag(match);
       filterStr = filters.trim() ? " filters=\"" + filters + "\"" : '';
       if (close) {
-        return "{{#forEach " + varName + filterStr + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#unless " + (_.last(varName.split(/\s/))) + ".length}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/unless}}\n" + close.after;
+        return "{{#forEach " + varName + filterStr + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#unless " + (_.last(_.compact(varName.split(/\s/)))) + ".length}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/unless}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
@@ -233,6 +234,7 @@ compile = function(options) {
       escapedAttrVal = escapeBraces(attrVal);
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, function(match, openTag, contents, closeTag) {
+      updated = true;
       return "" + openTag + "{{translate \"" + (contents.replace(/"/g, '\"')) + "\"}}" + closeTag;
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;

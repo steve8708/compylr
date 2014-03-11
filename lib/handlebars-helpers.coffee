@@ -5,7 +5,8 @@ helpers = require './helpers'
 module.exports = (handlebars) ->
   handlebars or= require 'handlebars'
 
-  # Compile Handlebars Helpers - - - - - - - - - - - - - - - - - - -
+  # Compylr Handlebars Helpers
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   handlebars.registerHelper "eachExpression", (name, _in, expression, options) ->
     value = helpers.safeEvalStaticExpression expression, @
@@ -69,7 +70,7 @@ module.exports = (handlebars) ->
     i = 0
     ret = ""
     data = undefined
-    # context = context.call(@) if typeof context is 'function'
+
     if context and _.isObject context
       if _.isArray context
         j = context.length
@@ -83,9 +84,7 @@ module.exports = (handlebars) ->
             data.index = i
             data.first = (i is 0)
             data.last = i is (iterContext.length - 1)
-          ret = ret + fn(iterContext,
-            data: data
-          )
+          ret = ret + fn iterContext, data: data
           i++
       else
         for key of context
@@ -95,10 +94,8 @@ module.exports = (handlebars) ->
             if data
               data.key = key
               data.index = i
-              data.first = (i is 0)
-            ret = ret + fn(iterCtx,
-              data: data
-            )
+              data.first = i is 0
+            ret = ret + fn iterCtx, data: data
             i++
-    # ret = inverse(@) if i is 0
+
     ret

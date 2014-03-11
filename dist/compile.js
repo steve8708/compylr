@@ -197,7 +197,7 @@ compile = function(options) {
       close = getCloseTag(match);
       filterStr = filters.trim() ? " filters=\"" + filters + "\"" : '';
       if (close) {
-        return "{{#forEach " + varName + filterStr + "}}\n" + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n" + close.after;
+        return "{{#forEach " + varName + filterStr + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#unless " + (_.last(varName.split(/\s/))) + ".length}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/unless}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
@@ -206,7 +206,7 @@ compile = function(options) {
       helpers.logVerbose('match 2');
       updated = true;
       varName = varName.trim();
-      tagName = varName.split(' ')[1] ? 'ifExpression' : 'if';
+      tagName = varName.match(/^[\w\.]+$/) ? 'if' : 'ifExpression';
       if (varName.indexOf('!') === 0 && tagName === 'if') {
         tagName = 'unless';
         varName = varName.substr(1);
@@ -232,6 +232,8 @@ compile = function(options) {
       escapedMatch = escapeCurlyBraces(match);
       escapedAttrVal = escapeBraces(attrVal);
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
+    }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, function(match, openTag, contents, closeTag) {
+      return "" + openTag + "{{translate \"" + (contents.replace(/"/g, '\"')) + "\"}}" + closeTag†;
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {
@@ -289,7 +291,7 @@ compile = function(options) {
           if (expression.length !== expression.match(/[\w\.]+/)[0].length) {
             return "{{expression '" + (expression.replace(/'/g, "\\'")) + "'}}";
           } else {
-            return match;
+            return match.replace(/\[|\]/g, '.');
           }
         });
         trimmedMatch = trimmedMatch.replace(attrVal, escapeBraces(newAttrVal));

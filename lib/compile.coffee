@@ -7,8 +7,13 @@ helpers      = require './helpers'
 config       = require './config'
 glob         = require 'glob'
 
+# TODO: API for compile replacements
+#
+# compylr.add /foo/g, (match, group, etc) -> # doSomething()
 
-# Helpers - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Helpers
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # E.g. <div ng-repeat="foo in bar"></div>
 getRefNames = (str, options) ->
@@ -138,7 +143,8 @@ unescapeBraces = (str) ->
     .replace(/__\}\}__/g, '}}')
 
 
-# Compile - - - - - - - - - - - - - - - - - - - - - - - -
+# Compile
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 compile = (options) ->
   filePath = argv.file or options.file
@@ -161,7 +167,8 @@ compile = (options) ->
 
     interpolated = interpolated
 
-      # ng-repeat - - - - - - - - - - - - - -
+      # ng-repeat
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
         helpers.logVerbose 'match 1'
@@ -193,14 +200,15 @@ compile = (options) ->
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
       )
 
-      # ng-if - - - - - - - - - - - - - - - - -
+      # ng-if
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?\sng-if="(.*?)".*?>([\S\s]+)/, (match, varName, post) ->
         helpers.logVerbose 'match 2'
         updated = true
         varName = varName.trim()
         # TODO: expressions
-        tagName = if varName.split(' ')[1] then 'ifExpression' else 'if'
+        tagName = if varName.match /^[\w\.]+$/ then 'if' else 'ifExpression'
         if varName.indexOf('!') is 0 and tagName is 'if'
           tagName = 'unless'
           varName = varName.substr 1
@@ -214,7 +222,8 @@ compile = (options) ->
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
       )
 
-      # ng-include - - - - - - - - - - - - - -
+      # ng-include
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       # FIXME: doesn't handle ng-include="'foo' + bar + 'baz'"
       .replace(/<[^>]*?\sng-include="'(.*)'".*?>/, (match, includePath, post) ->
@@ -225,7 +234,8 @@ compile = (options) ->
         "#{match}\n{{> #{includePath}}}"
       )
 
-      # ng-src, ng-href, ng-value - - - - - - -
+      # ng-src, ng-href, ng-value
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/\s(ng-src|ng-href|ng-value)="(.*)"/, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
@@ -235,7 +245,14 @@ compile = (options) ->
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       )
 
-      # ng-class, ng-style - - - - - - - - - -
+      # translate
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+      .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, (match, openTag, contents, closeTag) ->
+        """#{openTag}{{translate "#{contents.replace /"/g, '\"' }"}}#{closeTag†}"""
+
+      # ng-class, ng-style
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
         helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
@@ -252,7 +269,8 @@ compile = (options) ->
         match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
       )
 
-      # click-action - - - - - - - - - - - - - - -
+      # click-action
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       # TODO: ng-click only on anchors
       .replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, (match, tagName, attrName, attrVal) ->
@@ -277,7 +295,8 @@ compile = (options) ->
           "#{anchorStr}>\n#{close.before.replace attrName, escapeBasicAttribute attrName}\n</a>\n#{close.after}"
       )
 
-      # attr="{{intrerpolation}}" - - - - - - - -
+      # attr="{{intrerpolation}}"
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)".*?>/, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
@@ -293,13 +312,14 @@ compile = (options) ->
             if expression.length isnt expression.match(/[\w\.]+/)[0].length
               "{{expression '#{expression.replace /'/g, "\\'"}'}}"
             else
-              match
+              match.replace /\[|\]/g, '.'
 
           trimmedMatch = trimmedMatch.replace attrVal, escapeBraces newAttrVal
           """#{trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
       )
 
-      # ng-show, ng-hide - - - - - - - - - - - - -
+      # ng-show, ng-hide
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
         updated = true
@@ -337,7 +357,8 @@ compile = (options) ->
           escapeBraces match
       )
 
-  # Unescape and output - - - - - - - - - - - - - - - - - - - - - -
+  # Unescape and output
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   interpolated = unescapeReplacements interpolated
   interpolated = unescapeBraces interpolated

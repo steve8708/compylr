@@ -142,6 +142,16 @@ unescapeBraces = (str) ->
     .replace(/__\{\{__/g, '{{')
     .replace(/__\}\}__/g, '}}')
 
+escapeTripleBraces = (str) ->
+  str
+    .replace(/\{\{\{/g, '__[[[__')
+    .replace(/\}\}\}/g, '__]]]__')
+
+unescapeTripleBraces = (str) ->
+  str
+    .replace(/__\[\[\[__/g, '{{{')
+    .replace(/__\]\]\]__/g, '}}}')
+
 
 # Compile
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -155,7 +165,7 @@ compile = (options) ->
     file = options.string or options
 
   updated = true
-  interpolated = stripComments file
+  interpolated = escapeTripleBraces stripComments file
   i = 0
   maxIters = 10000
 
@@ -362,6 +372,7 @@ compile = (options) ->
   # Unescape and output
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  interpolated = unescapeTripleBraces interpolated
   interpolated = unescapeReplacements interpolated
   interpolated = unescapeBraces interpolated
   interpolated = unescapeBasicAttributes interpolated

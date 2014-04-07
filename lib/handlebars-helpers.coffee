@@ -76,7 +76,7 @@ module.exports = (handlebars) ->
         j = context.length
 
         while i < j
-          iterContext = _.cloneDeep ctx
+          iterContext = _.clone ctx
           iterContext[name] = context[i]
 
           if data
@@ -89,7 +89,7 @@ module.exports = (handlebars) ->
       else
         for key of context
           if context.hasOwnProperty key
-            iterCtx = _.cloneDeep ctx
+            iterCtx = _.clone ctx
             iterCtx[name] = context[key]
             if data
               data.key = key

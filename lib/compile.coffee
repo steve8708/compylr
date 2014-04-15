@@ -424,9 +424,9 @@ compile = (options) ->
   interpolated = unescapeTripleBraces interpolated
   interpolated = unescapeReplacements interpolated
   interpolated = unescapeBasicAttributes interpolated
-  interpolated = unescapeBraces interpolated
   # interpolated = convertNgToDataNg interpolated
   interpolated = convertDataNgToNg interpolated
+  interpolated = unescapeBraces unescapeBraces interpolated
   beautified = beautify interpolated
 
   if argv.file and not argv['no-write']

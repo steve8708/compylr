@@ -356,8 +356,8 @@ compile = function(options) {
   interpolated = unescapeTripleBraces(interpolated);
   interpolated = unescapeReplacements(interpolated);
   interpolated = unescapeBasicAttributes(interpolated);
-  interpolated = unescapeBraces(interpolated);
   interpolated = convertDataNgToNg(interpolated);
+  interpolated = unescapeBraces(unescapeBraces(interpolated));
   beautified = beautify(interpolated);
   if (argv.file && !argv['no-write']) {
     fs.writeFileSync('template-output/output.html', beautified);

@@ -289,7 +289,7 @@ compile = (options) ->
         helpers.logVerbose 'match 9'
         return match if _.contains match, '{{translate'
         updated = true
-        """#{openTag}{{translate "#{contents.replace /"/g, '\"' }"}}#{closeTag}"""
+        """#{openTag}{{translate '#{contents.replace /'/g, "'" }'}}#{closeTag}"""
 
       # ng-class, ng-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

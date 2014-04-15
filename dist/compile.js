@@ -246,7 +246,7 @@ compile = function(options) {
         return match;
       }
       updated = true;
-      return "" + openTag + "{{translate \"" + (contents.replace(/"/g, '\"')) + "\"}}" + closeTag;
+      return "" + openTag + "{{translate '" + (contents.replace(/'/g, "'")) + "'}}" + closeTag;
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {

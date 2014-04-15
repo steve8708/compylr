@@ -180,7 +180,7 @@ compile = (options) ->
       # ng-repeat
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^\/>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
+      .replace(/<[^\/>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, (match, text, post) ->
         helpers.logVerbose 'match 1'
         updated = true
         repeatExp = text

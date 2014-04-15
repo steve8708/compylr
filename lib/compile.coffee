@@ -290,7 +290,7 @@ compile = (options) ->
 
       .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, (match, openTag, contents, closeTag) ->
         helpers.logVerbose 'match 9'
-        if /|\s*translate/.test match
+        if /\|\s*translate/.test match
           return match
 
         if _.contains(match, '__{{__translate')

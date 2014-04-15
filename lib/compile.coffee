@@ -225,6 +225,8 @@ compile = (options) ->
         # I.e. for {{#forEach 'foo' in 'bar'}} this would be: bar
         expressionKeypath = _.last(repeatExpSplit)[1...-1]
 
+        console.log 6
+
         if close
           """
             {{#forEach #{repeatExp}}}

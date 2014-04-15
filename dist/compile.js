@@ -240,19 +240,6 @@ compile = function(options) {
       escapedMatch = escapeCurlyBraces(match.replace(/\{\{/g, "{{expression '").replace(/\}\}/g, "'}}"));
       escapedAttrVal = escapeBraces(attrVal);
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
-    }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
-      var cleanedContents;
-      helpers.logVerbose('match 9');
-      if (/\|\s*translate/.test(match)) {
-        return match;
-      }
-      if (_.contains(match, '__{{__translate')) {
-        return match;
-      }
-      updated = true;
-      cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ');
-      openTag = openTag.replace(/translate/, "translate=\"" + (contents.trim()) + "\" ");
-      return escapeBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "'}}" + closeTag);
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {
@@ -316,6 +303,19 @@ compile = function(options) {
         trimmedMatch = trimmedMatch.replace(attrVal, escapeBraces(newAttrVal));
         return "" + trimmedMatch + " data-ng-attr-" + attrName + "=\"" + (escapeCurlyBraces(attrVal)) + "\">";
       }
+    }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
+      var cleanedContents;
+      helpers.logVerbose('match 9');
+      if (/\|\s*translate/.test(match)) {
+        return match;
+      }
+      if (_.contains(match, '__{{__translate')) {
+        return match;
+      }
+      updated = true;
+      cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ');
+      openTag = openTag.replace(/translate/, "translate=\"" + (contents.trim()) + "\" ");
+      return escapeBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "'}}" + closeTag);
     }).replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {
       var hbsTagType;
       helpers.logVerbose('match 6');

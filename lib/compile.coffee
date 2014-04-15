@@ -285,30 +285,6 @@ compile = (options) ->
       )
 
 
-      # translate
-      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-      .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, (match, openTag, contents, closeTag) ->
-        helpers.logVerbose 'match 9'
-
-        # Ignore {{ foo | translate }} in attributes
-        if /\|\s*translate/.test match
-          return match
-
-        # Pre escaped
-        if _.contains(match, '__{{__translate')
-          return match
-
-        updated = true
-
-        # Escape single quotes and remove newline which aren't allowed in js
-        # strings
-        cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
-        openTag = openTag.replace /translate/, """translate="#{contents.trim()}" """
-
-        escapeBraces """#{openTag}{{translate '#{ cleanedContents.trim() }'}}#{closeTag}"""
-
-
       # ng-class, ng-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -362,7 +338,7 @@ compile = (options) ->
         trimmedMatch = match.substr 0, match.length - 1
         trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
         if attrName.indexOf('data-ng-attr-') is 0 or _.contains attrVal, '__{{__'
-          match
+          return match
         else
           updated = true
           newAttrVal = attrVal.replace /\{\{([\s\S]+?)\}\}/g, (match, expression) ->
@@ -375,6 +351,31 @@ compile = (options) ->
           trimmedMatch = trimmedMatch.replace attrVal, escapeBraces newAttrVal
           """#{trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
       )
+
+
+      # translate
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+      .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, (match, openTag, contents, closeTag) ->
+        helpers.logVerbose 'match 9'
+
+        # Ignore {{ foo | translate }} in attributes
+        if /\|\s*translate/.test match
+          return match
+
+        # Pre escaped
+        if _.contains(match, '__{{__translate')
+          return match
+
+        updated = true
+
+        # Escape single quotes and remove newline which aren't allowed in js
+        # strings
+        cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
+        openTag = openTag.replace /translate/, """translate="#{contents.trim()}" """
+
+        escapeBraces """#{openTag}{{translate '#{ cleanedContents.trim() }'}}#{closeTag}"""
+
 
       # ng-show, ng-hide
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

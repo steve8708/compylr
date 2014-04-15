@@ -1,4 +1,4 @@
-var argv, beautify, beautifyHtml, compile, config, convertDataNgToNg, convertNgToDataNg, escapeBasicAttribute, escapeBraces, escapeCurlyBraces, escapeReplacement, fs, getCloseTag, getRefNames, glob, helpers, processFilters, selfClosingTags, stripComments, unescapeBasicAttributes, unescapeBraces, unescapeReplacements, _, _str,
+var argv, beautify, beautifyHtml, compile, config, convertDataNgToNg, convertNgToDataNg, escapeBasicAttribute, escapeBraces, escapeCurlyBraces, escapeReplacement, escapeTripleBraces, fs, getCloseTag, getRefNames, glob, helpers, processFilters, selfClosingTags, stripComments, unescapeBasicAttributes, unescapeBraces, unescapeReplacements, unescapeTripleBraces, _, _str,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 argv = require('optimist').argv;
@@ -164,6 +164,14 @@ unescapeBraces = function(str) {
   return str.replace(/__\{\{__/g, '{{').replace(/__\}\}__/g, '}}');
 };
 
+escapeTripleBraces = function(str) {
+  return str.replace(/\{\{\{/g, '__[[[__').replace(/\}\}\}/g, '__]]]__');
+};
+
+unescapeTripleBraces = function(str) {
+  return str.replace(/__\[\[\[__/g, '{{{').replace(/__\]\]\]__/g, '}}}');
+};
+
 compile = function(options) {
   var beautified, file, filePath, firstLoop, i, interpolated, maxIters, updated;
   filePath = argv.file || options.file;
@@ -174,7 +182,7 @@ compile = function(options) {
     file = options.string || options;
   }
   updated = true;
-  interpolated = stripComments(file);
+  interpolated = escapeTripleBraces(stripComments(file));
   i = 0;
   maxIters = 10000;
   while (updated) {
@@ -184,21 +192,20 @@ compile = function(options) {
       throw new Error('infinite update loop');
     }
     interpolated = interpolated.replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, function(match, text, post) {
-      var close, filterStr, filters, processedFilters, propName, varName, varNameSplit;
+      var close, expressionKeypath, propName, repeatExp, repeatExpSplit;
       helpers.logVerbose('match 1');
       updated = true;
-      varName = text;
-      varNameSplit = varName.split(' ');
-      propName = varNameSplit[0];
-      varNameSplit[0] = "'" + varNameSplit[0] + "'";
-      varName = varNameSplit.join(' ');
-      processedFilters = processFilters(varName);
-      varName = processedFilters.replaced;
-      filters = processedFilters.filters;
+      repeatExp = text;
+      repeatExp = repeatExp.trim().replace(/\((.+?)\s*,\s*/g, '$1,$2');
+      repeatExpSplit = _.compact(repeatExp.split('|')[0].split('track by')[0].split(/\s+/));
+      propName = repeatExpSplit[0];
+      repeatExpSplit[0] = "'" + repeatExpSplit[0] + "'";
+      repeatExp[repeatExp.length - 1] = "'" + (_.last(repeatExp)) + "'";
+      repeatExp = repeatExpSplit.join(' ');
       close = getCloseTag(match);
-      filterStr = filters.trim() ? " filters=\"" + filters + "\"" : '';
+      expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
       if (close) {
-        return "{{#forEach " + varName + filterStr + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#unless " + (_.last(_.compact(varName.split(/\s/)))) + ".length}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/unless}}\n" + close.after;
+        return "{{#forEach " + repeatExp + filterStr + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#ifExpression '!" + expressionKeypath + ".length'}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/ifExpression}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
@@ -226,12 +233,13 @@ compile = function(options) {
       includePath = includePath.replace('.tpl.html', '');
       match = match.replace(/\sng-include=/, ' data-ng-include=');
       return "" + match + "\n{{> " + includePath + "}}";
-    }).replace(/\s(ng-src|ng-href|ng-value)="(.*)"/, function(match, attrName, attrVal) {
+    }).replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, function(match, attrName, attrVal) {
       var escapedAttrVal, escapedMatch;
       helpers.logVerbose('match 4');
       updated = true;
       escapedMatch = escapeCurlyBraces(match);
       escapedAttrVal = escapeBraces(attrVal);
+      escapedMatch = escapedMatch.replace(/\{\{/g, "{{expression '").replace(/\}\}/g, "'}}");
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, function(match, openTag, contents, closeTag) {
       updated = true;
@@ -335,6 +343,7 @@ compile = function(options) {
       }
     });
   }
+  interpolated = unescapeTripleBraces(interpolated);
   interpolated = unescapeReplacements(interpolated);
   interpolated = unescapeBraces(interpolated);
   interpolated = unescapeBasicAttributes(interpolated);

@@ -183,29 +183,49 @@ compile = (options) ->
       .replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
         helpers.logVerbose 'match 1'
         updated = true
-        varName = text
-        varNameSplit = varName.split ' '
-        propName = varNameSplit[0]
-        varNameSplit[0] = "'#{varNameSplit[0]}'"
-        varName = varNameSplit.join ' '
-        processedFilters = processFilters varName
-        varName = processedFilters.replaced
-        filters = processedFilters.filters
-        # varName = text.split(' in ')[1]
+        repeatExp = text
+
+        # Convert '(key, val) in bar' to 'key,val in bar' as our #forEach
+        # helper wants to ultimately see {{#forEach 'key,val' in 'bar'}} for
+        # objects
+        repeatExp = repeatExp.trim().replace /\((.+?)\s*,\s*/g, '$1,$2'
+
+        # Strip out any filters (e.g. ng-repeat="foo in bar | limitTo: 10")
+        # and split by whitespace and compact the result (remove any empty
+        # strings in the list) as well as the 'track by' option in angular
+        repeatExpSplit = _.compact repeatExp
+          .split('|')[0]
+          .split('track by')[0]
+          .split /\s+/
+
+        propName = repeatExpSplit[0]
+
+        # Wrap the property name in strings for 'foo' in
+        # {{#forEach 'foo' in 'bar'}}
+        repeatExpSplit[0] = "'#{repeatExpSplit[0]}'"
+
+        # Wrap the expression value in strings for 'bar' in
+        # {{#forEach 'foo' in 'bar'}}
+        repeatExp[repeatExp.length - 1] = "'#{_.last repeatExp}'"
+
+        repeatExp = repeatExpSplit.join ' '
         close = getCloseTag match
-        filterStr = if filters.trim() then " filters=\"#{filters}\"" else ''
-        # TODO: hide the unless section
+
+        # The real keypath of what we are looping through with quotes removed
+        # I.e. for {{#forEach 'foo' in 'bar'}} this would be: bar
+        expressionKeypath = _.last(repeatExpSplit)[1...-1]
+
         if close
           """
-          {{#forEach #{varName}#{filterStr}}}
-            #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
-          {{/forEach}}
-          {{#unless #{_.last _.compact varName.split /\s/}.length}}
-            <span ng-cloak>
+            {{#forEach #{repeatExp}#{filterStr}}}
               #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
-            </span>
-          {{/unless}}
-          #{close.after}
+            {{/forEach}}
+            {{#ifExpression '!#{expressionKeypath}.length'}}
+              <span ng-cloak>
+                #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
+              </span>
+            {{/ifExpression}}
+            #{close.after}
           """
         else
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
@@ -248,11 +268,15 @@ compile = (options) ->
       # ng-src, ng-href, ng-value
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/\s(ng-src|ng-href|ng-value)="(.*)"/, (match, attrName, attrVal) ->
+      .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
         updated = true
         escapedMatch = escapeCurlyBraces match
         escapedAttrVal = escapeBraces attrVal
+        escapedMatch = escapedMatch
+          .replace(/\{\{/g, "{{expression '")
+          .replace(/\}\}/g, "'}}")
+
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       )
 

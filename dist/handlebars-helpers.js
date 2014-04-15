@@ -83,8 +83,9 @@ module.exports = function(handlebars) {
     scriptStr += '>';
     return "" + scriptStr + " " + (options.fn(this)) + " </script>";
   });
-  return handlebars.registerHelper("forEach", function(name, _in, context) {
-    var ctx, data, fn, i, inverse, iterContext, iterCtx, j, key, options, ret;
+  return handlebars.registerHelper("forEach", function(name, _in, contextExpression) {
+    var context, ctx, data, fn, i, inverse, iterContext, iterCtx, j, key, nameSplit, objSize, options, ret, value;
+    context = value = helpers.safeEvalStaticExpression(contextExpression, this);
     options = _.last(arguments);
     fn = options.fn;
     ctx = this;
@@ -92,17 +93,21 @@ module.exports = function(handlebars) {
     i = 0;
     ret = "";
     data = void 0;
+    nameSplit = name.split(',');
     if (context && _.isObject(context)) {
       if (_.isArray(context)) {
         j = context.length;
         while (i < j) {
-          iterContext = _.cloneDeep(ctx);
+          iterContext = _.clone(ctx);
           iterContext[name] = context[i];
           if (data) {
             data[name + 'Index'] = i;
-            data.index = i;
-            data.first = i === 0;
-            data.last = i === (iterContext.length - 1);
+            data.$index = i;
+            data.$first = i === 0;
+            data.$last = i === (iterContext.length - 1);
+            data.$odd = i % 2;
+            data.$even = !(i % 2);
+            data.$middle = !data.$first && !data.$last;
           }
           ret = ret + fn(iterContext, {
             data: data
@@ -110,14 +115,21 @@ module.exports = function(handlebars) {
           i++;
         }
       } else {
+        objSize = _.size(context);
         for (key in context) {
+          value = context[key];
           if (context.hasOwnProperty(key)) {
-            iterCtx = _.cloneDeep(ctx);
+            iterCtx = _.clone(ctx);
             iterCtx[name] = context[key];
             if (data) {
-              data.key = key;
-              data.index = i;
-              data.first = i === 0;
+              data[nameSplit[0]] = key;
+              data[nameSplit[1]] = value;
+              data.$index = i;
+              data.$first = i === 0;
+              data.$odd = i % 2;
+              data.$even = !(i % 2);
+              data.$last = i === objSize - 1;
+              data.$middle = !data.$first && !data.$last;
             }
             ret = ret + fn(iterCtx, {
               data: data

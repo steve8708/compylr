@@ -62,7 +62,8 @@ module.exports = (handlebars) ->
   # TODO: looping through options
   #   (key, value) in bar
   # TODO: eachIndex
-  handlebars.registerHelper "forEach", (name, _in, context) ->
+  handlebars.registerHelper "forEach", (name, _in, contextExpression) ->
+    context = value = helpers.safeEvalStaticExpression contextExpression, @
     options = _.last arguments
     fn = options.fn
     ctx = @
@@ -70,6 +71,8 @@ module.exports = (handlebars) ->
     i = 0
     ret = ""
     data = undefined
+
+    nameSplit = name.split ','
 
     if context and _.isObject context
       if _.isArray context
@@ -81,20 +84,29 @@ module.exports = (handlebars) ->
 
           if data
             data[name + 'Index'] = i
-            data.index = i
-            data.first = (i is 0)
-            data.last = i is (iterContext.length - 1)
+            data.$index = i
+            data.$first = (i is 0)
+            data.$last = i is (iterContext.length - 1)
+            data.$odd = i % 2
+            data.$even = not (i % 2)
+            data.$middle = not data.$first and not data.$last
           ret = ret + fn iterContext, data: data
           i++
       else
-        for key of context
+        objSize = _.size context
+        for key, value of context
           if context.hasOwnProperty key
             iterCtx = _.clone ctx
             iterCtx[name] = context[key]
             if data
-              data.key = key
-              data.index = i
-              data.first = i is 0
+              data[nameSplit[0]] = key
+              data[nameSplit[1]] = value
+              data.$index = i
+              data.$first = i is 0
+              data.$odd = i % 2
+              data.$even = not (i % 2)
+              data.$last = i is objSize - 1
+              data.$middle = not data.$first and not data.$last
             ret = ret + fn iterCtx, data: data
             i++
 

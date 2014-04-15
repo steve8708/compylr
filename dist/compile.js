@@ -207,13 +207,13 @@ compile = function(options) {
       repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExpSplit)) + "'";
       console.log(5);
       repeatExp = repeatExpSplit.join(' ');
-      close = getCloseTag(match);
       try {
-        expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
+        close = getCloseTag(match);
       } catch (_error) {
         error = _error;
-        console.log(reepatExpSplit);
+        console.log('match', match);
       }
+      expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
       console.log(6);
       if (close) {
         return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#ifExpression '!" + expressionKeypath + ".length'}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/ifExpression}}\n" + close.after;

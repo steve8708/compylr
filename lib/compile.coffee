@@ -219,15 +219,15 @@ compile = (options) ->
         console.log 5
 
         repeatExp = repeatExpSplit.join ' '
-        close = getCloseTag match
 
         try
-          # The real keypath of what we are looping through with quotes removed
-          # I.e. for {{#forEach 'foo' in 'bar'}} this would be: bar
-          expressionKeypath = _.last(repeatExpSplit)[1...-1]
-
+          close = getCloseTag match
         catch error
-          console.log reepatExpSplit
+          console.log 'match', match
+
+        # The real keypath of what we are looping through with quotes removed
+        # I.e. for {{#forEach 'foo' in 'bar'}} this would be: bar
+        expressionKeypath = _.last(repeatExpSplit)[1...-1]
 
         console.log 6
 

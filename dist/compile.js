@@ -243,7 +243,7 @@ compile = function(options) {
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
       var cleanedContents;
       helpers.logVerbose('match 9');
-      if (_.contains(match, '{{translate')) {
+      if (_.contains(match, '__{{__translate')) {
         return match;
       }
       updated = true;

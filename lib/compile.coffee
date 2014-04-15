@@ -288,7 +288,7 @@ compile = (options) ->
 
       .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, (match, openTag, contents, closeTag) ->
         helpers.logVerbose 'match 9'
-        return match if _.contains match, '{{translate'
+        return match if _.contains match, '__{{__translate'
         updated = true
 
         # Escape single quotes and remove newline which aren't allowed in js

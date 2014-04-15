@@ -87,8 +87,16 @@ getCloseTag = function(string) {
   string = string.trim();
   index = 0;
   depth = 0;
-  open = string.match(/<.*?>/)[0];
-  tagName = string.match(/<\w+/)[0].substring(1);
+  try {
+    open = string.match(/<.*?>/)[0];
+  } catch (_error) {
+    console.log('open fail', string);
+  }
+  try {
+    tagName = string.match(/<\w+/)[0].substring(1);
+  } catch (_error) {
+    console.log('tagname fail', string);
+  }
   string = string.replace(open, '');
   if (__indexOf.call(selfClosingTags, tagName) >= 0) {
     out = {
@@ -192,29 +200,18 @@ compile = function(options) {
       throw new Error('infinite update loop');
     }
     interpolated = interpolated.replace(/<[^\/>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, text, post) {
-      var close, error, expressionKeypath, propName, repeatExp, repeatExpSplit;
+      var close, expressionKeypath, propName, repeatExp, repeatExpSplit;
       helpers.logVerbose('match 1');
       updated = true;
       repeatExp = text;
       repeatExp = repeatExp.trim().replace(/\((.+?)\s*,\s*/g, '$1,$2');
-      console.log(1);
       repeatExpSplit = _.compact(repeatExp.split('|')[0].split('track by')[0].split(/\s+/));
-      console.log(2);
       propName = repeatExpSplit[0];
-      console.log(3);
       repeatExpSplit[0] = "'" + repeatExpSplit[0] + "'";
-      console.log(4);
       repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExpSplit)) + "'";
-      console.log(5);
       repeatExp = repeatExpSplit.join(' ');
-      try {
-        close = getCloseTag(match);
-      } catch (_error) {
-        error = _error;
-        console.log('match', match);
-      }
+      close = getCloseTag(match);
       expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
-      console.log(6);
       if (close) {
         return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#ifExpression '!" + expressionKeypath + ".length'}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/ifExpression}}\n" + close.after;
       } else {

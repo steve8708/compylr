@@ -189,7 +189,7 @@ compile = (options) ->
         # helper wants to ultimately see {{#forEach 'key,val' in 'bar'}} for
         # objects
         repeatExp = repeatExp.trim()
-          .replace /\(\s*(\w+?)\s*,(\w+?)\s*\)/g, '$1,$2'
+          .replace /\(\s*(\w+?)\s*,\s*(\w+?)\s*\)/g, '$1,$2'
 
         # Strip out any filters (e.g. ng-repeat="foo in bar | limitTo: 10")
         # and split by whitespace and compact the result (remove any empty

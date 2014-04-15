@@ -196,7 +196,7 @@ compile = function(options) {
       helpers.logVerbose('match 1');
       updated = true;
       repeatExp = text;
-      repeatExp = repeatExp.trim().replace(/\(\s*(\w+?)\s*,(\w+?)\s*\)/g, '$1,$2');
+      repeatExp = repeatExp.trim().replace(/\(\s*(\w+?)\s*,\s*(\w+?)\s*\)/g, '$1,$2');
       repeatExpSplit = _.compact(repeatExp.split('|')[0].split('track by')[0].split(/\s+/));
       propName = repeatExpSplit[0];
       repeatExpSplit[0] = "'" + repeatExpSplit[0] + "'";

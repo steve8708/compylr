@@ -272,11 +272,12 @@ compile = (options) ->
         helpers.logVerbose 'match 4'
         updated = true
 
-        escapedMatch = escapeCurlyBraces match
-        escapedAttrVal = escapeBraces( attrVal
+        escapedMatch = escapeCurlyBraces( match
           .replace(/\{\{/g, "{{expression '")
           .replace(/\}\}/g, "'}}")
         )
+
+        escapedAttrVal = escapeBraces attrVal
 
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       )

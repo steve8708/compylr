@@ -265,7 +265,6 @@ compile = (options) ->
         "#{match}\n{{> #{includePath}}}"
       )
 
-
       # ng-src, ng-href, ng-value
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -282,6 +281,21 @@ compile = (options) ->
 
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       )
+
+
+      # translate
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+      .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, (match, openTag, contents, closeTag) ->
+        helpers.logVerbose 'match 9'
+        return match if _.contains match, '{{translate'
+        updated = true
+
+        # Escape single quotes and remove newline which aren't allowed in js
+        # strings
+        cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
+
+        """#{openTag}{{translate '#{ cleanedContents }'}}#{closeTag}"""
 
 
       # ng-class, ng-style

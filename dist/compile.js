@@ -240,6 +240,15 @@ compile = function(options) {
       escapedMatch = escapeCurlyBraces(match.replace(/\{\{/g, "{{expression '").replace(/\}\}/g, "'}}"));
       escapedAttrVal = escapeBraces(attrVal);
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
+    }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
+      var cleanedContents;
+      helpers.logVerbose('match 9');
+      if (_.contains(match, '{{translate')) {
+        return match;
+      }
+      updated = true;
+      cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ');
+      return "" + openTag + "{{translate '" + cleanedContents + "'}}" + closeTag;
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {

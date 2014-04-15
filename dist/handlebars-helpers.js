@@ -45,7 +45,7 @@ module.exports = function(handlebars) {
   });
   handlebars.registerHelper("expression", function(expression, options) {
     var value;
-    value = helpers.safeEvalStaticExpression(expression, this);
+    value = helpers.safeEvalWithContext(expression, this);
     return value;
   });
   handlebars.registerHelper("hbsShow", function(expression, options) {

@@ -1,5 +1,4 @@
 _ = require 'lodash'
-# handlebars = require 'handlebars'
 helpers = require './helpers'
 
 module.exports = (handlebars) ->
@@ -35,8 +34,7 @@ module.exports = (handlebars) ->
       options.fn @
 
   handlebars.registerHelper "expression", (expression, options) ->
-    # TODO: there are better ways to do @, borrow angular helpers.eval function
-    value = helpers.safeEvalStaticExpression expression, @
+    value = helpers.safeEvalWithContext expression, @
     value
 
   handlebars.registerHelper "hbsShow", (expression, options) ->
@@ -59,9 +57,6 @@ module.exports = (handlebars) ->
 
     "#{scriptStr} #{options.fn @} </script>"
 
-  # TODO: looping through options
-  #   (key, value) in bar
-  # TODO: eachIndex
   handlebars.registerHelper "forEach", (name, _in, contextExpression) ->
     context = helpers.safeEvalStaticExpression contextExpression, @
     options = _.last arguments

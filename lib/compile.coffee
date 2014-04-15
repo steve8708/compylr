@@ -344,7 +344,7 @@ compile = (options) ->
           newAttrVal = attrVal.replace /\{\{([\s\S]+?)\}\}/g, (match, expression) ->
             match = match.trim()
             if expression.length isnt expression.match(/[\w\.]+/)[0].length
-              "{{expression '#{expression.replace /'/g, "\\'"}'}}"
+              "{{expression '#{expression.replace /'/g, '"'}'}}"
             else
               match.replace /\[|\]/g, '.'
 

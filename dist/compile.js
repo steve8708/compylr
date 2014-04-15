@@ -248,7 +248,7 @@ compile = function(options) {
       }
       updated = true;
       cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ');
-      return "" + openTag + "{{translate '" + cleanedContents + "'}}" + closeTag;
+      return escapeBraces("" + openTag + "{{translate '" + cleanedContents + "'}}" + closeTag);
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {

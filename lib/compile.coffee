@@ -295,7 +295,7 @@ compile = (options) ->
         # strings
         cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
 
-        """#{openTag}{{translate '#{ cleanedContents }'}}#{closeTag}"""
+        escapeBraces """#{openTag}{{translate '#{ cleanedContents }'}}#{closeTag}"""
 
 
       # ng-class, ng-style

@@ -243,6 +243,9 @@ compile = function(options) {
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
       var cleanedContents;
       helpers.logVerbose('match 9');
+      if (/|\s*translate/.test(match)) {
+        return escapeCurlyBraces(match);
+      }
       if (_.contains(match, '__{{__translate')) {
         return match;
       }

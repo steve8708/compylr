@@ -190,6 +190,8 @@ compile = (options) ->
         # objects
         repeatExp = repeatExp.trim().replace /\((.+?)\s*,\s*/g, '$1,$2'
 
+        console.log 1
+
         # Strip out any filters (e.g. ng-repeat="foo in bar | limitTo: 10")
         # and split by whitespace and compact the result (remove any empty
         # strings in the list) as well as the 'track by' option in angular
@@ -198,15 +200,23 @@ compile = (options) ->
           .split('track by')[0]
           .split /\s+/
 
+        console.log 2
+
         propName = repeatExpSplit[0]
+
+        console.log 3
 
         # Wrap the property name in strings for 'foo' in
         # {{#forEach 'foo' in 'bar'}}
         repeatExpSplit[0] = "'#{repeatExpSplit[0]}'"
 
+        console.log 4
+
         # Wrap the expression value in strings for 'bar' in
         # {{#forEach 'foo' in 'bar'}}
         repeatExpSplit[repeatExpSplit.length - 1] = "'#{_.last repeatExpSplit}'"
+
+        console.log 5
 
         repeatExp = repeatExpSplit.join ' '
         close = getCloseTag match

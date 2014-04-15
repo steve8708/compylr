@@ -197,10 +197,15 @@ compile = function(options) {
       updated = true;
       repeatExp = text;
       repeatExp = repeatExp.trim().replace(/\((.+?)\s*,\s*/g, '$1,$2');
+      console.log(1);
       repeatExpSplit = _.compact(repeatExp.split('|')[0].split('track by')[0].split(/\s+/));
+      console.log(2);
       propName = repeatExpSplit[0];
+      console.log(3);
       repeatExpSplit[0] = "'" + repeatExpSplit[0] + "'";
+      console.log(4);
       repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExpSplit)) + "'";
+      console.log(5);
       repeatExp = repeatExpSplit.join(' ');
       close = getCloseTag(match);
       expressionKeypath = _.last(repeatExpSplit).slice(1, -1);

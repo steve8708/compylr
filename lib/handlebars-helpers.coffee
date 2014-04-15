@@ -75,7 +75,7 @@ module.exports = (handlebars) ->
     nameSplit = name.split ','
 
     if context and _.isObject context
-      if _.isArray context
+      if _.isArray(context) or _.isString context
         j = context.length
 
         while i < j

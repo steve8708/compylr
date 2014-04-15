@@ -95,7 +95,7 @@ module.exports = function(handlebars) {
     data = void 0;
     nameSplit = name.split(',');
     if (context && _.isObject(context)) {
-      if (_.isArray(context)) {
+      if (_.isArray(context) || _.isString(context)) {
         j = context.length;
         while (i < j) {
           iterContext = _.clone(ctx);

@@ -235,7 +235,7 @@ compile = (options) ->
       # ng-if
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\sng-if="(.*?)".*?>([\S\s]+)/, (match, varName, post) ->
+      .replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/, (match, varName, post) ->
         helpers.logVerbose 'match 2'
         updated = true
         varName = varName.trim()

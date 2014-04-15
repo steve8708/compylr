@@ -209,7 +209,7 @@ compile = function(options) {
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
-    }).replace(/<[^>]*?\sng-if="(.*?)".*?>([\S\s]+)/, function(match, varName, post) {
+    }).replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/, function(match, varName, post) {
       var close, tagName;
       helpers.logVerbose('match 2');
       updated = true;

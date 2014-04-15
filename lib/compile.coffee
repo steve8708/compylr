@@ -289,7 +289,12 @@ compile = (options) ->
         helpers.logVerbose 'match 9'
         return match if _.contains match, '{{translate'
         updated = true
-        """#{openTag}{{translate '#{contents.replace /'/g, "'" }'}}#{closeTag}"""
+
+        # Escape single quotes and remove newline which aren't allowed in js
+        # strings
+        cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
+
+        """#{openTag}{{translate '#{ cleanedContents }'}}#{closeTag}"""
 
       # ng-class, ng-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -239,7 +239,6 @@ compile = function(options) {
       updated = true;
       escapedMatch = escapeCurlyBraces(match.replace(/\{\{/g, "{{expression '").replace(/\}\}/g, "'}}"));
       escapedAttrVal = escapeBraces(attrVal);
-      console.log('test', attrName);
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, function(match, openTag, contents, closeTag) {
       updated = true;

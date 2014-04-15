@@ -423,8 +423,8 @@ compile = (options) ->
 
   interpolated = unescapeTripleBraces interpolated
   interpolated = unescapeReplacements interpolated
-  interpolated = unescapeBraces interpolated
   interpolated = unescapeBasicAttributes interpolated
+  interpolated = unescapeBraces interpolated
   # interpolated = convertNgToDataNg interpolated
   interpolated = convertDataNgToNg interpolated
   beautified = beautify interpolated

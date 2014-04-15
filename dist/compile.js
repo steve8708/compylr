@@ -355,8 +355,8 @@ compile = function(options) {
   }
   interpolated = unescapeTripleBraces(interpolated);
   interpolated = unescapeReplacements(interpolated);
-  interpolated = unescapeBraces(interpolated);
   interpolated = unescapeBasicAttributes(interpolated);
+  interpolated = unescapeBraces(interpolated);
   interpolated = convertDataNgToNg(interpolated);
   beautified = beautify(interpolated);
   if (argv.file && !argv['no-write']) {

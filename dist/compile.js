@@ -248,6 +248,7 @@ compile = function(options) {
       }
       updated = true;
       cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ');
+      openTag = openTag.replace(/translate/, "translate=\"" + contents + "\" ");
       return escapeBraces("" + openTag + "{{translate '" + cleanedContents + "'}}" + closeTag);
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
@@ -289,7 +290,7 @@ compile = function(options) {
         close = getCloseTag(match);
         return "" + anchorStr + ">\n" + (close.before.replace(attrName, escapeBasicAttribute(attrName))) + "\n</a>\n" + close.after;
       }
-    }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)".*?>/, function(match, attrName, attrVal) {
+    }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/, function(match, attrName, attrVal) {
       var newAttrVal, trimmedMatch;
       helpers.logVerbose('match 5', {
         attrName: attrName,

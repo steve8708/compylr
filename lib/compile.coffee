@@ -294,6 +294,7 @@ compile = (options) ->
         # Escape single quotes and remove newline which aren't allowed in js
         # strings
         cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
+        openTag = openTag.replace /translate/, """translate="#{contents}" """
 
         escapeBraces """#{openTag}{{translate '#{ cleanedContents }'}}#{closeTag}"""
 
@@ -345,7 +346,7 @@ compile = (options) ->
       # attr="{{intrerpolation}}"
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)".*?>/, (match, attrName, attrVal) ->
+      .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '#'
         trimmedMatch = match.substr 0, match.length - 1

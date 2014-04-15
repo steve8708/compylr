@@ -72,14 +72,8 @@ getCloseTag = (string) ->
   string = string.trim()
   index = 0
   depth = 0
-  try
-    open = string.match(/<.*?>/)[0]
-  catch
-    console.log 'open fail', string
-  try
-    tagName = string.match(/<\w+/)[0].substring 1
-  catch
-    console.log 'tagname fail', string
+  open = string.match(/<[\s\S]*?>/)[0]
+  tagName = string.match(/<\w+/)[0].substring 1
   string = string.replace open, ''
 
   if tagName in selfClosingTags

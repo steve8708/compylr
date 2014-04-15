@@ -1,2 +1,2 @@
 module.exports =
-  verbose: false
+  verbose: true

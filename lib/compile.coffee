@@ -188,7 +188,8 @@ compile = (options) ->
         # Convert '(key, val) in bar' to 'key,val in bar' as our #forEach
         # helper wants to ultimately see {{#forEach 'key,val' in 'bar'}} for
         # objects
-        repeatExp = repeatExp.trim().replace /\((.+?)\s*,\s*/g, '$1'
+        repeatExp = repeatExp.trim()
+          .replace /\(\s*(\w+?)\s*,(\w+?)\s*\)/g, '$1,$2'
 
         # Strip out any filters (e.g. ng-repeat="foo in bar | limitTo: 10")
         # and split by whitespace and compact the result (remove any empty

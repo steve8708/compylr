@@ -206,7 +206,7 @@ compile = (options) ->
 
         # Wrap the expression value in strings for 'bar' in
         # {{#forEach 'foo' in 'bar'}}
-        repeatExp[repeatExp.length - 1] = "'#{_.last repeatExp}'"
+        repeatExpSplit[repeatExpSplit.length - 1] = "'#{_.last repeatExpSplit}'"
 
         repeatExp = repeatExpSplit.join ' '
         close = getCloseTag match

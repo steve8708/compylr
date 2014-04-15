@@ -100,18 +100,13 @@ module.exports = function(handlebars) {
         while (i < j) {
           iterContext = _.clone(ctx);
           iterContext[name] = context[i];
-          if (data) {
-            data[name + 'Index'] = i;
-            data.$index = i;
-            data.$first = i === 0;
-            data.$last = i === (iterContext.length - 1);
-            data.$odd = i % 2;
-            data.$even = !(i % 2);
-            data.$middle = !data.$first && !data.$last;
-          }
-          ret = ret + fn(iterContext, {
-            data: data
-          });
+          iterContext.$index = i;
+          iterContext.$first = i === 0;
+          iterContext.$last = i === (iterContext.length - 1);
+          iterContext.$odd = i % 2;
+          iterContext.$even = !(i % 2);
+          iterContext.$middle = !iterContext.$first && !iterContext.$last;
+          ret = ret + fn(iterContext);
           i++;
         }
       } else {
@@ -120,20 +115,15 @@ module.exports = function(handlebars) {
           value = context[key];
           if (context.hasOwnProperty(key)) {
             iterCtx = _.clone(ctx);
-            iterCtx[name] = context[key];
-            if (data) {
-              data[nameSplit[0]] = key;
-              data[nameSplit[1]] = value;
-              data.$index = i;
-              data.$first = i === 0;
-              data.$odd = i % 2;
-              data.$even = !(i % 2);
-              data.$last = i === objSize - 1;
-              data.$middle = !data.$first && !data.$last;
-            }
-            ret = ret + fn(iterCtx, {
-              data: data
-            });
+            iterCtx[nameSplit[0]] = key;
+            iterCtx[nameSplit[1]] = value;
+            iterCtx.$index = i;
+            iterCtx.$first = i === 0;
+            iterCtx.$odd = i % 2;
+            iterCtx.$even = !(i % 2);
+            iterCtx.$last = i === objSize - 1;
+            iterCtx.$middle = !iterCtx.$first && !iterCtx.$last;
+            ret = ret + fn(iterCtx);
             i++;
           }
         }

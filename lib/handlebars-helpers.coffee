@@ -82,32 +82,28 @@ module.exports = (handlebars) ->
           iterContext = _.clone ctx
           iterContext[name] = context[i]
 
-          if data
-            data[name + 'Index'] = i
-            data.$index = i
-            data.$first = (i is 0)
-            data.$last = i is (iterContext.length - 1)
-            data.$odd = i % 2
-            data.$even = not (i % 2)
-            data.$middle = not data.$first and not data.$last
-          ret = ret + fn iterContext, data: data
+          iterContext.$index = i
+          iterContext.$first = (i is 0)
+          iterContext.$last = i is (iterContext.length - 1)
+          iterContext.$odd = i % 2
+          iterContext.$even = not (i % 2)
+          iterContext.$middle = not iterContext.$first and not iterContext.$last
+          ret = ret + fn iterContext
           i++
       else
         objSize = _.size context
         for key, value of context
           if context.hasOwnProperty key
             iterCtx = _.clone ctx
-            iterCtx[name] = context[key]
-            if data
-              data[nameSplit[0]] = key
-              data[nameSplit[1]] = value
-              data.$index = i
-              data.$first = i is 0
-              data.$odd = i % 2
-              data.$even = not (i % 2)
-              data.$last = i is objSize - 1
-              data.$middle = not data.$first and not data.$last
-            ret = ret + fn iterCtx, data: data
+            iterCtx[nameSplit[0]] = key
+            iterCtx[nameSplit[1]] = value
+            iterCtx.$index = i
+            iterCtx.$first = i is 0
+            iterCtx.$odd = i % 2
+            iterCtx.$even = not (i % 2)
+            iterCtx.$last = i is objSize - 1
+            iterCtx.$middle = not iterCtx.$first and not iterCtx.$last
+            ret = ret + fn iterCtx
             i++
 
     ret

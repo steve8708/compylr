@@ -295,7 +295,7 @@ compile = function(options) {
         newAttrVal = attrVal.replace(/\{\{([\s\S]+?)\}\}/g, function(match, expression) {
           match = match.trim();
           if (expression.length !== expression.match(/[\w\.]+/)[0].length) {
-            return "{{expression '" + (expression.replace(/'/g, '\'')) + "'}}";
+            return "{{expression '" + (expression.replace(/'/g, "\\'")) + "'}}";
           } else {
             return match.replace(/\[|\]/g, '.');
           }

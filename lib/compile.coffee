@@ -271,11 +271,12 @@ compile = (options) ->
       .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
         updated = true
+
         escapedMatch = escapeCurlyBraces match
-        escapedAttrVal = escapeBraces attrVal
-        escapedMatch = escapedMatch
+        escapedAttrVal = escapeBraces( attrVal
           .replace(/\{\{/g, "{{expression '")
           .replace(/\}\}/g, "'}}")
+        )
 
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       )

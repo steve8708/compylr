@@ -288,11 +288,14 @@ compile = (options) ->
       # translate
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, (match, openTag, contents, closeTag) ->
+      .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, (match, openTag, contents, closeTag) ->
         helpers.logVerbose 'match 9'
+
+        # Ignore {{ foo | translate }} in attributes
         if /\|\s*translate/.test match
           return match
 
+        # Pre escaped
         if _.contains(match, '__{{__translate')
           return match
 
@@ -353,7 +356,7 @@ compile = (options) ->
       # attr="{{intrerpolation}}"
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/, (match, attrName, attrVal) ->
+      .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '#'
         trimmedMatch = match.substr 0, match.length - 1

@@ -180,7 +180,7 @@ compile = (options) ->
       # ng-repeat
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
+      .replace(/<[^\/>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, (match, text, post) ->
         helpers.logVerbose 'match 1'
         updated = true
         repeatExp = text
@@ -289,7 +289,7 @@ compile = (options) ->
       .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, (match, openTag, contents, closeTag) ->
         helpers.logVerbose 'match 9'
         if /|\s*translate/.test match
-          return escapeCurlyBraces match
+          return match
 
         if _.contains(match, '__{{__translate')
           return match

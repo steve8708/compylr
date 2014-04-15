@@ -191,7 +191,7 @@ compile = function(options) {
     if (i++ > maxIters) {
       throw new Error('infinite update loop');
     }
-    interpolated = interpolated.replace(/<[^>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, function(match, text, post) {
+    interpolated = interpolated.replace(/<[^\/>]*?\sng-repeat="(.*?)".*?>([\S\s]+)/gi, function(match, text, post) {
       var close, expressionKeypath, propName, repeatExp, repeatExpSplit;
       helpers.logVerbose('match 1');
       updated = true;
@@ -244,7 +244,7 @@ compile = function(options) {
       var cleanedContents;
       helpers.logVerbose('match 9');
       if (/|\s*translate/.test(match)) {
-        return escapeCurlyBraces(match);
+        return match;
       }
       if (_.contains(match, '__{{__translate')) {
         return match;

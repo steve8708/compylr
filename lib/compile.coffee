@@ -279,6 +279,8 @@ compile = (options) ->
 
         escapedAttrVal = escapeBraces attrVal
 
+        console.log 'test', attrName
+
         """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       )
 

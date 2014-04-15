@@ -237,9 +237,9 @@ compile = function(options) {
       var escapedAttrVal, escapedMatch;
       helpers.logVerbose('match 4');
       updated = true;
-      escapedMatch = escapeCurlyBraces(match);
+      escapedMatch = escapeCurlyBraces(match.replace(/\{\{/g, "{{expression '").replace(/\}\}/g, "'}}"));
       escapedAttrVal = escapeBraces(attrVal);
-      escapedMatch = escapedMatch.replace(/\{\{/g, "{{expression '").replace(/\}\}/g, "'}}");
+      console.log('test', attrName);
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, function(match, openTag, contents, closeTag) {
       updated = true;

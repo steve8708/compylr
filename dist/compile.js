@@ -192,7 +192,7 @@ compile = function(options) {
       throw new Error('infinite update loop');
     }
     interpolated = interpolated.replace(/<[^\/>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, text, post) {
-      var close, expressionKeypath, propName, repeatExp, repeatExpSplit;
+      var close, error, expressionKeypath, propName, repeatExp, repeatExpSplit;
       helpers.logVerbose('match 1');
       updated = true;
       repeatExp = text;
@@ -208,7 +208,12 @@ compile = function(options) {
       console.log(5);
       repeatExp = repeatExpSplit.join(' ');
       close = getCloseTag(match);
-      expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
+      try {
+        expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
+      } catch (_error) {
+        error = _error;
+        console.log(reepatExpSplit);
+      }
       console.log(6);
       if (close) {
         return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#ifExpression '!" + expressionKeypath + ".length'}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/ifExpression}}\n" + close.after;

@@ -286,6 +286,8 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, (match, openTag, contents, closeTag) ->
+        helpers.logVerbose 'match 9'
+        return match if _.contains match, '{{translate'
         updated = true
         """#{openTag}{{translate "#{contents.replace /"/g, '\"' }"}}#{closeTag}"""
 

@@ -241,6 +241,10 @@ compile = function(options) {
       escapedAttrVal = escapeBraces(attrVal);
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, function(match, openTag, contents, closeTag) {
+      helpers.logVerbose('match 9');
+      if (_.contains(match, '{{translate')) {
+        return match;
+      }
       updated = true;
       return "" + openTag + "{{translate \"" + (contents.replace(/"/g, '\"')) + "\"}}" + closeTag;
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {

@@ -63,7 +63,7 @@ module.exports = (handlebars) ->
   #   (key, value) in bar
   # TODO: eachIndex
   handlebars.registerHelper "forEach", (name, _in, contextExpression) ->
-    context = value = helpers.safeEvalStaticExpression contextExpression, @
+    context = helpers.safeEvalStaticExpression contextExpression, @
     options = _.last arguments
     fn = options.fn
     ctx = @
@@ -74,7 +74,7 @@ module.exports = (handlebars) ->
 
     nameSplit = name.split ','
 
-    if context and _.isObject context
+    if context
       if _.isArray(context) or _.isString context
         j = context.length
 
@@ -93,17 +93,16 @@ module.exports = (handlebars) ->
       else
         objSize = _.size context
         for key, value of context
-          if context.hasOwnProperty key
-            iterCtx = _.clone ctx
-            iterCtx[nameSplit[0]] = key
-            iterCtx[nameSplit[1]] = value
-            iterCtx.$index = i
-            iterCtx.$first = i is 0
-            iterCtx.$odd = i % 2
-            iterCtx.$even = not (i % 2)
-            iterCtx.$last = i is objSize - 1
-            iterCtx.$middle = not iterCtx.$first and not iterCtx.$last
-            ret = ret + fn iterCtx
-            i++
+          iterCtx = _.clone ctx
+          iterCtx[nameSplit[0]] = key
+          iterCtx[nameSplit[1]] = value
+          iterCtx.$index = i
+          iterCtx.$first = i is 0
+          iterCtx.$odd = i % 2
+          iterCtx.$even = not (i % 2)
+          iterCtx.$last = i is objSize - 1
+          iterCtx.$middle = not iterCtx.$first and not iterCtx.$last
+          ret = ret + fn iterCtx
+          i++
 
     ret

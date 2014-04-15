@@ -85,7 +85,7 @@ module.exports = function(handlebars) {
   });
   return handlebars.registerHelper("forEach", function(name, _in, contextExpression) {
     var context, ctx, data, fn, i, inverse, iterContext, iterCtx, j, key, nameSplit, objSize, options, ret, value;
-    context = value = helpers.safeEvalStaticExpression(contextExpression, this);
+    context = helpers.safeEvalStaticExpression(contextExpression, this);
     options = _.last(arguments);
     fn = options.fn;
     ctx = this;
@@ -94,7 +94,7 @@ module.exports = function(handlebars) {
     ret = "";
     data = void 0;
     nameSplit = name.split(',');
-    if (context && _.isObject(context)) {
+    if (context) {
       if (_.isArray(context) || _.isString(context)) {
         j = context.length;
         while (i < j) {
@@ -113,19 +113,17 @@ module.exports = function(handlebars) {
         objSize = _.size(context);
         for (key in context) {
           value = context[key];
-          if (context.hasOwnProperty(key)) {
-            iterCtx = _.clone(ctx);
-            iterCtx[nameSplit[0]] = key;
-            iterCtx[nameSplit[1]] = value;
-            iterCtx.$index = i;
-            iterCtx.$first = i === 0;
-            iterCtx.$odd = i % 2;
-            iterCtx.$even = !(i % 2);
-            iterCtx.$last = i === objSize - 1;
-            iterCtx.$middle = !iterCtx.$first && !iterCtx.$last;
-            ret = ret + fn(iterCtx);
-            i++;
-          }
+          iterCtx = _.clone(ctx);
+          iterCtx[nameSplit[0]] = key;
+          iterCtx[nameSplit[1]] = value;
+          iterCtx.$index = i;
+          iterCtx.$first = i === 0;
+          iterCtx.$odd = i % 2;
+          iterCtx.$even = !(i % 2);
+          iterCtx.$last = i === objSize - 1;
+          iterCtx.$middle = !iterCtx.$first && !iterCtx.$last;
+          ret = ret + fn(iterCtx);
+          i++;
         }
       }
     }

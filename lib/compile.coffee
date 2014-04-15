@@ -288,7 +288,7 @@ compile = (options) ->
       # translate
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, (match, openTag, contents, closeTag) ->
+      .replace /(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, (match, openTag, contents, closeTag) ->
         helpers.logVerbose 'match 9'
         if /\|\s*translate/.test match
           return match

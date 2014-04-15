@@ -240,7 +240,7 @@ compile = function(options) {
       escapedMatch = escapeCurlyBraces(match.replace(/\{\{/g, "{{expression '").replace(/\}\}/g, "'}}"));
       escapedAttrVal = escapeBraces(attrVal);
       return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
-    }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
+    }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/, function(match, openTag, contents, closeTag) {
       var cleanedContents;
       helpers.logVerbose('match 9');
       if (/\|\s*translate/.test(match)) {

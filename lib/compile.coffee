@@ -303,7 +303,7 @@ compile = (options) ->
         cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
         openTag = openTag.replace /translate/, """translate="#{contents.trim()}" """
 
-        escapeBraces """#{openTag}{{translate '#{ cleanedContents }'}}#{closeTag}"""
+        escapeBraces """#{openTag}{{translate '#{ cleanedContents.trim() }'}}#{closeTag}"""
 
 
       # ng-class, ng-style

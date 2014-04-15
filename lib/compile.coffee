@@ -360,6 +360,8 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
+        helpers.logVerbose 'match 6'
+
         updated = true
         hbsTagType = if showOrHide is 'ng-show' then 'hbsShow' else 'hbsHide'
         match = match.replace ' ' + showOrHide, " data-#{showOrHide}"

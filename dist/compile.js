@@ -308,6 +308,7 @@ compile = function(options) {
       }
     }).replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {
       var hbsTagType;
+      helpers.logVerbose('match 6');
       updated = true;
       hbsTagType = showOrHide === 'ng-show' ? 'hbsShow' : 'hbsHide';
       match = match.replace(' ' + showOrHide, " data-" + showOrHide);

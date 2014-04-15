@@ -205,7 +205,7 @@ compile = function(options) {
       close = getCloseTag(match);
       expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
       if (close) {
-        return "{{#forEach " + repeatExp + filterStr + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#ifExpression '!" + expressionKeypath + ".length'}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/ifExpression}}\n" + close.after;
+        return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#ifExpression '!" + expressionKeypath + ".length'}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/ifExpression}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }

@@ -217,7 +217,7 @@ compile = (options) ->
 
         if close
           """
-            {{#forEach #{repeatExp}#{filterStr}}}
+            {{#forEach #{repeatExp}}}
               #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
             {{/forEach}}
             {{#ifExpression '!#{expressionKeypath}.length'}}
@@ -238,7 +238,7 @@ compile = (options) ->
         helpers.logVerbose 'match 2'
         updated = true
         varName = varName.trim()
-        # TODO: expressions
+
         tagName = if varName.match /^[\w\.]+$/ then 'if' else 'ifExpression'
         if varName.indexOf('!') is 0 and tagName is 'if'
           tagName = 'unless'

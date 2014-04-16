@@ -203,11 +203,11 @@ compile = (options) ->
 
         # Wrap the property name in strings for 'foo' in
         # {{#forEach 'foo' in 'bar'}}
-        repeatExpSplit[0] = "'#{repeatExpSplit[0].replace /'/g, "\\'"}'"
+        repeatExpSplit[0] = "'#{repeatExpSplit[0]}'"
 
         # Wrap the expression value in strings for 'bar' in
         # {{#forEach 'foo' in 'bar'}}
-        repeatExpSplit[repeatExpSplit.length - 1] = "'#{_.last repeatExpSplit}'"
+        repeatExpSplit[repeatExpSplit.length - 1] = "'#{_.last(repeatExpSplit).replace /'/g, "\\'"}'"
 
         repeatExp = repeatExpSplit.join ' '
         close = getCloseTag match

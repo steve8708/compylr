@@ -203,7 +203,7 @@ compile = (options) ->
 
         # Wrap the property name in strings for 'foo' in
         # {{#forEach 'foo' in 'bar'}}
-        repeatExpSplit[0] = "'#{repeatExpSplit[0]}'"
+        repeatExpSplit[0] = "'#{repeatExpSplit[0].replace /'/g, "\\'"}'"
 
         # Wrap the expression value in strings for 'bar' in
         # {{#forEach 'foo' in 'bar'}}

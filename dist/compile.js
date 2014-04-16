@@ -191,7 +191,7 @@ compile = function(options) {
     if (i++ > maxIters) {
       throw new Error('infinite update loop');
     }
-    interpolated = interpolated.replace(/<[^\/>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, text, post) {
+    interpolated = interpolated.replace(/<[^>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, text, post) {
       var close, expressionKeypath, propName, repeatExp, repeatExpSplit;
       helpers.logVerbose('match 1');
       updated = true;

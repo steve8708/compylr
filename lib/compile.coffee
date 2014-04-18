@@ -240,7 +240,7 @@ compile = (options) ->
         helpers.logVerbose 'match 2'
         updated = true
         if _.contains match.replace(post, ''), 'compylr-keep'
-          return match.replace 'ng-if', 'data-ng-if'
+          return match.replace 'ng-if', 'ng-cloak data-ng-if'
 
         varName = varName.trim()
 

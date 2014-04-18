@@ -233,13 +233,6 @@ compile = function(options) {
       includePath = includePath.replace('.tpl.html', '');
       match = match.replace(/\sng-include=/, ' data-ng-include=');
       return "" + match + "\n{{> " + includePath + "}}";
-    }).replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, function(match, attrName, attrVal) {
-      var escapedAttrVal, escapedMatch;
-      helpers.logVerbose('match 4');
-      updated = true;
-      escapedMatch = escapeCurlyBraces(match.replace(/\{\{/g, "{{expression '").replace(/\}\}/g, "'}}"));
-      escapedAttrVal = escapeBraces(attrVal);
-      return "" + (escapedMatch.replace(' ' + attrName, ' data-' + attrName)) + " " + (attrName.substring(3)) + "=\"" + escapedAttrVal + "\" ";
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {

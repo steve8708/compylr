@@ -270,19 +270,19 @@ compile = (options) ->
       # ng-src, ng-href, ng-value
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, (match, attrName, attrVal) ->
-        helpers.logVerbose 'match 4'
-        updated = true
+      # .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, (match, attrName, attrVal) ->
+      #   helpers.logVerbose 'match 4'
+      #   updated = true
 
-        escapedMatch = escapeCurlyBraces( match
-          .replace(/\{\{/g, "{{expression '")
-          .replace(/\}\}/g, "'}}")
-        )
+      #   escapedMatch = escapeCurlyBraces( match
+      #     .replace(/\{\{/g, "{{expression '")
+      #     .replace(/\}\}/g, "'}}")
+      #   )
 
-        escapedAttrVal = escapeBraces attrVal
+      #   escapedAttrVal = escapeBraces attrVal
 
-        """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
-      )
+      #   """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
+      # )
 
 
       # ng-class, ng-style

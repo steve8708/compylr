@@ -37,7 +37,7 @@ getRefNames = (str, options) ->
   map
 
 stripComments = (str = '') ->
-  str.replace /<!--[\s\S]*?[^\[][\s\S]*?-->/g, ''
+  str.replace /<!--[^\[]*?-->/g, ''
 
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
   keygen, link, meta, param, source, track, wbr'.split /,\s*/

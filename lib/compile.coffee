@@ -236,9 +236,12 @@ compile = (options) ->
       # ng-if
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/, (match, varName, post) ->
+      .replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
         helpers.logVerbose 'match 2'
         updated = true
+        if _.contains match.replace(post, ''), 'compylr-keep'
+          return match.replace 'ng-if', 'data-ng-if'
+
         varName = varName.trim()
 
         tagName = if varName.match /^[\w\.]+$/ then 'if' else 'ifExpression'
@@ -270,6 +273,7 @@ compile = (options) ->
       # ng-src, ng-href, ng-value
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+      # FIXME: this should replace ng-src with src, etc
       # .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, (match, attrName, attrVal) ->
       #   helpers.logVerbose 'match 4'
       #   updated = true

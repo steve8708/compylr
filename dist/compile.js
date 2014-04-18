@@ -209,10 +209,13 @@ compile = function(options) {
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
-    }).replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/, function(match, varName, post) {
+    }).replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/g, function(match, varName, post) {
       var close, tagName;
       helpers.logVerbose('match 2');
       updated = true;
+      if (_.contains(match.replace(post, ''), 'compylr-keep')) {
+        return match.replace('ng-if', 'data-ng-if');
+      }
       varName = varName.trim();
       tagName = varName.match(/^[\w\.]+$/) ? 'if' : 'ifExpression';
       if (varName.indexOf('!') === 0 && tagName === 'if') {

@@ -51,7 +51,7 @@ stripComments = function(str) {
   if (str == null) {
     str = '';
   }
-  return str.replace(/<!--[\s\S]*?-->/g, '');
+  return str.replace(/<!--[\s\S]*?[^\[][\s\S]*?-->/g, '');
 };
 
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,\

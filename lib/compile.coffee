@@ -267,7 +267,12 @@ compile = (options) ->
         updated = true
         includePath = includePath.replace '.tpl.html', ''
         match = match.replace /\sng-include=/, ' data-ng-include='
-        "#{match}\n{{> #{includePath}}}"
+        """
+          #{match}
+          <span ng-non-bindable>
+            {{> #{includePath}}}
+          <span>
+        """
       )
 
       # ng-src, ng-href, ng-value

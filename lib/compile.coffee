@@ -271,7 +271,7 @@ compile = (options) ->
           #{match}
           <span data-ng-non-bindable>
             {{> #{includePath}}}
-          <span>
+          </span>
         """
       )
 

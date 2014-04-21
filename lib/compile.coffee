@@ -269,7 +269,7 @@ compile = (options) ->
         match = match.replace /\sng-include=/, ' data-ng-include='
         """
           #{match}
-          <span ng-non-bindable>
+          <span data-ng-non-bindable>
             {{> #{includePath}}}
           <span>
         """

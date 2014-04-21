@@ -343,8 +343,13 @@ compile = (options) ->
 
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
-        # Match without the final '#'
+        # Match without the final '>'
         trimmedMatch = match.substr 0, match.length - 1
+
+        # If the tag was a self closing tag, e.g. <img /> remove the trailing '/'
+        if _str.endsWith trimmedMatch, '/'
+          trimmedMatch = trimmedMatch.substr 0, match.length - 1
+
         trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
         if attrName.indexOf('data-ng-attr-') is 0 or _.contains attrVal, '__{{__'
           return match

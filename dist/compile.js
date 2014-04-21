@@ -283,6 +283,9 @@ compile = function(options) {
         attrVal: attrVal
       });
       trimmedMatch = match.substr(0, match.length - 1);
+      if (_str.endsWith(trimmedMatch, '/')) {
+        trimmedMatch = trimmedMatch.substr(0, match.length - 1);
+      }
       trimmedMatch = trimmedMatch.replace("" + attrName + "=", escapeBasicAttribute("" + attrName + "="));
       if (attrName.indexOf('data-ng-attr-') === 0 || _.contains(attrVal, '__{{__')) {
         return match;

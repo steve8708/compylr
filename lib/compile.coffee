@@ -406,7 +406,7 @@ compile = (options) ->
       # ng-bind, ng-bind-html
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /<[^>]*(ng-bind|ng-bind-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
+      .replace /<[^>]*\s(ng-bind|ng-bind-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"

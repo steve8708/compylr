@@ -410,7 +410,7 @@ compile = (options) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"
-        expressionTag = if type is 'ng-bind' then "{{#{expression}}}" else "{{{#{expression}}}}"
+        expressionTag = if type is 'ng-bind' then escapeBraces "{{#{expression}}}" else escapeTribleBraces "{{{#{expression}}}}"
         str = str.replace closeTag, expressionTag + closeTag
 
   i = 0

@@ -327,7 +327,7 @@ compile = function(options) {
       helpers.logVerbose('match 7');
       updated = true;
       str = match.replace(type, "data-" + type);
-      expressionTag = type === 'ng-bind' ? "{{" + expression + "}}" : "{{{" + expression + "}}}";
+      expressionTag = type === 'ng-bind' ? escapeBraces("{{" + expression + "}}") : escapeTribleBraces("{{{" + expression + "}}}");
       return str = str.replace(closeTag, expressionTag + closeTag);
     });
   }

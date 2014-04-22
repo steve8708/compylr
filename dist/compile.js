@@ -322,6 +322,13 @@ compile = function(options) {
       hbsTagType = showOrHide === 'ng-show' ? 'hbsShow' : 'hbsHide';
       match = match.replace(' ' + showOrHide, " data-" + showOrHide);
       return "" + match + " {{" + hbsTagType + " \"" + expression + "\"}}";
+    }).replace(/<[^>]*(ng-bind|ng-bind-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, function(match, type, expression, closeTag) {
+      var expressionTag, str;
+      helpers.logVerbose('match 7');
+      updated = true;
+      str = match.replace(type, "data-" + type);
+      expressionTag = type === 'ng-bind' ? "{{" + expression + "}}" : "{{{" + expression + "}}}";
+      return str = str.replace(closeTag, expressionTag + closeTag);
     });
   }
   i = 0;

@@ -403,6 +403,16 @@ compile = (options) ->
         "#{match} {{#{hbsTagType} \"#{expression}\"}}"
       )
 
+      # ng-bind, ng-bind-html
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+      .replace /<[^>]*(ng-bind|ng-bind-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
+        helpers.logVerbose 'match 7'
+        updated = true
+        str = match.replace type, "data-#{type}"
+        expressionTag = if type is 'ng-bind' then "{{#{expression}}}" else "{{{#{expression}}}}"
+        str = str.replace closeTag, expressionTag + closeTag
+
   i = 0
   updated = true
   while updated

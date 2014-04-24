@@ -32,7 +32,6 @@ getRefNames = (str, options) ->
       continue unless repeat
       repeatText = RegExp.$1
       split = repeatText.split ' in '
-      # product: selectedProducts
       map[slit[0]] = split[1]
   map
 
@@ -261,7 +260,6 @@ compile = (options) ->
       # ng-include
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      # FIXME: doesn't handle ng-include="'foo' + bar + 'baz'"
       .replace(/<[^>]*?\sng-include="'(.*)'".*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 3'
         updated = true
@@ -271,6 +269,18 @@ compile = (options) ->
           #{match}
           <span data-ng-non-bindable>
             {{> #{includePath}}}
+          </span>
+        """
+      )
+
+      .replace(/<[^>]*?\sng-include="([^'])+?".*?>/, (match, includePath, post) ->
+        helpers.logVerbose 'match 10'
+        updated = true
+        match = match.replace /\sng-include=/, ' data-ng-include='
+        """
+          #{match}
+          <span data-ng-non-bindable>
+            {{dynamicTemplate #{includePath}}}
           </span>
         """
       )

@@ -236,6 +236,11 @@ compile = function(options) {
       includePath = includePath.replace('.tpl.html', '');
       match = match.replace(/\sng-include=/, ' data-ng-include=');
       return "" + match + "\n<span data-ng-non-bindable>\n  {{> " + includePath + "}}\n</span>";
+    }).replace(/<[^>]*?\sng-include="([^'])+?".*?>/, function(match, includePath, post) {
+      helpers.logVerbose('match 10');
+      updated = true;
+      match = match.replace(/\sng-include=/, ' data-ng-include=');
+      return "" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate " + includePath + "}}\n</span>";
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {

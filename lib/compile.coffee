@@ -41,7 +41,7 @@ stripComments = (str = '') ->
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
   keygen, link, meta, param, source, track, wbr'.split /,\s*/
 
-escapeCurlyBraces = (str) ->
+htmlEscapeCurlyBraces = (str) ->
   str
     .replace(/\{/g, '&#123;')
     .replace(/\}/g, '&#125;')
@@ -293,7 +293,7 @@ compile = (options) ->
       #   helpers.logVerbose 'match 4'
       #   updated = true
 
-      #   escapedMatch = escapeCurlyBraces( match
+      #   escapedMatch = htmlEscapeCurlyBraces( match
       #     .replace(/\{\{/g, "{{expression '")
       #     .replace(/\}\}/g, "'}}")
       #   )
@@ -330,7 +330,7 @@ compile = (options) ->
         helpers.logVerbose 'match 7', attrName: attrName, attrVal: attrVal
         updated = true
         hrefStr = """href="{{urlPath}}?action=#{encodeURIComponent attrVal}" """
-        anchorStr = escapeBraces """<a #{hrefStr} data-ng-#{escapeCurlyBraces hrefStr}"""
+        anchorStr = escapeBraces """<a #{hrefStr} data-ng-#{htmlEscapeCurlyBraces hrefStr}"""
 
         index = interpolated.indexOf match
         beforeStr = interpolated.substr 0, index
@@ -373,7 +373,7 @@ compile = (options) ->
               match.replace /\[|\]/g, '.'
 
           trimmedMatch = trimmedMatch.replace attrVal, escapeBraces newAttrVal
-          """#{trimmedMatch} data-ng-attr-#{attrName}="#{escapeCurlyBraces attrVal}">"""
+          """#{trimmedMatch} data-ng-attr-#{attrName}="#{htmlEscapeCurlyBraces attrVal}">"""
       )
 
 

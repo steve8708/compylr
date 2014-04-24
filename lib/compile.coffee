@@ -277,7 +277,7 @@ compile = (options) ->
         helpers.logVerbose 'match 10'
         updated = true
         match = match.replace /\sng-include=/, ' data-ng-include='
-        """
+        helpers.escapeCurlyBraces """
           #{match}
           <span data-ng-non-bindable>
             {{dynamicTemplate #{includePath}}}

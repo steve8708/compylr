@@ -1,4 +1,4 @@
-var argv, beautify, beautifyHtml, compile, config, convertDataNgToNg, convertNgToDataNg, escapeBasicAttribute, escapeBraces, escapeCurlyBraces, escapeReplacement, escapeTripleBraces, fs, getCloseTag, getRefNames, glob, helpers, processFilters, selfClosingTags, stripComments, unescapeBasicAttributes, unescapeBraces, unescapeReplacements, unescapeTripleBraces, _, _str,
+var argv, beautify, beautifyHtml, compile, config, convertDataNgToNg, convertNgToDataNg, escapeBasicAttribute, escapeDoubleBraces, escapeReplacement, escapeTripleBraces, fs, getCloseTag, getRefNames, glob, helpers, htmlEscapeCurlyBraces, processFilters, selfClosingTags, stripComments, unescapeBasicAttributes, unescapeDoubleBraces, unescapeReplacements, unescapeTripleBraces, _, _str,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 argv = require('optimist').argv;
@@ -57,7 +57,7 @@ stripComments = function(str) {
 selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,\
   keygen, link, meta, param, source, track, wbr'.split(/,\s*/);
 
-escapeCurlyBraces = function(str) {
+htmlEscapeCurlyBraces = function(str) {
   return str.replace(/\{/g, '&#123;').replace(/\}/g, '&#125;');
 };
 
@@ -156,11 +156,11 @@ unescapeBasicAttributes = function(str) {
   return str.replace(/__ATTR__/g, '');
 };
 
-escapeBraces = function(str) {
+escapeDoubleBraces = function(str) {
   return str.replace(/\{\{/g, '__{{__').replace(/\}\}/g, '__}}__');
 };
 
-unescapeBraces = function(str) {
+unescapeDoubleBraces = function(str) {
   return str.replace(/__\{\{__/g, '{{').replace(/__\}\}__/g, '}}');
 };
 
@@ -240,7 +240,7 @@ compile = function(options) {
       helpers.logVerbose('match 10');
       updated = true;
       match = match.replace(/\sng-include=/, ' data-ng-include=');
-      return escapeBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate " + includePath + "}}\n</span>");
+      return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate " + includePath + "}}\n</span>");
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {
@@ -267,7 +267,7 @@ compile = function(options) {
       });
       updated = true;
       hrefStr = "href=\"{{urlPath}}?action=" + (encodeURIComponent(attrVal)) + "\" ";
-      anchorStr = escapeBraces("<a " + hrefStr + " data-ng-" + (escapeCurlyBraces(hrefStr)));
+      anchorStr = escapeDoubleBraces("<a " + hrefStr + " data-ng-" + (htmlEscapeCurlyBraces(hrefStr)));
       index = interpolated.indexOf(match);
       beforeStr = interpolated.substr(0, index);
       refs = getRefNames(beforeStr);
@@ -304,8 +304,8 @@ compile = function(options) {
             return match.replace(/\[|\]/g, '.');
           }
         });
-        trimmedMatch = trimmedMatch.replace(attrVal, escapeBraces(newAttrVal));
-        return "" + trimmedMatch + " data-ng-attr-" + attrName + "=\"" + (escapeCurlyBraces(attrVal)) + "\">";
+        trimmedMatch = trimmedMatch.replace(attrVal, escapeDoubleBraces(newAttrVal));
+        return "" + trimmedMatch + " data-ng-attr-" + attrName + "=\"" + (htmlEscapeCurlyBraces(attrVal)) + "\">";
       }
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
       var cleanedContents;
@@ -319,7 +319,7 @@ compile = function(options) {
       updated = true;
       cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ');
       openTag = openTag.replace(/translate/, "translate=\"" + (contents.trim()) + "\" ");
-      return escapeBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "'}}" + closeTag);
+      return escapeDoubleBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "'}}" + closeTag);
     }).replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {
       var hbsTagType;
       helpers.logVerbose('match 6');
@@ -332,7 +332,7 @@ compile = function(options) {
       helpers.logVerbose('match 7');
       updated = true;
       str = match.replace(type, "data-" + type);
-      expressionTag = type === 'ng-bind' ? escapeBraces("{{" + expression + "}}") : escapeTripleBraces("{{{" + expression + "}}}");
+      expressionTag = type === 'ng-bind' ? escapeDoubleBraces("{{" + expression + "}}") : escapeTripleBraces("{{{" + expression + "}}}");
       return str = str.replace(closeTag, expressionTag + closeTag);
     });
   }
@@ -358,9 +358,9 @@ compile = function(options) {
           prefix = 'expression "';
           suffix = '"';
         }
-        return escapeBraces("<span data-ng-bind=\"" + body + "\">{{" + prefix + body + suffix + "}}</span>");
+        return escapeDoubleBraces("<span data-ng-bind=\"" + body + "\">{{" + prefix + body + suffix + "}}</span>");
       } else {
-        return escapeBraces(match);
+        return escapeDoubleBraces(match);
       }
     });
   }
@@ -368,7 +368,7 @@ compile = function(options) {
   interpolated = unescapeReplacements(interpolated);
   interpolated = unescapeBasicAttributes(interpolated);
   interpolated = convertDataNgToNg(interpolated);
-  interpolated = unescapeBraces(unescapeBraces(interpolated));
+  interpolated = unescapeDoubleBraces(unescapeDoubleBraces(interpolated));
   beautified = beautify(interpolated);
   if (argv.file && !argv['no-write']) {
     fs.writeFileSync('template-output/output.html', beautified);

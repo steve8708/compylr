@@ -131,12 +131,12 @@ escapeBasicAttribute = (str) ->
 unescapeBasicAttributes = (str) ->
   str.replace /__ATTR__/g, ''
 
-escapeBraces = (str) ->
+escapeDoubleBraces = (str) ->
   str
     .replace(/\{\{/g, '__{{__')
     .replace(/\}\}/g, '__}}__')
 
-unescapeBraces = (str) ->
+unescapeDoubleBraces = (str) ->
   str
     .replace(/__\{\{__/g, '{{')
     .replace(/__\}\}__/g, '}}')
@@ -277,7 +277,7 @@ compile = (options) ->
         helpers.logVerbose 'match 10'
         updated = true
         match = match.replace /\sng-include=/, ' data-ng-include='
-        escapeBraces """
+        escapeDoubleBraces """
           #{match}
           <span data-ng-non-bindable>
             {{dynamicTemplate #{includePath}}}
@@ -298,7 +298,7 @@ compile = (options) ->
       #     .replace(/\}\}/g, "'}}")
       #   )
 
-      #   escapedAttrVal = escapeBraces attrVal
+      #   escapedAttrVal = escapeDoubleBraces attrVal
 
       #   """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
       # )
@@ -330,7 +330,7 @@ compile = (options) ->
         helpers.logVerbose 'match 7', attrName: attrName, attrVal: attrVal
         updated = true
         hrefStr = """href="{{urlPath}}?action=#{encodeURIComponent attrVal}" """
-        anchorStr = escapeBraces """<a #{hrefStr} data-ng-#{htmlEscapeCurlyBraces hrefStr}"""
+        anchorStr = escapeDoubleBraces """<a #{hrefStr} data-ng-#{htmlEscapeCurlyBraces hrefStr}"""
 
         index = interpolated.indexOf match
         beforeStr = interpolated.substr 0, index
@@ -372,7 +372,7 @@ compile = (options) ->
             else
               match.replace /\[|\]/g, '.'
 
-          trimmedMatch = trimmedMatch.replace attrVal, escapeBraces newAttrVal
+          trimmedMatch = trimmedMatch.replace attrVal, escapeDoubleBraces newAttrVal
           """#{trimmedMatch} data-ng-attr-#{attrName}="#{htmlEscapeCurlyBraces attrVal}">"""
       )
 
@@ -398,7 +398,7 @@ compile = (options) ->
         cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
         openTag = openTag.replace /translate/, """translate="#{contents.trim()}" """
 
-        escapeBraces """#{openTag}{{translate '#{ cleanedContents.trim() }'}}#{closeTag}"""
+        escapeDoubleBraces """#{openTag}{{translate '#{ cleanedContents.trim() }'}}#{closeTag}"""
 
 
       # ng-show, ng-hide
@@ -420,7 +420,7 @@ compile = (options) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"
-        expressionTag = if type is 'ng-bind' then escapeBraces "{{#{expression}}}" else escapeTripleBraces "{{{#{expression}}}}"
+        expressionTag = if type is 'ng-bind' then escapeDoubleBraces "{{#{expression}}}" else escapeTripleBraces "{{{#{expression}}}}"
         str = str.replace closeTag, expressionTag + closeTag
 
   i = 0
@@ -447,9 +447,9 @@ compile = (options) ->
             helpers.logVerbose 'body', body
             prefix = 'expression "'
             suffix = '"'
-          escapeBraces """<span data-ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
+          escapeDoubleBraces """<span data-ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
         else
-          escapeBraces match
+          escapeDoubleBraces match
       )
 
   # Unescape and output
@@ -460,7 +460,7 @@ compile = (options) ->
   interpolated = unescapeBasicAttributes interpolated
   # interpolated = convertNgToDataNg interpolated
   interpolated = convertDataNgToNg interpolated
-  interpolated = unescapeBraces unescapeBraces interpolated
+  interpolated = unescapeDoubleBraces unescapeDoubleBraces interpolated
   beautified = beautify interpolated
 
   if argv.file and not argv['no-write']

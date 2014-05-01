@@ -289,19 +289,11 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       # FIXME: this should replace ng-src with src, etc
-      # .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, (match, attrName, attrVal) ->
-      #   helpers.logVerbose 'match 4'
-      #   updated = true
-
-      #   escapedMatch = htmlEscapeCurlyBraces( match
-      #     .replace(/\{\{/g, "{{expression '")
-      #     .replace(/\}\}/g, "'}}")
-      #   )
-
-      #   escapedAttrVal = escapeDoubleBraces attrVal
-
-      #   """#{escapedMatch.replace ' ' + attrName, ' data-' + attrName} #{attrName.substring(3)}="#{escapedAttrVal}" """
-      # )
+      .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, (match, attrName, attrVal) ->
+        helpers.logVerbose 'match 4'
+        updated = true
+        match.replace attrName, attrName.replace 'ng-', ''
+      )
 
 
       # ng-class, ng-style

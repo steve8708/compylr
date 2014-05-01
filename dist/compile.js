@@ -241,6 +241,10 @@ compile = function(options) {
       updated = true;
       match = match.replace(/\sng-include=/, ' data-ng-include=');
       return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate " + includePath + "}}\n</span>");
+    }).replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, function(match, attrName, attrVal) {
+      helpers.logVerbose('match 4');
+      updated = true;
+      return match.replace(attrName, attrName.replace('ng-', ''));
     }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {

@@ -1,4 +1,4 @@
-var config, esprima, evalFnCache, evaluate, expressionCache, i, _,
+var config, ent, esprima, evalFnCache, evaluate, expressionCache, i, _,
   __slice = [].slice;
 
 esprima = require('esprima');
@@ -8,6 +8,8 @@ config = require('./config');
 _ = require('lodash');
 
 evaluate = require('static-eval');
+
+ent = require('ent');
 
 expressionCache = {};
 
@@ -35,6 +37,7 @@ module.exports = {
     if (thisArg == null) {
       thisArg = context;
     }
+    expression = ent.decode(expression);
     fn = evalFnCache[expression] || (evalFnCache[expression] = new Function('context', "with (context) { return " + expression + " }"));
     try {
       output = fn.call(thisArg, context);
@@ -56,6 +59,7 @@ module.exports = {
     if (thisArg == null) {
       thisArg = this;
     }
+    expression = ent.decode(expression);
     context['this'] = thisArg;
     try {
       expressionBody = expressionCache[expression] || esprima.parse(expression).body[0].expression;

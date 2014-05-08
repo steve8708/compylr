@@ -26,7 +26,8 @@
     "esprima": "~1.0.4",
     "request": "~2.31.0",
     "underscore.string": "~2.3.3",
-    "glob": "~3.2.8"
+    "glob": "~3.2.8",
+    "ent": "~2.0.0"
   },
   "devDependencies": {
     "coffee-script": "~1.6.3",

@@ -17,6 +17,10 @@ config = require('./config');
 
 glob = require('glob');
 
+config = _.defaults({}, argv, {
+  ugly: false
+});
+
 getRefNames = function(str, options) {
   var depth, map, repeat, repeatText, split, tag, tags, _i, _len;
   tags = str.match(/<.*?>/g);
@@ -205,7 +209,7 @@ compile = function(options) {
       close = getCloseTag(match);
       expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
       if (close) {
-        return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n{{#ifExpression '!" + expressionKeypath + ".length'}}\n  <span ng-cloak>\n    " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n  </span>\n{{/ifExpression}}\n" + close.after;
+        return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
@@ -287,6 +291,9 @@ compile = function(options) {
       }
     }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, function(match, attrName, attrVal) {
       var newAttrVal, trimmedMatch;
+      if (!config.ugly) {
+        return;
+      }
       helpers.logVerbose('match 5', {
         attrName: attrName,
         attrVal: attrVal

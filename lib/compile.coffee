@@ -11,6 +11,12 @@ glob         = require 'glob'
 #
 # compylr.add /foo/g, (match, group, etc) -> # doSomething()
 
+config = _.defaults {}, argv,
+  ugly: false
+
+
+
+
 
 # Helpers
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -221,11 +227,6 @@ compile = (options) ->
             {{#forEach #{repeatExp}}}
               #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
             {{/forEach}}
-            {{#ifExpression '!#{expressionKeypath}.length'}}
-              <span ng-cloak>
-                #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
-              </span>
-            {{/ifExpression}}
             #{close.after}
           """
         else
@@ -273,6 +274,7 @@ compile = (options) ->
         """
       )
 
+      # ng-include expressions
       .replace(/<[^>]*?\sng-include="([^']+?)".*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 10'
         updated = true
@@ -300,6 +302,8 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
+        # TODO: modify class attributes based on object here
+
         helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
         updated = true
         type = attrName.substr 3 # 'class' or 'style'
@@ -344,6 +348,8 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, (match, attrName, attrVal) ->
+        return unless config.ugly
+
         helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '>'
         trimmedMatch = match.substr 0, match.length - 1

@@ -291,9 +291,6 @@ compile = function(options) {
       }
     }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, function(match, attrName, attrVal) {
       var newAttrVal, trimmedMatch;
-      if (!config.ugly) {
-        return match;
-      }
       helpers.logVerbose('match 5', {
         attrName: attrName,
         attrVal: attrVal
@@ -316,7 +313,7 @@ compile = function(options) {
           }
         });
         trimmedMatch = trimmedMatch.replace(attrVal, escapeDoubleBraces(newAttrVal));
-        return "" + trimmedMatch + " data-ng-attr-" + attrName + "=\"" + (htmlEscapeCurlyBraces(attrVal)) + "\">";
+        return "" + trimmedMatch + ">";
       }
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
       var cleanedContents;

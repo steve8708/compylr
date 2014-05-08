@@ -348,8 +348,6 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, (match, attrName, attrVal) ->
-        return match unless config.ugly
-
         helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '>'
         trimmedMatch = match.substr 0, match.length - 1
@@ -371,7 +369,7 @@ compile = (options) ->
               match.replace /\[|\]/g, '.'
 
           trimmedMatch = trimmedMatch.replace attrVal, escapeDoubleBraces newAttrVal
-          """#{trimmedMatch} data-ng-attr-#{attrName}="#{htmlEscapeCurlyBraces attrVal}">"""
+          """#{trimmedMatch}>"""
       )
 
 

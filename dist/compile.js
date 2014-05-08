@@ -292,7 +292,7 @@ compile = function(options) {
     }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, function(match, attrName, attrVal) {
       var newAttrVal, trimmedMatch;
       if (!config.ugly) {
-        return;
+        return match;
       }
       helpers.logVerbose('match 5', {
         attrName: attrName,

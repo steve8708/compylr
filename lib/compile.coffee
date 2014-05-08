@@ -348,7 +348,7 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, (match, attrName, attrVal) ->
-        return unless config.ugly
+        return match unless config.ugly
 
         helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '>'

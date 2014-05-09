@@ -334,7 +334,7 @@ compile = function(options) {
       clanedValues = cleanup(values);
       updated = true;
       cleanedContents = cleanup(contents);
-      openTag = openTag.replace(/translate/, "translate=\"" + (contents.trim()) + "\" ");
+      openTag = openTag.replace(/translate([\W])/, "translate=\"" + (contents.trim()) + "\"$1");
       return escapeDoubleBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "' '" + cleanedValues + "'}}" + closeTag);
     }).replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {
       var hbsTagType;

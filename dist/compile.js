@@ -330,7 +330,7 @@ compile = function(options) {
         }
         return str.replace(/'/g, "\\'").replace(/\n/g, ' ');
       };
-      valuesRe = /[\s\S]*?translate-values\s*=\s*"([^"]+)"[\s\S]*"/;
+      valuesRe = /[\s\S]*?translate-values\s*=\s*"([^"]+)"[\s\S]*/;
       if (valuesRe.test(openTag)) {
         values = openTag.replace(valuesRe, '$1');
       }

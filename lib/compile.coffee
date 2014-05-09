@@ -387,14 +387,20 @@ compile = (options) ->
         if _.contains(match, '__{{__translate')
           return match
 
+        cleanup = (str = '') ->
+          str.replace(/'/g, "\\'").replace(/\n/g, ' ')
+
+        values = openTag.replace /[\s\S]*?translate-values\s*=\s*"([^"]+)"[\s\S]*"/, '$1'
+        clanedValues = cleanup values
+
         updated = true
 
         # Escape single quotes and remove newline which aren't allowed in js
         # strings
-        cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ')
+        cleanedContents = cleanUp contents
         openTag = openTag.replace /translate/, """translate="#{contents.trim()}" """
 
-        escapeDoubleBraces """#{openTag}{{translate '#{ cleanedContents.trim() }'}}#{closeTag}"""
+        escapeDoubleBraces """#{openTag}{{translate '#{ cleanedContents.trim() }' '#{cleanedValues}'}}#{closeTag}"""
 
 
       # ng-show, ng-hide

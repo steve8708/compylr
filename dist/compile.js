@@ -316,7 +316,7 @@ compile = function(options) {
         return "" + trimmedMatch + ">";
       }
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
-      var cleanedContents;
+      var clanedValues, cleanedContents, cleanup, values;
       helpers.logVerbose('match 9');
       if (/\|\s*translate/.test(match)) {
         return match;
@@ -324,10 +324,18 @@ compile = function(options) {
       if (_.contains(match, '__{{__translate')) {
         return match;
       }
+      cleanup = function(str) {
+        if (str == null) {
+          str = '';
+        }
+        return str.replace(/'/g, "\\'").replace(/\n/g, ' ');
+      };
+      values = openTag.replace(/[\s\S]*?translate-values\s*=\s*"([^"]+)"[\s\S]*"/, '$1');
+      clanedValues = cleanup(values);
       updated = true;
-      cleanedContents = contents.replace(/'/g, "\\'").replace(/\n/g, ' ');
+      cleanedContents = cleanUp(contents);
       openTag = openTag.replace(/translate/, "translate=\"" + (contents.trim()) + "\" ");
-      return escapeDoubleBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "'}}" + closeTag);
+      return escapeDoubleBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "' '" + cleanedValues + "'}}" + closeTag);
     }).replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {
       var hbsTagType;
       helpers.logVerbose('match 6');

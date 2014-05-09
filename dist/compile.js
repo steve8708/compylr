@@ -333,7 +333,7 @@ compile = function(options) {
       values = openTag.replace(/[\s\S]*?translate-values\s*=\s*"([^"]+)"[\s\S]*"/, '$1');
       clanedValues = cleanup(values);
       updated = true;
-      cleanedContents = cleanUp(contents);
+      cleanedContents = cleanup(contents);
       openTag = openTag.replace(/translate/, "translate=\"" + (contents.trim()) + "\" ");
       return escapeDoubleBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "' '" + cleanedValues + "'}}" + closeTag);
     }).replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {

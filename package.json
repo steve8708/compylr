@@ -2,7 +2,7 @@
   "author": "Steve Sewell",
   "name": "compylr",
   "description": "Compile angular apps to run on your server",
-  "version": "0.1.83",
+  "version": "0.1.84",
   "bugs": "https://github.com/steve8708/compylr/issues",
   "main": "index.js",
   "repository": {

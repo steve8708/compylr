@@ -245,7 +245,7 @@ compile = function(options) {
       updated = true;
       match = match.replace(/\sng-include=/, ' data-ng-include=');
       return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate " + includePath + "}}\n</span>");
-    }).replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, function(match, attrName, attrVal) {
+    }).replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/g, function(match, attrName, attrVal) {
       helpers.logVerbose('match 4');
       updated = true;
       return match.replace(attrName, attrName.replace('ng-', ''));

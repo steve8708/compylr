@@ -291,7 +291,7 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       # FIXME: this should replace ng-src with src, etc
-      .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/, (match, attrName, attrVal) ->
+      .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
         updated = true
         match.replace attrName, attrName.replace 'ng-', ''

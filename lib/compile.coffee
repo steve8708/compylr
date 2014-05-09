@@ -400,7 +400,7 @@ compile = (options) ->
         # Escape single quotes and remove newline which aren't allowed in js
         # strings
         cleanedContents = cleanup contents
-        openTag = openTag.replace /translate([\W])/, """translate="#{contents.trim()}"$1"""
+        openTag = openTag.replace /translate([^a-z\-0-9])/i, """translate="#{contents.trim()}"$1"""
 
         escapeDoubleBraces """#{openTag}{{translate '#{ cleanedContents.trim() }' '#{cleanedValues}'}}#{closeTag}"""
 

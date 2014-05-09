@@ -391,7 +391,7 @@ compile = (options) ->
           str.replace(/'/g, "\\'").replace(/\n/g, ' ')
 
         values = openTag.replace /[\s\S]*?translate-values\s*=\s*"([^"]+)"[\s\S]*"/, '$1'
-        clanedValues = cleanup values
+        cleanedValues = cleanup values
 
         updated = true
 

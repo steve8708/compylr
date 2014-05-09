@@ -316,7 +316,7 @@ compile = function(options) {
         return "" + trimmedMatch + ">";
       }
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
-      var clanedValues, cleanedContents, cleanup, values;
+      var cleanedContents, cleanedValues, cleanup, values;
       helpers.logVerbose('match 9');
       if (/\|\s*translate/.test(match)) {
         return match;
@@ -331,7 +331,7 @@ compile = function(options) {
         return str.replace(/'/g, "\\'").replace(/\n/g, ' ');
       };
       values = openTag.replace(/[\s\S]*?translate-values\s*=\s*"([^"]+)"[\s\S]*"/, '$1');
-      clanedValues = cleanup(values);
+      cleanedValues = cleanup(values);
       updated = true;
       cleanedContents = cleanup(contents);
       openTag = openTag.replace(/translate([\W])/, "translate=\"" + (contents.trim()) + "\"$1");

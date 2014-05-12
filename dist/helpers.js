@@ -34,6 +34,9 @@ module.exports = {
   },
   safeEvalWithContext: function(expression, context, clone, thisArg, returnNewContext) {
     var error, fn, output;
+    if (expression == null) {
+      expression = '';
+    }
     if (thisArg == null) {
       thisArg = context;
     }
@@ -56,6 +59,9 @@ module.exports = {
   },
   safeEvalStaticExpression: function(expression, context, thisArg) {
     var error, expressionBody, value;
+    if (expression == null) {
+      expression = '';
+    }
     if (thisArg == null) {
       thisArg = this;
     }

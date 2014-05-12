@@ -16,7 +16,7 @@ module.exports =
   logVerbose: (args...) ->
     console.info args... if config.verbose
 
-  safeEvalWithContext: (expression, context, clone, thisArg = context, returnNewContext) ->
+  safeEvalWithContext: (expression = '', context, clone, thisArg = context, returnNewContext) ->
     expression = ent.decode expression
 
     fn = evalFnCache[expression] or= new Function 'context', "with (context) { return #{expression} }"
@@ -33,7 +33,7 @@ module.exports =
 
   # In Java can use ScriptEngineManager to eval js
   # (http://stackoverflow.com/questions/2605032/using-eval-in-java)
-  safeEvalStaticExpression: (expression, context, thisArg = @) ->
+  safeEvalStaticExpression: (expression = '', context, thisArg = @) ->
     expression = ent.decode expression
 
     context['this'] = thisArg

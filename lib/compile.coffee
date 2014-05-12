@@ -261,7 +261,7 @@ compile = (options) ->
       # ng-include
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\sng-include="'(.*)'".*?>/, (match, includePath, post) ->
+      .replace(/<[^>]*?\sng-include="'(.*)'"[^>]*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 3'
         updated = true
         includePath = includePath.replace '.tpl.html', ''

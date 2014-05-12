@@ -234,7 +234,7 @@ compile = function(options) {
       } else {
         throw new Error('Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file);
       }
-    }).replace(/<[^>]*?\sng-include="'(.*)'".*?>/, function(match, includePath, post) {
+    }).replace(/<[^>]*?\sng-include="'(.*)'"[^>]*?>/, function(match, includePath, post) {
       helpers.logVerbose('match 3');
       updated = true;
       includePath = includePath.replace('.tpl.html', '');

@@ -9,7 +9,7 @@ module.exports = function(handlebars) {
   handlebars || (handlebars = require('handlebars'));
   handlebars.registerHelper("eachExpression", function(name, _in, expression, options) {
     var value;
-    value = helpers.safeEvalStaticExpression(expression, this);
+    value = helpers.safeEvalWithContext(expression, this);
     return instance.helpers.forEach(name, _in, value, options);
   });
   handlebars.registerHelper("styleExpression", function(expression, options) {
@@ -36,7 +36,7 @@ module.exports = function(handlebars) {
   });
   handlebars.registerHelper("ifExpression", function(expression, options) {
     var value;
-    value = helpers.safeEvalStaticExpression(expression, this);
+    value = helpers.safeEvalWithContext(expression, this);
     if (!options.hash.includeZero && !value) {
       return options.inverse(this);
     } else {
@@ -50,7 +50,7 @@ module.exports = function(handlebars) {
   });
   handlebars.registerHelper("hbsShow", function(expression, options) {
     var value;
-    value = helpers.safeEvalStaticExpression(expression, this);
+    value = helpers.safeEvalWithContext(expression, this);
     if (value) {
       return ' data-hbs-show ';
     } else {
@@ -59,7 +59,7 @@ module.exports = function(handlebars) {
   });
   handlebars.registerHelper("hbsHide", function(expression, options) {
     var value;
-    value = helpers.safeEvalStaticExpression(expression, this);
+    value = helpers.safeEvalWithContext(expression, this);
     if (value) {
       return ' data-hbs-hide ';
     } else {
@@ -85,7 +85,7 @@ module.exports = function(handlebars) {
   });
   return handlebars.registerHelper("forEach", function(name, _in, contextExpression) {
     var context, ctx, data, fn, i, inverse, iterContext, iterCtx, j, key, nameSplit, objSize, options, ret, value;
-    context = helpers.safeEvalStaticExpression(contextExpression, this);
+    context = helpers.safeEvalWithContext(contextExpression, this);
     options = _.last(arguments);
     fn = options.fn;
     ctx = this;

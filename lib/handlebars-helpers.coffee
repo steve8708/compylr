@@ -8,7 +8,7 @@ module.exports = (handlebars) ->
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   handlebars.registerHelper "eachExpression", (name, _in, expression, options) ->
-    value = helpers.safeEvalStaticExpression expression, @
+    value = helpers.safeEvalWithContext expression, @
     instance.helpers.forEach name, _in, value, options
 
   handlebars.registerHelper "styleExpression", (expression, options) ->
@@ -26,7 +26,7 @@ module.exports = (handlebars) ->
     ' ' + out.join(' ') + ' '
 
   handlebars.registerHelper "ifExpression", (expression, options) ->
-    value = helpers.safeEvalStaticExpression expression, @
+    value = helpers.safeEvalWithContext expression, @
 
     if not options.hash.includeZero and not value
       options.inverse @
@@ -38,11 +38,11 @@ module.exports = (handlebars) ->
     value
 
   handlebars.registerHelper "hbsShow", (expression, options) ->
-    value = helpers.safeEvalStaticExpression expression, @
+    value = helpers.safeEvalWithContext expression, @
     if value then ' data-hbs-show ' else ' data-hbs-hide '
 
   handlebars.registerHelper "hbsHide", (expression, options) ->
-    value = helpers.safeEvalStaticExpression expression, @
+    value = helpers.safeEvalWithContext expression, @
     if value then ' data-hbs-hide ' else ' data-hbs-show '
 
   handlebars.registerHelper "json", (args..., options) ->
@@ -58,7 +58,7 @@ module.exports = (handlebars) ->
     "#{scriptStr} #{options.fn @} </script>"
 
   handlebars.registerHelper "forEach", (name, _in, contextExpression) ->
-    context = helpers.safeEvalStaticExpression contextExpression, @
+    context = helpers.safeEvalWithContext contextExpression, @
     options = _.last arguments
     fn = options.fn
     ctx = @

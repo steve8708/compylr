@@ -58,7 +58,7 @@ module.exports = {
     }
   },
   safeEvalStaticExpression: function(expression, context, thisArg) {
-    var error, expressionBody, value;
+    var error, expressionBody, value, _ref;
     if (expression == null) {
       expression = '';
     }
@@ -68,7 +68,7 @@ module.exports = {
     expression = ent.decode(expression);
     context['this'] = thisArg;
     try {
-      expressionBody = expressionCache[expression] || esprima.parse(expression).body[0].expression;
+      expressionBody = expressionCache[expression] || ((_ref = esprima.parse(expression).body[0]) != null ? _ref.expression : void 0);
       if (!expressionCache[expression]) {
         expressionCache[expression] = expressionBody;
       }

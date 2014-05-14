@@ -38,7 +38,7 @@ module.exports =
 
     context['this'] = thisArg
     try
-      expressionBody = expressionCache[expression] or esprima.parse(expression).body[0].expression
+      expressionBody = expressionCache[expression] or esprima.parse(expression).body[0]?.expression
       expressionCache[expression] = expressionBody unless expressionCache[expression]
     catch error
       console.warn 'Expression error', expression, error

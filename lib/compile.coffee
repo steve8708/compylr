@@ -427,6 +427,17 @@ compile = (options) ->
         expressionTag = if type is 'ng-bind' then escapeDoubleBraces "{{#{expression}}}" else escapeTripleBraces "{{{#{expression}}}}"
         str = str.replace closeTag, expressionTag + closeTag
 
+      # bo-text
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+      .replace /<[^>]*\s(bo-text)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
+        helpers.logVerbose 'match 7'
+        updated = true
+        str = match.replace type, type
+        expressionTag = escapeDoubleBraces "{{#{expression}}}"
+        str = str.replace closeTag, expressionTag + closeTag
+
+
   i = 0
   updated = true
   while updated

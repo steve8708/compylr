@@ -72,16 +72,16 @@ beautify = function(str) {
     modifier = type === '#' ? '' : '/';
     return "<" + modifier + "#" + body + ">";
   });
-  pretty = beautifyHtml(str, {
-    indent_size: 2,
-    indent_inner_html: true,
-    preserve_newlines: false
-  });
-  pretty = pretty.replace(/<(\/?#)(.*)>/g, function(match, modifier, body) {
+  str = str.replace(/<(\/?#)(.*)>/g, function(match, modifier, body) {
     if (modifier === '/#') {
       modifier = '/';
     }
     return "{{" + modifier + body + "}}";
+  });
+  pretty = beautifyHtml(str, {
+    indent_size: 2,
+    indent_inner_html: true,
+    preserve_newlines: false
   });
   return pretty;
 };
@@ -141,11 +141,11 @@ escapeReplacement = function(str) {
 };
 
 convertNgToDataNg = function(str) {
-  return str.replace(/\sng-/g, ' data-ng-');
+  return str.replace(/\s(ng|bo)-/g, ' data-$1-');
 };
 
 convertDataNgToNg = function(str) {
-  return str.replace(/\sdata-ng-/g, ' ng-');
+  return str.replace(/\sdata-(ng|bo)-/g, ' $1-');
 };
 
 unescapeReplacements = function(str) {
@@ -213,7 +213,7 @@ compile = function(options) {
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
-    }).replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/g, function(match, varName, post) {
+    }).replace(/<[^>]*?\s(?:ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, function(match, varName, post) {
       var close, tagName;
       helpers.logVerbose('match 2');
       updated = true;
@@ -230,7 +230,7 @@ compile = function(options) {
       }
       close = getCloseTag(match);
       if (close) {
-        return "{{#" + tagName + " " + varName + "}}\n" + (close.before.replace(/\sng-if=/, " data-ng-if=")) + "\n{{/" + tagName + "}}\n" + close.after;
+        return "{{#" + tagName + " " + varName + "}}\n" + (close.before.replace(/\s(ng|bo)-if=/, ' data-$1-if=')) + "\n{{/" + tagName + "}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file);
       }
@@ -245,11 +245,11 @@ compile = function(options) {
       updated = true;
       match = match.replace(/\sng-include=/, ' data-ng-include=');
       return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate " + includePath + "}}\n</span>");
-    }).replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/g, function(match, attrName, attrVal) {
+    }).replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, function(match, attrName, attrVal) {
       helpers.logVerbose('match 4');
       updated = true;
-      return match.replace(attrName, attrName.replace('ng-', ''));
-    }).replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
+      return match.replace(attrName, attrName.replace(/(ng|bo)-/, ''));
+    }).replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8', {
         tagName: tagName,
@@ -265,7 +265,7 @@ compile = function(options) {
       if (typeMatch) {
         match = match.replace(typeMatch, '');
       }
-      match = match.replace(new RegExp("\\sng-" + type), "data-ng-" + type);
+      match = match.replace(new RegExp("\\s(ng|bo)-" + type), "data-$1-" + type);
       return match.replace("<" + tagName, "<" + tagName + " " + typeStrOpen + " " + typeExpressionStr + "\" ");
     }).replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, function(match, tagName, attrName, attrVal) {
       var anchorStr, beforeStr, close, hrefStr, index, key, refs, value;
@@ -300,7 +300,7 @@ compile = function(options) {
         trimmedMatch = trimmedMatch.substr(0, match.length - 1);
       }
       trimmedMatch = trimmedMatch.replace("" + attrName + "=", escapeBasicAttribute("" + attrName + "="));
-      if (attrName.indexOf('data-ng-attr-') === 0 || _.contains(attrVal, '__{{__')) {
+      if (attrName.indexOf('data-(ng|bo)-attr-') === 0 || _.contains(attrVal, '__{{__')) {
         return match;
       } else {
         updated = true;
@@ -339,19 +339,19 @@ compile = function(options) {
       cleanedContents = cleanup(contents);
       openTag = openTag.replace(/translate([^a-z\-0-9])/i, "translate=\"" + (contents.trim()) + "\"$1");
       return escapeDoubleBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "' '" + cleanedValues + "'}}" + closeTag);
-    }).replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {
+    }).replace(/\s((?:ng|bo)-show|(?:ng|bo)-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {
       var hbsTagType;
       helpers.logVerbose('match 6');
       updated = true;
-      hbsTagType = showOrHide === 'ng-show' ? 'hbsShow' : 'hbsHide';
+      hbsTagType = _(showOrHide).contains('-show') ? 'hbsShow' : 'hbsHide';
       match = match.replace(' ' + showOrHide, " data-" + showOrHide);
       return "" + match + " {{" + hbsTagType + " \"" + expression + "\"}}";
-    }).replace(/<[^>]*\s(ng-bind|ng-bind-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, function(match, type, expression, closeTag) {
+    }).replace(/<[^>]*\s((?:ng|bo)-bind|ng-bind-html|bo-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, function(match, type, expression, closeTag) {
       var expressionTag, str;
       helpers.logVerbose('match 7');
       updated = true;
       str = match.replace(type, "data-" + type);
-      expressionTag = type === 'ng-bind' ? escapeDoubleBraces("{{" + expression + "}}") : escapeTripleBraces("{{{" + expression + "}}}");
+      expressionTag = _(type).contains('-html') ? escapeTripleBraces("{{{" + expression + "}}}") : escapeDoubleBraces("{{" + expression + "}}");
       return str = str.replace(closeTag, expressionTag + closeTag);
     });
   }

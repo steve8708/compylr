@@ -123,9 +123,11 @@ escapeReplacement = (str) ->
 
 convertNgToDataNg = (str) ->
   str.replace /\sng-/g, ' data-ng-'
+  str.replace /\sbo-/g, ' data-bo-'
 
 convertDataNgToNg = (str) ->
   str.replace /\sdata-ng-/g, ' ng-'
+  str.replace /\sdata-bo-/g, ' bo-'
 
 unescapeReplacements = (str) ->
   str
@@ -179,6 +181,8 @@ compile = (options) ->
     firstLoop = false
 
     throw new Error 'infinite update loop' if i++ > maxIters
+
+    try
 
     interpolated = interpolated
 
@@ -236,9 +240,10 @@ compile = (options) ->
       # ng-if
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
+      .replace(/<[^>]*?\s(ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
         helpers.logVerbose 'match 2'
         updated = true
+
         if _.contains match.replace(post, ''), 'compylr-keep'
           return match.replace 'ng-if', 'ng-cloak data-ng-if'
 
@@ -252,8 +257,10 @@ compile = (options) ->
           varName = "\"#{varName}\""
 
         close = getCloseTag match
+        ngOrBo = if new RegExp(/\sbo-if/).test(close.before) then ' data-bo-if=' else ' data-ng-if='
+
         if close
-          "{{##{tagName} #{varName}}}\n#{close.before.replace /\sng-if=/, " data-ng-if="}\n{{/#{tagName}}}\n#{close.after}"
+          "{{##{tagName} #{varName}}}\n#{close.before.replace /\s(?:ng|bo)-if=/, ngOrBo}\n{{/#{tagName}}}\n#{close.after}"
         else
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
       )
@@ -287,21 +294,21 @@ compile = (options) ->
         """
       )
 
-      # ng-src, ng-href, ng-value
+      # ng-src, ng-href, ng-value, bo-src, bo-href, bo-value
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       # FIXME: this should replace ng-src with src, etc
-      .replace(/\s(ng-src|ng-href|ng-value)="([\s\S]*?)"/g, (match, attrName, attrVal) ->
+      .replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
         updated = true
-        match.replace attrName, attrName.replace 'ng-', ''
+        match.replace attrName, attrName.replace /(?:ng|bo)-/, ''
       )
 
 
-      # ng-class, ng-style
+      # ng-class, ng-style, bo-class, bo-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<(\w+)[^>]*\s(ng-class|ng-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
+      .replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
         # TODO: modify class attributes based on object here
 
         helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
@@ -314,6 +321,7 @@ compile = (options) ->
         if typeMatch
           match = match.replace typeMatch, ''
         match = match.replace new RegExp("\\sng-#{type}"), "data-ng-#{type}"
+        match = match.replace new RegExp("\\sbo-#{type}"), "data-bo-#{type}"
 
         match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
       )
@@ -344,7 +352,7 @@ compile = (options) ->
           "#{anchorStr}>\n#{close.before.replace attrName, escapeBasicAttribute attrName}\n</a>\n#{close.after}"
       )
 
-      # attr="{{intrerpolation}}"
+      # attr="{{interpolation}}"
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, (match, attrName, attrVal) ->
@@ -405,36 +413,26 @@ compile = (options) ->
         escapeDoubleBraces """#{openTag}{{translate '#{ cleanedContents.trim() }' '#{cleanedValues}'}}#{closeTag}"""
 
 
-      # ng-show, ng-hide
+      # ng-show, ng-hide, bo-show, bo-hide
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/\s(ng-show|ng-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
+      .replace(/\s((?:ng|bo)-show|(?:ng|bo)-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
         helpers.logVerbose 'match 6'
 
         updated = true
-        hbsTagType = if showOrHide is 'ng-show' then 'hbsShow' else 'hbsHide'
+        hbsTagType = if showOrHide.indexOf('-show') isnt -1 then 'hbsShow' else 'hbsHide'
         match = match.replace ' ' + showOrHide, " data-#{showOrHide}"
         "#{match} {{#{hbsTagType} \"#{expression}\"}}"
       )
 
-      # ng-bind, ng-bind-html
+      # ng-bind, ng-bind-html, bo-bind, bo-html
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /<[^>]*\s(ng-bind|ng-bind-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
+      .replace /<[^>]*\s((?:ng|bo)-bind|ng-bind-html|bo-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"
-        expressionTag = if type is 'ng-bind' then escapeDoubleBraces "{{#{expression}}}" else escapeTripleBraces "{{{#{expression}}}}"
-        str = str.replace closeTag, expressionTag + closeTag
-
-      # bo-text
-      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-      .replace /<[^>]*\s(bo-text)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
-        helpers.logVerbose 'match 7'
-        updated = true
-        str = match.replace type, type
-        expressionTag = escapeDoubleBraces "{{#{expression}}}"
+        expressionTag = if type is 'ng-bind-html' then escapeTripleBraces "{{{#{expression}}}}" else escapeDoubleBraces "{{#{expression}}}"
         str = str.replace closeTag, expressionTag + closeTag
 
 
@@ -467,22 +465,24 @@ compile = (options) ->
           escapeDoubleBraces match
       )
 
+
   # Unescape and output
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  try
+    interpolated = unescapeTripleBraces interpolated
+    interpolated = unescapeReplacements interpolated
+    interpolated = unescapeBasicAttributes interpolated
+    # interpolated = convertNgToDataNg interpolated
+    interpolated = convertDataNgToNg interpolated
+    interpolated = unescapeDoubleBraces unescapeDoubleBraces interpolated
+    beautified = beautify interpolated
 
-  interpolated = unescapeTripleBraces interpolated
-  interpolated = unescapeReplacements interpolated
-  interpolated = unescapeBasicAttributes interpolated
-  # interpolated = convertNgToDataNg interpolated
-  interpolated = convertDataNgToNg interpolated
-  interpolated = unescapeDoubleBraces unescapeDoubleBraces interpolated
-  beautified = beautify interpolated
+    if argv.file and not argv['no-write']
+      fs.writeFileSync 'template-output/output.html', beautified
 
-  if argv.file and not argv['no-write']
-    fs.writeFileSync 'template-output/output.html', beautified
-
-  beautified
-
+    beautified
+  catch e
+    console.log e
 
 compile.setHelpers = (handlebars) ->
   require('./handlebars-helpers') handlebars

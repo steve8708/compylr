@@ -57,15 +57,15 @@ beautify = (str) ->
     modifier = if type is '#' then '' else '/'
     "<#{modifier}##{body}>"
 
+  str = str
+    .replace /<(\/?#)(.*)>/g, (match, modifier, body) ->
+      modifier = '/' if modifier is '/#'
+      "{{#{modifier}#{body}}}"
+
   pretty = beautifyHtml str,
     indent_size: 2
     indent_inner_html: true
     preserve_newlines: false
-
-  pretty = pretty
-    .replace /<(\/?#)(.*)>/g, (match, modifier, body) ->
-      modifier = '/' if modifier is '/#'
-      "{{#{modifier}#{body}}}"
 
   pretty
 
@@ -122,12 +122,10 @@ escapeReplacement = (str) ->
   convertNgToDataNg str
 
 convertNgToDataNg = (str) ->
-  str.replace /\sng-/g, ' data-ng-'
-  str.replace /\sbo-/g, ' data-bo-'
+  str.replace /\s(ng|bo)-/g, ' data-$1-'
 
 convertDataNgToNg = (str) ->
-  str.replace /\sdata-ng-/g, ' ng-'
-  str.replace /\sdata-bo-/g, ' bo-'
+  str.replace /\sdata-(ng|bo)-/g, ' $1-'
 
 unescapeReplacements = (str) ->
   str
@@ -235,10 +233,10 @@ compile = (options) ->
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
       )
 
-      # ng-if
+      # ng-if, bo-if
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\s(ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
+      .replace(/<[^>]*?\s(?:ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
         helpers.logVerbose 'match 2'
         updated = true
         if _.contains match.replace(post, ''), 'compylr-keep'
@@ -254,10 +252,9 @@ compile = (options) ->
           varName = "\"#{varName}\""
 
         close = getCloseTag match
-        ngOrBo = if new RegExp(/\sbo-if/).test close.before then ' data-bo-if=' else ' data-ng-if='
 
         if close
-          "{{##{tagName} #{varName}}}\n#{close.before.replace /\s(?:ng|bo)-if=/, ngOrBo}\n{{/#{tagName}}}\n#{close.after}"
+          "{{##{tagName} #{varName}}}\n#{close.before.replace /\s(ng|bo)-if=/, " data-$1-if="}\n{{/#{tagName}}}\n#{close.after}"
         else
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
       )
@@ -298,7 +295,7 @@ compile = (options) ->
       .replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
         updated = true
-        match.replace attrName, attrName.replace /(?:ng|bo)-/, ''
+        match.replace attrName, attrName.replace /(ng|bo)-/, ''
       )
 
 
@@ -317,8 +314,7 @@ compile = (options) ->
         typeExpressionStr = """{{#{type}Expression "#{attrVal}"}}"""
         if typeMatch
           match = match.replace typeMatch, ''
-        match = match.replace new RegExp("\\sng-#{type}"), "data-ng-#{type}"
-        match = match.replace new RegExp("\\sbo-#{type}"), "data-bo-#{type}"
+        match = match.replace new RegExp("\\s(ng|bo)-#{type}"), "data-$1-#{type}"
 
         match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
       )
@@ -362,7 +358,7 @@ compile = (options) ->
           trimmedMatch = trimmedMatch.substr 0, match.length - 1
 
         trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
-        if attrName.indexOf('data-ng-attr-') is 0 or _.contains attrVal, '__{{__'
+        if attrName.indexOf('data-(ng|bo)-attr-') is 0 or _.contains attrVal, '__{{__'
           return match
         else
           updated = true
@@ -417,7 +413,7 @@ compile = (options) ->
         helpers.logVerbose 'match 6'
 
         updated = true
-        hbsTagType = if showOrHide.indexOf('-show') isnt -1 then 'hbsShow' else 'hbsHide'
+        hbsTagType = if _(showOrHide).contains '-show' then 'hbsShow' else 'hbsHide'
         match = match.replace ' ' + showOrHide, " data-#{showOrHide}"
         "#{match} {{#{hbsTagType} \"#{expression}\"}}"
       )
@@ -429,7 +425,7 @@ compile = (options) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"
-        expressionTag = if type.indexOf('-html') isnt -1 then escapeTripleBraces "{{{#{expression}}}}" else escapeDoubleBraces "{{#{expression}}}"
+        expressionTag = if _(type).contains '-html' then escapeTripleBraces "{{{#{expression}}}}" else escapeDoubleBraces "{{#{expression}}}"
         str = str.replace closeTag, expressionTag + closeTag
 
   i = 0

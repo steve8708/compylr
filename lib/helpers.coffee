@@ -2,7 +2,7 @@ esprima = require 'esprima'
 config = require './config'
 _ = require 'lodash'
 evaluate = require 'static-eval'
-ent = require 'ent'
+he = require 'he'
 
 expressionCache = {}
 evalFnCache = {}
@@ -17,7 +17,7 @@ module.exports =
     console.info args... if config.verbose
 
   safeEvalWithContext: (expression = '', context, clone, thisArg = context, returnNewContext) ->
-    expression = ent.decode expression
+    expression = he.decode expression
 
     fn = evalFnCache[expression] or= new Function 'context', "with (context) { return #{expression} }"
     try
@@ -34,7 +34,7 @@ module.exports =
   # In Java can use ScriptEngineManager to eval js
   # (http://stackoverflow.com/questions/2605032/using-eval-in-java)
   safeEvalStaticExpression: (expression = '', context, thisArg = @) ->
-    expression = ent.decode expression
+    expression = he.decode expression
 
     context['this'] = thisArg
     try

@@ -182,8 +182,6 @@ compile = (options) ->
 
     throw new Error 'infinite update loop' if i++ > maxIters
 
-    try
-
     interpolated = interpolated
 
       # ng-repeat
@@ -243,7 +241,6 @@ compile = (options) ->
       .replace(/<[^>]*?\s(ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
         helpers.logVerbose 'match 2'
         updated = true
-
         if _.contains match.replace(post, ''), 'compylr-keep'
           return match.replace 'ng-if', 'ng-cloak data-ng-if'
 
@@ -257,7 +254,7 @@ compile = (options) ->
           varName = "\"#{varName}\""
 
         close = getCloseTag match
-        ngOrBo = if new RegExp(/\sbo-if/).test(close.before) then ' data-bo-if=' else ' data-ng-if='
+        ngOrBo = if new RegExp(/\sbo-if/).test close.before then ' data-bo-if=' else ' data-ng-if='
 
         if close
           "{{##{tagName} #{varName}}}\n#{close.before.replace /\s(?:ng|bo)-if=/, ngOrBo}\n{{/#{tagName}}}\n#{close.after}"
@@ -432,9 +429,8 @@ compile = (options) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"
-        expressionTag = if type is 'ng-bind-html' then escapeTripleBraces "{{{#{expression}}}}" else escapeDoubleBraces "{{#{expression}}}"
+        expressionTag = if type.indexOf('-html') isnt -1 then escapeTripleBraces "{{{#{expression}}}}" else escapeDoubleBraces "{{#{expression}}}"
         str = str.replace closeTag, expressionTag + closeTag
-
 
   i = 0
   updated = true
@@ -465,24 +461,22 @@ compile = (options) ->
           escapeDoubleBraces match
       )
 
-
   # Unescape and output
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  try
-    interpolated = unescapeTripleBraces interpolated
-    interpolated = unescapeReplacements interpolated
-    interpolated = unescapeBasicAttributes interpolated
-    # interpolated = convertNgToDataNg interpolated
-    interpolated = convertDataNgToNg interpolated
-    interpolated = unescapeDoubleBraces unescapeDoubleBraces interpolated
-    beautified = beautify interpolated
 
-    if argv.file and not argv['no-write']
-      fs.writeFileSync 'template-output/output.html', beautified
+  interpolated = unescapeTripleBraces interpolated
+  interpolated = unescapeReplacements interpolated
+  interpolated = unescapeBasicAttributes interpolated
+  # interpolated = convertNgToDataNg interpolated
+  interpolated = convertDataNgToNg interpolated
+  interpolated = unescapeDoubleBraces unescapeDoubleBraces interpolated
+  beautified = beautify interpolated
 
-    beautified
-  catch e
-    console.log e
+  if argv.file and not argv['no-write']
+    fs.writeFileSync 'template-output/output.html', beautified
+
+  beautified
+
 
 compile.setHelpers = (handlebars) ->
   require('./handlebars-helpers') handlebars

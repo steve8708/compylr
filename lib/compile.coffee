@@ -34,7 +34,7 @@ getRefNames = (str, options) ->
       return map if depth < 0
     else
       depth++
-      repeat = tag.match /\sng-repeat="(.*?)"/g
+      repeat = tag.match /\s(bo|ng)-repeat="(.*?)"/g
       continue unless repeat
       repeatText = RegExp.$1
       split = repeatText.split ' in '
@@ -59,7 +59,7 @@ beautify = (str) ->
 
   str = str
     .replace /<(\/?#)(.*)>/g, (match, modifier, body) ->
-      modifier = '/' if modifier is '/#'
+      modifier = '/' if modifier is '/#'√
       "{{#{modifier}#{body}}}"
 
   pretty = beautifyHtml str,
@@ -113,7 +113,7 @@ getCloseTag = (string) ->
 
 # FIXME: this will break for pipes inside strings
 processFilters = (str) ->
-  filterSplit = str.match /[^\|]+/
+  filterSplit = str.split /\s\|\s/
   filters: filterSplit.slice(1).join ' | '
   replaced: filterSplit[0]
 
@@ -185,7 +185,7 @@ compile = (options) ->
       # ng-repeat
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, (match, text, post) ->
+      .replace(/<[^>]*?\s(bo|ng)-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, (match, type, text, post) ->
         helpers.logVerbose 'match 1'
         updated = true
         repeatExp = text
@@ -225,7 +225,7 @@ compile = (options) ->
         if close
           """
             {{#forEach #{repeatExp}}}
-              #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
+              #{close.before.replace /\s(bo|ng)-repeat/, ' data-$1-repeat'}
             {{/forEach}}
             #{close.after}
           """
@@ -302,48 +302,25 @@ compile = (options) ->
       # ng-class, ng-style, bo-class, bo-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
-        # TODO: modify class attributes based on object here
+      # TODO: need to do this in a way that does not duplicate class and style attributes
+      #
+      # .replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
+      #   # TODO: modify class attributes based on object here
+      #
+      #   helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
+      #   updated = true
+      #   type = attrName.substr 3 # 'class' or 'style'
+      #   typeMatch = match.match new RegExp "\\s#{type}=\"([\\s\\S]*?)\""
+      #   typeStr = typeMatch and typeMatch[0].substr(1) or "#{type}=\"\""
+      #   typeStrOpen = typeStr.substr 0, typeStr.length - 1
+      #   typeExpressionStr = """{{#{type}Expression "#{attrVal}"}}"""
+      #   if typeMatch
+      #     match = match.replace typeMatch, ''
+      #   match = match.replace new RegExp("\\s(ng|bo)-#{type}"), "data-$1-#{type}"
+      #
+      #   match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
+      # )
 
-        helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
-        updated = true
-        type = attrName.substr 3 # 'class' or 'style'
-        typeMatch = match.match new RegExp "\\s#{type}=\"([\\s\\S]*?)\""
-        typeStr = typeMatch and typeMatch[0].substr(1) or "#{type}=\"\""
-        typeStrOpen = typeStr.substr 0, typeStr.length - 1
-        typeExpressionStr = """{{#{type}Expression "#{attrVal}"}}"""
-        if typeMatch
-          match = match.replace typeMatch, ''
-        match = match.replace new RegExp("\\s(ng|bo)-#{type}"), "data-$1-#{type}"
-
-        match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
-      )
-
-      # click-action
-      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-      # TODO: ng-click only on anchors
-      .replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, (match, tagName, attrName, attrVal) ->
-        helpers.logVerbose 'match 7', attrName: attrName, attrVal: attrVal
-        updated = true
-        hrefStr = """href="{{urlPath}}?action=#{encodeURIComponent attrVal}" """
-        anchorStr = escapeDoubleBraces """<a #{hrefStr} data-ng-#{htmlEscapeCurlyBraces hrefStr}"""
-
-        index = interpolated.indexOf match
-        beforeStr = interpolated.substr 0, index
-        refs = getRefNames beforeStr
-        # FIXME: will break for things like 'product' and 'products'
-        for key, value of refs
-          # E.g. ng-click="activeProduct = product" -> ng-click="activeProduct = products[{{@activeProductIndex}}]"
-          attrVal = attrVal.replace key, "#{value}[{{@#{key}Index}}]"
-
-        if tagName is 'a'
-          # TODO: preserve other url query params - keep a hash in data and add to url
-          match.replace("<a", anchorStr).replace attrName, escapeBasicAttribute attrName
-        else
-          close = getCloseTag match
-          "#{anchorStr}>\n#{close.before.replace attrName, escapeBasicAttribute attrName}\n</a>\n#{close.after}"
-      )
 
       # attr="{{interpolation}}"
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -425,6 +402,9 @@ compile = (options) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"
+        if expression.length isnt expression.match(/[\w\.]+/)[0].length
+          expression = "expression '#{expression.replace /'/g, "\\'"}'"
+
         expressionTag = if _(type).contains '-html' then escapeTripleBraces "{{{#{expression}}}}" else escapeDoubleBraces "{{#{expression}}}"
         str = str.replace closeTag, expressionTag + closeTag
 
@@ -452,7 +432,7 @@ compile = (options) ->
             helpers.logVerbose 'body', body
             prefix = 'expression "'
             suffix = '"'
-          escapeDoubleBraces """<span data-ng-bind="#{body}">{{#{prefix}#{body}#{suffix}}}</span>"""
+          escapeDoubleBraces """{{#{prefix}#{body}#{suffix}}}"""
         else
           escapeDoubleBraces match
       )

@@ -234,6 +234,17 @@ compile = function(options) {
       } else {
         throw new Error('Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file);
       }
+    }).replace(/<[^>]*?\slocals="[^"]*"[\s\S]*?>([\S\s]+)/g, function(match, expression, post) {
+      var close;
+      helpers.logVerbose('match 2');
+      updated = true;
+      expression = expression.trim();
+      close = getCloseTag(match);
+      if (close) {
+        return "{{#locals \"" + expression + "\"}}\n  " + close.before + "\n{{/locals}}\n" + close.after;
+      } else {
+        throw new Error('Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file);
+      }
     }).replace(/<[^>]*?\sng-include="'(.*)'"[^>]*?>/, function(match, includePath, post) {
       helpers.logVerbose('match 3');
       updated = true;

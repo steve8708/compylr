@@ -176,28 +176,10 @@ compile = (options) ->
 
   while updated
     updated = false
-    firstLoop = false
 
     throw new Error 'infinite update loop' if i++ > maxIters
 
     interpolated = interpolated
-
-      # locals
-      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-      .replace(/<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
-        helpers.logVerbose 'match 11'
-        updated = true
-
-        expression = expression.trim()
-        close = getCloseTag match
-
-        if close
-          """{{#locals "#{expression}"}}\n  #{close.before.replace /\slocals=/, ' data-locals='}\n{{/locals}}\n#{close.after}"""
-        else
-          throw new Error 'Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file
-      )
-
 
       # ng-repeat
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -249,6 +231,7 @@ compile = (options) ->
         else
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
       )
+
 
       # ng-if, bo-if
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -450,6 +433,33 @@ compile = (options) ->
 
         expressionTag = if _(type).contains '-html' then escapeTripleBraces "{{{#{expression}}}}" else escapeDoubleBraces "{{#{expression}}}"
         str = str.replace closeTag, expressionTag + closeTag
+
+
+  # Higher priority
+  updated = true
+  i = 0
+  while updated
+    updated = false 
+    throw new Error 'infinite update loop' if i++ > maxIters
+
+    interpolated = interpolated
+
+      # locals
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+      .replace(/<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
+        helpers.logVerbose 'match 11'
+        updated = true
+
+        expression = expression.trim()
+        close = getCloseTag match
+
+        if close
+          """{{#locals "#{expression}"}}\n  #{close.before.replace /\slocals=/, ' data-locals='}\n{{/locals}}\n#{close.after}"""
+        else
+          throw new Error 'Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file
+      )
+
 
   i = 0
   updated = true

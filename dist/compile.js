@@ -195,7 +195,18 @@ compile = function(options) {
     if (i++ > maxIters) {
       throw new Error('infinite update loop');
     }
-    interpolated = interpolated.replace(/<[^>]*?\s(bo|ng)-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, type, text, post) {
+    interpolated = interpolated.replace(/<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, function(match, expression, post) {
+      var close;
+      helpers.logVerbose('match 11');
+      updated = true;
+      expression = expression.trim();
+      close = getCloseTag(match);
+      if (close) {
+        return "{{#locals \"" + expression + "\"}}\n  " + (close.before.replace(/\slocals=/, ' data-locals=')) + "\n{{/locals}}\n" + close.after;
+      } else {
+        throw new Error('Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file);
+      }
+    }).replace(/<[^>]*?\s(bo|ng)-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, type, text, post) {
       var close, expressionKeypath, propName, repeatExp, repeatExpSplit;
       helpers.logVerbose('match 1');
       updated = true;
@@ -233,17 +244,6 @@ compile = function(options) {
         return "{{#" + tagName + " " + varName + "}}\n" + (close.before.replace(/\s(ng|bo)-if=/, " data-$1-if=")) + "\n{{/" + tagName + "}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file);
-      }
-    }).replace(/<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, function(match, expression, post) {
-      var close;
-      helpers.logVerbose('match 11');
-      updated = true;
-      expression = expression.trim();
-      close = getCloseTag(match);
-      if (close) {
-        return "{{#locals \"" + expression + "\"}}\n  " + (close.before.replace(/\slocals=/, ' data-locals=')) + "\n{{/locals}}\n" + close.after;
-      } else {
-        throw new Error('Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file);
       }
     }).replace(/<[^>]*?\sng-include="'(.*)'"[^>]*?>/, function(match, includePath, post) {
       helpers.logVerbose('match 3');

@@ -234,7 +234,7 @@ compile = function(options) {
       } else {
         throw new Error('Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file);
       }
-    }).replace(/<[^>]*?\slocals="[^"]*"[\s\S]*?>([\S\s]+)/g, function(match, expression, post) {
+    }).replace(/<[^>]*?\slocals="[^"]*?"[\s\S]*?>([\S\s]+)/g, function(match, expression, post) {
       var close;
       helpers.logVerbose('match 2');
       updated = true;

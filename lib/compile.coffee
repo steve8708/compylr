@@ -262,7 +262,7 @@ compile = (options) ->
       # locals
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\slocals="[^"]*"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
+      .replace(/<[^>]*?\slocals="[^"]*?"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
         helpers.logVerbose 'match 2'
         updated = true
 

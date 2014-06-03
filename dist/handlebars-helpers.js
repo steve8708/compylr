@@ -34,7 +34,7 @@ module.exports = function(handlebars) {
     }
     return ' ' + out.join(' ') + ' ';
   });
-  registerHelper("locals", function(expression, options) {
+  handlebars.registerHelper("locals", function(expression, options) {
     var ctx, key, locals, value;
     locals = helpers.safeEvalWithContext(expression, this);
     ctx = _.clone(this);

@@ -341,7 +341,7 @@ compile = (options) ->
       .replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
         # TODO: modify class attributes based on object here
 
-        helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
+        helpers.logVerbose 'match 8'
         type = attrName.substr 3 # 'class' or 'style'
 
         # TODO: need to support class without duplicating class attribute all the time

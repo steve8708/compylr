@@ -271,11 +271,7 @@ compile = function(options) {
       return "" + match + " ng-include=\"'" + templateName + "'\" ng-controller=\"" + ctrlName + "Ctrl\" ";
     }).replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
-      helpers.logVerbose('match 8', {
-        tagName: tagName,
-        attrName: attrName,
-        attrVal: attrVal
-      });
+      helpers.logVerbose('match 8');
       type = attrName.substr(3);
       if (type === 'class') {
         return match;

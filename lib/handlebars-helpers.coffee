@@ -27,9 +27,8 @@ module.exports = (handlebars) ->
 
   registerHelper "locals", (expression, options) ->
     locals = helpers.safeEvalWithContext expression, @
-    ctx = _.clone @
     for key, value of locals
-      ctx[key] = value
+      ctx[key] = helpers.safeEvalWithContext value, @
 
     options.fn ctx, options
 

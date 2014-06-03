@@ -263,11 +263,13 @@ compile = (options) ->
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       .replace(/<[^>]*?\slocals="[^"]*?"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
-        helpers.logVerbose 'match 2'
+        helpers.logVerbose 'match 11'
         updated = true
 
         expression = expression.trim()
         close = getCloseTag match
+
+        console.log expression
 
         if close
           """{{#locals "#{expression}"}}\n  #{close.before.replace /\slocals=/, ' data-locals='}\n{{/locals}}\n#{close.after}"""
@@ -321,27 +323,43 @@ compile = (options) ->
       )
 
 
+      # component="foobar"
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      #
+      # TODO: remove these hardcoded items for us and have a compylr.add regex, replace
+      #
+      .replace(/\scomponent="([\s\S]*?)"/g, (match, componentName) ->
+        ctrlName = _.str.classify componentName
+        templateName = "modules/components/#{componentName}/#{componentName}.tpl.html"
+
+        """#{match} ng-include="'#{templateName}'" ng-controller="#{ctrlName}Ctrl" """
+      )
+
+
       # ng-class, ng-style, bo-class, bo-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      .replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
+        # TODO: modify class attributes based on object here
 
-      # TODO: need to do this in a way that does not duplicate class and style attributes
-      #
-      # .replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
-      #   # TODO: modify class attributes based on object here
-      #
-      #   helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
-      #   updated = true
-      #   type = attrName.substr 3 # 'class' or 'style'
-      #   typeMatch = match.match new RegExp "\\s#{type}=\"([\\s\\S]*?)\""
-      #   typeStr = typeMatch and typeMatch[0].substr(1) or "#{type}=\"\""
-      #   typeStrOpen = typeStr.substr 0, typeStr.length - 1
-      #   typeExpressionStr = """{{#{type}Expression "#{attrVal}"}}"""
-      #   if typeMatch
-      #     match = match.replace typeMatch, ''
-      #   match = match.replace new RegExp("\\s(ng|bo)-#{type}"), "data-$1-#{type}"
-      #
-      #   match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
-      # )
+        helpers.logVerbose 'match 8', tagName: tagName, attrName: attrName, attrVal: attrVal
+        type = attrName.substr 3 # 'class' or 'style'
+
+        # TODO: need to support class without duplicating class attribute all the time
+        #       style is permitted because inline styles shouldn't ever be used so
+        #       attribute duplication shouldn't happen
+        return match if type is 'class'
+
+        updated = true
+        typeMatch = match.match new RegExp "\\s#{type}=\"([\\s\\S]*?)\""
+        typeStr = typeMatch and typeMatch[0].substr(1) or "#{type}=\"\""
+        typeStrOpen = typeStr.substr 0, typeStr.length - 1
+        typeExpressionStr = """{{#{type}Expression "#{attrVal}"}}"""
+        if typeMatch
+          match = match.replace typeMatch, ''
+        match = match.replace new RegExp("\\s(ng|bo)-#{type}"), "data-$1-#{type}"
+
+        match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
+      )
 
 
       # attr="{{interpolation}}"

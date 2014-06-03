@@ -236,10 +236,11 @@ compile = function(options) {
       }
     }).replace(/<[^>]*?\slocals="[^"]*?"[\s\S]*?>([\S\s]+)/g, function(match, expression, post) {
       var close;
-      helpers.logVerbose('match 2');
+      helpers.logVerbose('match 11');
       updated = true;
       expression = expression.trim();
       close = getCloseTag(match);
+      console.log(expression);
       if (close) {
         return "{{#locals \"" + expression + "\"}}\n  " + (close.before.replace(/\slocals=/, ' data-locals=')) + "\n{{/locals}}\n" + close.after;
       } else {
@@ -263,6 +264,32 @@ compile = function(options) {
         match = match.replace(attrVal, "{{expression \"" + attrVal + "\"}}");
       }
       return match.replace(attrName, attrName.replace(/(ng|bo)-/, ''));
+    }).replace(/\scomponent="([\s\S]*?)"/g, function(match, componentName) {
+      var ctrlName, templateName;
+      ctrlName = _.str.classify(componentName);
+      templateName = "modules/components/" + componentName + "/" + componentName + ".tpl.html";
+      return "" + match + " ng-include=\"'" + templateName + "'\" ng-controller=\"" + ctrlName + "Ctrl\" ";
+    }).replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
+      var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
+      helpers.logVerbose('match 8', {
+        tagName: tagName,
+        attrName: attrName,
+        attrVal: attrVal
+      });
+      type = attrName.substr(3);
+      if (type === 'class') {
+        return match;
+      }
+      updated = true;
+      typeMatch = match.match(new RegExp("\\s" + type + "=\"([\\s\\S]*?)\""));
+      typeStr = typeMatch && typeMatch[0].substr(1) || ("" + type + "=\"\"");
+      typeStrOpen = typeStr.substr(0, typeStr.length - 1);
+      typeExpressionStr = "{{" + type + "Expression \"" + attrVal + "\"}}";
+      if (typeMatch) {
+        match = match.replace(typeMatch, '');
+      }
+      match = match.replace(new RegExp("\\s(ng|bo)-" + type), "data-$1-" + type);
+      return match.replace("<" + tagName, "<" + tagName + " " + typeStrOpen + " " + typeExpressionStr + "\" ");
     }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, function(match, attrName, attrVal) {
       var newAttrVal, trimmedMatch;
       helpers.logVerbose('match 5', {

@@ -262,14 +262,12 @@ compile = (options) ->
       # locals
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\slocals="[^"]*?"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
+      .replace(/<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
         helpers.logVerbose 'match 11'
         updated = true
 
         expression = expression.trim()
         close = getCloseTag match
-
-        console.log expression
 
         if close
           """{{#locals "#{expression}"}}\n  #{close.before.replace /\slocals=/, ' data-locals='}\n{{/locals}}\n#{close.after}"""

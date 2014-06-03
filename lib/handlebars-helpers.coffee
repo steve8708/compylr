@@ -25,6 +25,14 @@ module.exports = (handlebars) ->
       out.push key if val
     ' ' + out.join(' ') + ' '
 
+  registerHelper "locals", (expression, options) ->
+    locals = helpers.safeEvalWithContext expression, @
+    ctx = _.clone @
+    for key, value of locals
+      ctx[key] = value
+
+    options.fn ctx, options
+
   handlebars.registerHelper "ifExpression", (expression, options) ->
     value = helpers.safeEvalWithContext expression, @
 

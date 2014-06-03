@@ -296,6 +296,8 @@ compile = (options) ->
         helpers.logVerbose 'match 4'
         updated = true
 
+        # bo-src and bo-href don't use interpolations and use expressions directly so we
+        # we need to wrap them
         if _.contains attrName, 'bo-'
           match = match.replace attrVal, """{{expression "#{attrVal}"}}"""
 

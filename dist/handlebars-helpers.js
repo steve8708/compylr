@@ -35,12 +35,11 @@ module.exports = function(handlebars) {
     return ' ' + out.join(' ') + ' ';
   });
   registerHelper("locals", function(expression, options) {
-    var ctx, key, locals, value;
+    var key, locals, value;
     locals = helpers.safeEvalWithContext(expression, this);
-    ctx = _.clone(this);
     for (key in locals) {
       value = locals[key];
-      ctx[key] = value;
+      ctx[key] = helpers.safeEvalWithContext(value, this);
     }
     return options.fn(ctx, options);
   });

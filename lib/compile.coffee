@@ -59,7 +59,7 @@ beautify = (str) ->
 
   str = str
     .replace /<(\/?#)(.*)>/g, (match, modifier, body) ->
-      modifier = '/' if modifier is '/#'√
+      modifier = '/' if modifier is '/#'
       "{{#{modifier}#{body}}}"
 
   pretty = beautifyHtml str,
@@ -295,6 +295,10 @@ compile = (options) ->
       .replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
         updated = true
+
+        if _.contains attrName, 'bo-'
+          match = match.replace attrVal, """{{expression "#{attrVal}"}}"""
+
         match.replace attrName, attrName.replace /(ng|bo)-/, ''
       )
 

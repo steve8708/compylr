@@ -75,7 +75,7 @@ module.exports = (grunt) ->
         files: ['package.json']
         commit: true
         commitMessage: 'chore(release): v%VERSION%'
-        commitFiles: ['package.json']
+        commitFiles: ['package.json', '<%= buildDir %>/**']
         createTag: true
         tagName: 'v%VERSION%'
         tagMessage: 'Version %VERSION%'
@@ -161,7 +161,11 @@ module.exports = (grunt) ->
 
   grunt.initConfig taskConfig
   grunt.renameTask 'watch', 'delta'
+
   grunt.registerTask 'build', 'coffee:source'
+  grunt.registerTask 'release:patch', ['coffee:source', 'bump:patch']
+  grunt.registerTask 'release:minor', ['coffee:source', 'bump:minor']
+  grunt.registerTask 'release:major', ['coffee:source', 'bump:major']
 
 
   ###

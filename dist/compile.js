@@ -266,8 +266,11 @@ compile = function(options) {
       return match.replace(attrName, attrName.replace(/(ng|bo)-/, ''));
     }).replace(/\scomponent="([\s\S]*?)"/g, function(match, componentName) {
       var ctrlName, templateName;
+      helpers.logVerbose('match 12');
+      updated = true;
       ctrlName = _.str.classify(componentName);
       templateName = "modules/components/" + componentName + "/" + componentName + ".tpl.html";
+      match = match.replace(/\scomponent=/, ' data-component=');
       return "" + match + " ng-include=\"'" + templateName + "'\" ng-controller=\"" + ctrlName + "Ctrl\" ";
     }).replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;

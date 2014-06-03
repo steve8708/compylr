@@ -329,8 +329,12 @@ compile = (options) ->
       # TODO: remove these hardcoded items for us and have a compylr.add regex, replace
       #
       .replace(/\scomponent="([\s\S]*?)"/g, (match, componentName) ->
+        helpers.logVerbose 'match 12'
+        updated = true
         ctrlName = _.str.classify componentName
         templateName = "modules/components/#{componentName}/#{componentName}.tpl.html"
+
+        match = match.replace /\scomponent=/, ' data-component='
 
         """#{match} ng-include="'#{templateName}'" ng-controller="#{ctrlName}Ctrl" """
       )

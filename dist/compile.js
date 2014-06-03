@@ -241,7 +241,7 @@ compile = function(options) {
       expression = expression.trim();
       close = getCloseTag(match);
       if (close) {
-        return "{{#locals \"" + expression + "\"}}\n  " + close.before + "\n{{/locals}}\n" + close.after;
+        return "{{#locals \"" + expression + "\"}}\n  " + (close.before.replace(/\slocals=/, ' data-locals=')) + "\n{{/locals}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file);
       }

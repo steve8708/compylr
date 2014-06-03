@@ -182,6 +182,23 @@ compile = (options) ->
 
     interpolated = interpolated
 
+      # locals
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+      .replace(/<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
+        helpers.logVerbose 'match 11'
+        updated = true
+
+        expression = expression.trim()
+        close = getCloseTag match
+
+        if close
+          """{{#locals "#{expression}"}}\n  #{close.before.replace /\slocals=/, ' data-locals='}\n{{/locals}}\n#{close.after}"""
+        else
+          throw new Error 'Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file
+      )
+
+
       # ng-repeat
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -232,24 +249,6 @@ compile = (options) ->
         else
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
       )
-
-
-      # locals
-      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-      .replace(/<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
-        helpers.logVerbose 'match 11'
-        updated = true
-
-        expression = expression.trim()
-        close = getCloseTag match
-
-        if close
-          """{{#locals "#{expression}"}}\n  #{close.before.replace /\slocals=/, ' data-locals='}\n{{/locals}}\n#{close.after}"""
-        else
-          throw new Error 'Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file
-      )
-
 
       # ng-if, bo-if
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

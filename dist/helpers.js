@@ -1,4 +1,4 @@
-var config, he, esprima, evalFnCache, evaluate, expressionCache, i, _,
+var config, esprima, evalFnCache, evaluate, expressionCache, he, i, _,
   __slice = [].slice;
 
 esprima = require('esprima');

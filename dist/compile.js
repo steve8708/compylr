@@ -39,7 +39,7 @@ getRefNames = function(str, options) {
       }
     } else {
       depth++;
-      repeat = tag.match(/\sng-repeat="(.*?)"/g);
+      repeat = tag.match(/\s(bo|ng)-repeat="(.*?)"/g);
       if (!repeat) {
         continue;
       }
@@ -129,7 +129,7 @@ getCloseTag = function(string) {
 
 processFilters = function(str) {
   var filterSplit;
-  filterSplit = str.match(/[^\|]+/);
+  filterSplit = str.split(/\s\|\s/);
   return {
     filters: filterSplit.slice(1).join(' | '),
     replaced: filterSplit[0]
@@ -195,7 +195,7 @@ compile = function(options) {
     if (i++ > maxIters) {
       throw new Error('infinite update loop');
     }
-    interpolated = interpolated.replace(/<[^>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, text, post) {
+    interpolated = interpolated.replace(/<[^>]*?\s(bo|ng)-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, type, text, post) {
       var close, expressionKeypath, propName, repeatExp, repeatExpSplit;
       helpers.logVerbose('match 1');
       updated = true;
@@ -209,7 +209,7 @@ compile = function(options) {
       close = getCloseTag(match);
       expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
       if (close) {
-        return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n" + close.after;
+        return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\s(bo|ng)-repeat/, ' data-$1-repeat')) + "\n{{/forEach}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
@@ -230,7 +230,7 @@ compile = function(options) {
       }
       close = getCloseTag(match);
       if (close) {
-        return "{{#" + tagName + " " + varName + "}}\n" + (close.before.replace(/\s(ng|bo)-if=/, ' data-$1-if=')) + "\n{{/" + tagName + "}}\n" + close.after;
+        return "{{#" + tagName + " " + varName + "}}\n" + (close.before.replace(/\s(ng|bo)-if=/, " data-$1-if=")) + "\n{{/" + tagName + "}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file);
       }
@@ -249,46 +249,6 @@ compile = function(options) {
       helpers.logVerbose('match 4');
       updated = true;
       return match.replace(attrName, attrName.replace(/(ng|bo)-/, ''));
-    }).replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
-      var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
-      helpers.logVerbose('match 8', {
-        tagName: tagName,
-        attrName: attrName,
-        attrVal: attrVal
-      });
-      updated = true;
-      type = attrName.substr(3);
-      typeMatch = match.match(new RegExp("\\s" + type + "=\"([\\s\\S]*?)\""));
-      typeStr = typeMatch && typeMatch[0].substr(1) || ("" + type + "=\"\"");
-      typeStrOpen = typeStr.substr(0, typeStr.length - 1);
-      typeExpressionStr = "{{" + type + "Expression \"" + attrVal + "\"}}";
-      if (typeMatch) {
-        match = match.replace(typeMatch, '');
-      }
-      match = match.replace(new RegExp("\\s(ng|bo)-" + type), "data-$1-" + type);
-      return match.replace("<" + tagName, "<" + tagName + " " + typeStrOpen + " " + typeExpressionStr + "\" ");
-    }).replace(/<(\w+)[^>]*(\sclick-action\s*=\s*)"([^>"]+)"[\s\S]*/, function(match, tagName, attrName, attrVal) {
-      var anchorStr, beforeStr, close, hrefStr, index, key, refs, value;
-      helpers.logVerbose('match 7', {
-        attrName: attrName,
-        attrVal: attrVal
-      });
-      updated = true;
-      hrefStr = "href=\"{{urlPath}}?action=" + (encodeURIComponent(attrVal)) + "\" ";
-      anchorStr = escapeDoubleBraces("<a " + hrefStr + " data-ng-" + (htmlEscapeCurlyBraces(hrefStr)));
-      index = interpolated.indexOf(match);
-      beforeStr = interpolated.substr(0, index);
-      refs = getRefNames(beforeStr);
-      for (key in refs) {
-        value = refs[key];
-        attrVal = attrVal.replace(key, "" + value + "[{{@" + key + "Index}}]");
-      }
-      if (tagName === 'a') {
-        return match.replace("<a", anchorStr).replace(attrName, escapeBasicAttribute(attrName));
-      } else {
-        close = getCloseTag(match);
-        return "" + anchorStr + ">\n" + (close.before.replace(attrName, escapeBasicAttribute(attrName))) + "\n</a>\n" + close.after;
-      }
     }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, function(match, attrName, attrVal) {
       var newAttrVal, trimmedMatch;
       helpers.logVerbose('match 5', {
@@ -351,6 +311,9 @@ compile = function(options) {
       helpers.logVerbose('match 7');
       updated = true;
       str = match.replace(type, "data-" + type);
+      if (expression.length !== expression.match(/[\w\.]+/)[0].length) {
+        expression = "expression '" + (expression.replace(/'/g, "\\'")) + "'";
+      }
       expressionTag = _(type).contains('-html') ? escapeTripleBraces("{{{" + expression + "}}}") : escapeDoubleBraces("{{" + expression + "}}");
       return str = str.replace(closeTag, expressionTag + closeTag);
     });
@@ -377,7 +340,7 @@ compile = function(options) {
           prefix = 'expression "';
           suffix = '"';
         }
-        return escapeDoubleBraces("<span data-ng-bind=\"" + body + "\">{{" + prefix + body + suffix + "}}</span>");
+        return escapeDoubleBraces("{{" + prefix + body + suffix + "}}");
       } else {
         return escapeDoubleBraces(match);
       }

@@ -248,6 +248,9 @@ compile = function(options) {
     }).replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, function(match, attrName, attrVal) {
       helpers.logVerbose('match 4');
       updated = true;
+      if (_.contains(attrName, 'bo-')) {
+        match = match.replace(attrVal, "{{expression \"" + attrVal + "\"}}");
+      }
       return match.replace(attrName, attrName.replace(/(ng|bo)-/, ''));
     }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, function(match, attrName, attrVal) {
       var newAttrVal, trimmedMatch;

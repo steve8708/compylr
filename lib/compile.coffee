@@ -424,7 +424,7 @@ compile = (options) ->
       # ng-bind, ng-bind-html, bo-bind, bo-html
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /<[^>]*\s((?:ng|bo)-bind|ng-bind-html|bo-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
+      .replace /<[^>]*\s((?:ng|bo)-bind|ng-bind-html|bo-html)\s*=\s*"([^"]+?)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"
@@ -439,7 +439,7 @@ compile = (options) ->
   updated = true
   i = 0
   while updated
-    updated = false 
+    updated = false
     throw new Error 'infinite update loop' if i++ > maxIters
 
     interpolated = interpolated

@@ -333,7 +333,7 @@ compile = function(options) {
       hbsTagType = _(showOrHide).contains('-show') ? 'hbsShow' : 'hbsHide';
       match = match.replace(' ' + showOrHide, " data-" + showOrHide);
       return "" + match + " {{" + hbsTagType + " \"" + expression + "\"}}";
-    }).replace(/<[^>]*\s((?:ng|bo)-bind|ng-bind-html|bo-html)\s*=\s*"([^"]+)"[^>]*>[^<]*(<.*?>)/g, function(match, type, expression, closeTag) {
+    }).replace(/<[^>]*\s((?:ng|bo)-bind|ng-bind-html|bo-html)\s*=\s*"([^"]+?)"[^>]*>[^<]*(<.*?>)/g, function(match, type, expression, closeTag) {
       var expressionTag, str;
       helpers.logVerbose('match 7');
       updated = true;

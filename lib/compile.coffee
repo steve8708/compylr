@@ -299,7 +299,7 @@ compile = (options) ->
         # bo-src and bo-href don't use interpolations and use expressions directly so we
         # we need to wrap them
         if _.contains attrName, 'bo-'
-          match = match.replace attrVal, """{{expression "#{attrVal}"}}"""
+          match = match.replace attrVal, """{{expression "#{attrVal.split('|')[0].trim().replace /'/g, "\\'" }"}}"""
 
         match.replace attrName, attrName.replace /(ng|bo)-/, ''
       )
@@ -368,7 +368,7 @@ compile = (options) ->
           newAttrVal = attrVal.replace /\{\{([\s\S]+?)\}\}/g, (match, expression) ->
             match = match.trim()
             if expression.length isnt expression.match(/[\w\.]+/)[0].length
-              "{{expression '#{expression.replace /'/g, "\\'"}'}}"
+              "{{expression '#{expression.split('|')[0].trim().replace /'/g, "\\'"}'}}"
             else
               match.replace /\[|\]/g, '.'
 

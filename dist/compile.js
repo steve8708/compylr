@@ -200,10 +200,10 @@ compile = function(options) {
       updated = true;
       repeatExp = text;
       repeatExp = repeatExp.trim().replace(/\(\s*(\w+?)\s*,\s*(\w+?)\s*\)/g, '$1,$2');
-      repeatExpSplit = _.compact(repeatExp.split('|')[0].split('track by')[0].split(/\s+/));
+      repeatExpSplit = _.compact(repeatExp.split(' | ')[0].split('track by')[0].split(/\s+/));
       propName = repeatExpSplit[0];
       repeatExpSplit[0] = "'" + repeatExpSplit[0] + "'";
-      repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExpSplit).replace(/'/g, '"')) + "'";
+      repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExpg).replace(/'/g, '"')) + "'";
       repeatExp = repeatExpSplit.join(' ');
       close = getCloseTag(match);
       expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
@@ -248,7 +248,7 @@ compile = function(options) {
       helpers.logVerbose('match 4');
       updated = true;
       if (_.contains(attrName, 'bo-')) {
-        match = match.replace(attrVal, "{{expression \"" + (attrVal.split('|')[0].trim().replace(/'/g, "\\'")) + "\"}}");
+        match = match.replace(attrVal, "{{expression \"" + (attrVal.split(' | ')[0].trim().replace(/'/g, "\\'")) + "\"}}");
       }
       return match.replace(attrName, attrName.replace(/(ng|bo)-/, ''));
     }).replace(/\scomponent="([\s\S]*?)"/g, function(match, componentName) {
@@ -294,7 +294,7 @@ compile = function(options) {
         newAttrVal = attrVal.replace(/\{\{([\s\S]+?)\}\}/g, function(match, expression) {
           match = match.trim();
           if (expression.length !== expression.match(/[\w\.]+/)[0].length) {
-            return "{{expression '" + (expression.split('|')[0].trim().replace(/'/g, "\\'")) + "'}}";
+            return "{{expression '" + (expression.split(' | ')[0].trim().replace(/'/g, "\\'")) + "'}}";
           } else {
             return match.replace(/\[|\]/g, '.');
           }

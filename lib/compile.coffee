@@ -199,7 +199,7 @@ compile = (options) ->
         # and split by whitespace and compact the result (remove any empty
         # strings in the list) as well as the 'track by' option in angular
         repeatExpSplit = _.compact repeatExp
-          .split('|')[0]
+          .split(' | ')[0]
           .split('track by')[0]
           .split /\s+/
 
@@ -211,7 +211,7 @@ compile = (options) ->
 
         # Wrap the expression value in strings for 'bar' in
         # {{#forEach 'foo' in 'bar'}}
-        repeatExpSplit[repeatExpSplit.length - 1] = "'#{_.last(repeatExpSplit).replace /'/g, '"'}'"
+        repeatExpSplit[repeatExpSplit.length - 1] = "'#{_.last(repeatExpg).replace /'/g, '"'}'"
 
         repeatExp = repeatExpSplit.join ' '
         close = getCloseTag match
@@ -299,7 +299,7 @@ compile = (options) ->
         # bo-src and bo-href don't use interpolations and use expressions directly so we
         # we need to wrap them
         if _.contains attrName, 'bo-'
-          match = match.replace attrVal, """{{expression "#{attrVal.split('|')[0].trim().replace /'/g, "\\'" }"}}"""
+          match = match.replace attrVal, """{{expression "#{attrVal.split(' | ')[0].trim().replace /'/g, "\\'" }"}}"""
 
         match.replace attrName, attrName.replace /(ng|bo)-/, ''
       )
@@ -368,7 +368,7 @@ compile = (options) ->
           newAttrVal = attrVal.replace /\{\{([\s\S]+?)\}\}/g, (match, expression) ->
             match = match.trim()
             if expression.length isnt expression.match(/[\w\.]+/)[0].length
-              "{{expression '#{expression.split('|')[0].trim().replace /'/g, "\\'"}'}}"
+              "{{expression '#{expression.split(' | ')[0].trim().replace /'/g, "\\'"}'}}"
             else
               match.replace /\[|\]/g, '.'
 

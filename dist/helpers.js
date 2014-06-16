@@ -41,7 +41,12 @@ module.exports = {
       thisArg = context;
     }
     expression = he.decode(expression);
-    fn = evalFnCache[expression] || (evalFnCache[expression] = new Function('context', "with (context) { return " + expression + " }"));
+    try {
+      fn = evalFnCache[expression] || (evalFnCache[expression] = new Function('context', "with (context) { return " + expression + " }"));
+    } catch (_error) {
+      error = _error;
+      this.warnVerbose('Failed to compile expression', error.message, expression);
+    }
     try {
       output = fn.call(thisArg, context);
     } catch (_error) {

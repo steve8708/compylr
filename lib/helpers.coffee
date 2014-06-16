@@ -19,7 +19,11 @@ module.exports =
   safeEvalWithContext: (expression = '', context, clone, thisArg = context, returnNewContext) ->
     expression = he.decode expression
 
-    fn = evalFnCache[expression] or= new Function 'context', "with (context) { return #{expression} }"
+    try
+      fn = evalFnCache[expression] or= new Function 'context', "with (context) { return #{expression} }"
+    catch error
+      @warnVerbose 'Failed to compile expression', error.message, expression
+      
     try
       output = fn.call thisArg, context
     catch error

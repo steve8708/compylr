@@ -211,14 +211,14 @@ compile = (options) ->
 
         # Wrap the expression value in strings for 'bar' in
         # {{#forEach 'foo' in 'bar'}}
-        repeatExpSplit[repeatExpSplit.length - 1] = "'#{_.last(repeatExp).replace /'/g, '"'}'"
+        repeatExpSplit[repeatExpSplit.length - 1] = "'#{_.last(repeatExpSplit).replace /'/g, '"'}'"
 
         repeatExp = repeatExpSplit.join ' '
         close = getCloseTag match
 
         # The real keypath of what we are looping through with quotes removed
         # I.e. for {{#forEach 'foo' in 'bar'}} this would be: bar
-        expressionKeypath = _.last repeatExpSplit
+        expressionKeypath = _.last(repeatExpSplit)[1...-1]
 
 
         if close

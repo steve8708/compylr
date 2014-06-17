@@ -203,10 +203,10 @@ compile = function(options) {
       repeatExpSplit = _.compact(repeatExp.split(' | ')[0].split('track by')[0].split(/\s+/));
       propName = repeatExpSplit[0];
       repeatExpSplit[0] = "'" + repeatExpSplit[0] + "'";
-      repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExp).replace(/'/g, '"')) + "'";
+      repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExpSplit).replace(/'/g, '"')) + "'";
       repeatExp = repeatExpSplit.join(' ');
       close = getCloseTag(match);
-      expressionKeypath = _.last(repeatExpSplit);
+      expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
       if (close) {
         return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\s(bo|ng)-repeat/, ' data-$1-repeat')) + "\n{{/forEach}}\n" + close.after;
       } else {

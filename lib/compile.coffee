@@ -218,7 +218,7 @@ compile = (options) ->
 
         # The real keypath of what we are looping through with quotes removed
         # I.e. for {{#forEach 'foo' in 'bar'}} this would be: bar
-        expressionKeypath = _.last(repeatExpSplit)[1...-1]
+        expressionKeypath = _.last repeatExpSplit
 
 
         if close

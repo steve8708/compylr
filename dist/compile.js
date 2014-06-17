@@ -206,7 +206,7 @@ compile = function(options) {
       repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExp).replace(/'/g, '"')) + "'";
       repeatExp = repeatExpSplit.join(' ');
       close = getCloseTag(match);
-      expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
+      expressionKeypath = _.last(repeatExpSplit);
       if (close) {
         return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\s(bo|ng)-repeat/, ' data-$1-repeat')) + "\n{{/forEach}}\n" + close.after;
       } else {

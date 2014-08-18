@@ -7,6 +7,13 @@ helpers = require('./helpers');
 
 module.exports = function(handlebars) {
   handlebars || (handlebars = require('handlebars'));
+  handlebars.registerHelper('dynamicTemplate', function() {
+    var map, options, template, _i;
+    template = arguments[0], map = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), options = arguments[_i++];
+    template = helpers.safeEvalWithContext(template, this) || '';
+    template = template.replace('.tpl.html', '');
+    return new handlebars.SafeString(handlebars.partials[template](this));
+  });
   handlebars.registerHelper("eachExpression", function(name, _in, expression, options) {
     var value;
     value = helpers.safeEvalWithContext(expression, this);

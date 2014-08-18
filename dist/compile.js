@@ -243,7 +243,7 @@ compile = function(options) {
       helpers.logVerbose('match 10');
       updated = true;
       match = match.replace(/\sng-include=/, ' data-ng-include=');
-      return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate " + includePath + "}}\n</span>");
+      return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate '" + includePath + "'}}\n</span>");
     }).replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, function(match, attrName, attrVal) {
       helpers.logVerbose('match 4');
       updated = true;

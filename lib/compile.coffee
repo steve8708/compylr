@@ -283,7 +283,7 @@ compile = (options) ->
         escapeDoubleBraces """
           #{match}
           <span data-ng-non-bindable>
-            {{dynamicTemplate #{includePath}}}
+            {{dynamicTemplate '#{includePath}'}}
           </span>
         """
       )

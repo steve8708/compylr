@@ -7,6 +7,11 @@ module.exports = (handlebars) ->
   # Compylr Handlebars Helpers
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  handlebars.registerHelper 'dynamicTemplate', (template, map..., options) ->
+    template = helpers.safeEvalWithContext(template, @) or ''
+    template = template.replace '.tpl.html', ''
+    new handlebars.SafeString handlebars.partials[template] @
+
   handlebars.registerHelper "eachExpression", (name, _in, expression, options) ->
     value = helpers.safeEvalWithContext expression, @
     instance.helpers.forEach name, _in, value, options

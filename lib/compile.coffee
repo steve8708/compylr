@@ -262,7 +262,7 @@ compile = (options) ->
       # ng-include
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\sng-include="'(.*)'"[^>]*?>/, (match, includePath, post) ->
+      .replace(/<[^>]*?\sng-include="'([^']*?)'"[^>]*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 3'
         updated = true
         includePath = includePath.replace '.tpl.html', ''
@@ -276,14 +276,14 @@ compile = (options) ->
       )
 
       # ng-include expressions
-      .replace(/<[^>]*?\sng-include="([^']+?)".*?>/, (match, includePath, post) ->
+      .replace(/<[^>]*?\sng-include="(.*?\+.*?|[^']*?)"[^>]*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 10'
         updated = true
         match = match.replace /\sng-include=/, ' data-ng-include='
         escapeDoubleBraces """
           #{match}
           <span data-ng-non-bindable>
-            {{dynamicTemplate '#{includePath}'}}
+            {{dynamicTemplate "#{includePath}"}}
           </span>
         """
       )
@@ -314,6 +314,8 @@ compile = (options) ->
         helpers.logVerbose 'match 12'
         updated = true
         ctrlName = _.str.classify componentName
+        componentName = componentName.replace '{{', "'+"
+        componentName = componentName.replace '}}', "+'"
         templateName = "modules/components/#{componentName}/#{componentName}.tpl.html"
 
         match = match.replace /\scomponent=/, ' data-component='

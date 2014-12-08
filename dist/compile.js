@@ -233,17 +233,17 @@ compile = function(options) {
       } else {
         throw new Error('Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file);
       }
-    }).replace(/<[^>]*?\sng-include="'(.*)'"[^>]*?>/, function(match, includePath, post) {
+    }).replace(/<[^>]*?\sng-include="'([^']*?)'"[^>]*?>/, function(match, includePath, post) {
       helpers.logVerbose('match 3');
       updated = true;
       includePath = includePath.replace('.tpl.html', '');
       match = match.replace(/\sng-include=/, ' data-ng-include=');
       return "" + match + "\n<span data-ng-non-bindable>\n  {{> " + includePath + "}}\n</span>";
-    }).replace(/<[^>]*?\sng-include="([^']+?)".*?>/, function(match, includePath, post) {
+    }).replace(/<[^>]*?\sng-include="(.*?\+.*?|[^']*?)"[^>]*?>/, function(match, includePath, post) {
       helpers.logVerbose('match 10');
       updated = true;
       match = match.replace(/\sng-include=/, ' data-ng-include=');
-      return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate '" + includePath + "'}}\n</span>");
+      return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate \"" + includePath + "\"}}\n</span>");
     }).replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, function(match, attrName, attrVal) {
       helpers.logVerbose('match 4');
       updated = true;
@@ -256,6 +256,8 @@ compile = function(options) {
       helpers.logVerbose('match 12');
       updated = true;
       ctrlName = _.str.classify(componentName);
+      componentName = componentName.replace('{{', "'+");
+      componentName = componentName.replace('}}', "+'");
       templateName = "modules/components/" + componentName + "/" + componentName + ".tpl.html";
       match = match.replace(/\scomponent=/, ' data-component=');
       return "" + match + " ng-include=\"'" + templateName + "'\" ng-controller=\"" + ctrlName + "Ctrl\" ";

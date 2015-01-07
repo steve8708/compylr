@@ -185,6 +185,7 @@ compile = function(options) {
   } else {
     file = options.string || options;
   }
+  file = file.replace(/::/g, '');
   updated = true;
   interpolated = escapeTripleBraces(stripComments(file));
   i = 0;

@@ -169,6 +169,7 @@ compile = (options) ->
   else
     file = options.string or options
 
+  file = file.replace /::/g, ''
   updated = true
   interpolated = escapeTripleBraces stripComments file
   i = 0

@@ -276,7 +276,13 @@ CLI (coming soon...)
 `compylr src/path/* dest/path/*`  
 `./node_modules/.bin/compylr src/path/* dest/path/*`
 
-<!-- 
+## Development
+View and run `example/script.coffee` for an example on how to run uncompiled
+coffeescript on a sample file. Modify `example/sample-angular-template.tpl.html`
+then run `coffee example/script.coffee` to verify that your changes work as
+expected.
+
+<!--
 ## Contributing
 We need more adapters! Node + express is built. We need python, ruby, and more!
  -->

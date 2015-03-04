@@ -9,7 +9,8 @@ module.exports = (handlebars) ->
 
   handlebars.registerHelper 'dynamicTemplate', (template, map..., options) ->
     template = helpers.safeEvalWithContext(template, @) or ''
-    template = template.replace '.tpl.html', ''
+    # replace the extension and leading slash
+    template = template.replace('.tpl.html', '').replace /^\//, ''
     new handlebars.SafeString handlebars.partials[template] @
 
   handlebars.registerHelper "eachExpression", (name, _in, expression, options) ->

@@ -199,9 +199,11 @@ compile = (options) ->
         # Strip out any filters (e.g. ng-repeat="foo in bar | limitTo: 10")
         # and split by whitespace and compact the result (remove any empty
         # strings in the list) as well as the 'track by' option in angular
-        repeatExpSplit = _.compact repeatExp
+        repeatExp = _.compact repeatExp if typeof repeatExp isnt 'string'
+
+        repeatExpSplit = repeatExp
           .split(' | ')[0]
-          .split('track by')[0]
+          .split('track by')[0].trim()
           .split /\s+/
 
         propName = repeatExpSplit[0]
@@ -266,7 +268,8 @@ compile = (options) ->
       .replace(/<[^>]*?\sng-include="'([^']*?)'"[^>]*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 3'
         updated = true
-        includePath = includePath.replace '.tpl.html', ''
+         # take out the extension and leading slash for handlebars
+        includePath = includePath.replace('.tpl.html', '').replace /^\//, ''
         match = match.replace /\sng-include=/, ' data-ng-include='
         """
           #{match}

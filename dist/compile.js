@@ -179,6 +179,7 @@ unescapeTripleBraces = function(str) {
 compile = function(options) {
   var beautified, file, filePath, i, interpolated, maxIters, updated;
   filePath = argv.file || options.file;
+  filePath = filePath != null ? filePath.replace(/^\//, '') : void 0;
   if (filePath) {
     helpers.logVerbose('filePath', filePath);
     file = fs.readFileSync(filePath, 'utf8');
@@ -201,7 +202,10 @@ compile = function(options) {
       updated = true;
       repeatExp = text;
       repeatExp = repeatExp.trim().replace(/\(\s*(\w+?)\s*,\s*(\w+?)\s*\)/g, '$1,$2');
-      repeatExpSplit = _.compact(repeatExp.split(' | ')[0].split('track by')[0].split(/\s+/));
+      if (typeof repeatExp !== 'string') {
+        repeatExp = _.compact(repeatExp);
+      }
+      repeatExpSplit = repeatExp.split(' | ')[0].split('track by')[0].trim().split(/\s+/);
       propName = repeatExpSplit[0];
       repeatExpSplit[0] = "'" + repeatExpSplit[0] + "'";
       repeatExpSplit[repeatExpSplit.length - 1] = "'" + (_.last(repeatExpSplit).replace(/'/g, '"')) + "'";
@@ -237,7 +241,7 @@ compile = function(options) {
     }).replace(/<[^>]*?\sng-include="'([^']*?)'"[^>]*?>/, function(match, includePath, post) {
       helpers.logVerbose('match 3');
       updated = true;
-      includePath = includePath.replace('.tpl.html', '');
+      includePath = includePath.replace('.tpl.html', '').replace(/^\//, '');
       match = match.replace(/\sng-include=/, ' data-ng-include=');
       return "" + match + "\n<span data-ng-non-bindable>\n  {{> " + includePath + "}}\n</span>";
     }).replace(/<[^>]*?\sng-include="(.*?\+.*?|[^']*?)"[^>]*?>/, function(match, includePath, post) {

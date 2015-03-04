@@ -1,0 +1,14 @@
+{{#forEach 'product' in 'products'}}
+<a ng-repeat="product in products" href="products/{{product.id}}">
+
+  <img src="{{user.image}}" ng-show="foo && bar" {{hbsShow "foo && bar"}}>{{foo}}
+
+  <div ng-include="'path/to/partial'">
+    <span ng-non-bindable>
+  {{> path/to/partial}}
+</span>
+  </div>
+</a>
+{{/forEach}} {{#if foo.length}}
+<img class="small" ng-class="{ active: imgVisible }" ng-if="foo.length">{{/if}} {{#ifExpression "foo && bar"}}
+<img ng-style="{ color: mainColor }" ng-if="foo && bar">{{/ifExpression}} {{expression "foo && bar"}}

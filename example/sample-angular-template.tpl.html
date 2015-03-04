@@ -1,0 +1,13 @@
+<a ng-repeat="product in products" href="products/{{product.id}}">
+  <img src="{{user.image}}" ng-show="foo && bar">
+
+  {{foo}}
+
+  <div ng-include="'/path/to/partial'">
+  </div>
+</a>
+
+<img class="small" ng-class="{ active: imgVisible }" ng-if="foo.length">
+<img ng-style="{ color: mainColor }" ng-if="foo && bar">
+
+{{ foo && bar }}

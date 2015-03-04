@@ -11,7 +11,7 @@ module.exports = function(handlebars) {
     var map, options, template, _i;
     template = arguments[0], map = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), options = arguments[_i++];
     template = helpers.safeEvalWithContext(template, this) || '';
-    template = template.replace('.tpl.html', '');
+    template = template.replace('.tpl.html', '').replace(/^\//, '');
     return new handlebars.SafeString(handlebars.partials[template](this));
   });
   handlebars.registerHelper("eachExpression", function(name, _in, expression, options) {

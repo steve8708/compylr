@@ -317,7 +317,7 @@ compile = (options) ->
       .replace(/\scomponent="([\s\S]*?)"/g, (match, componentName) ->
         helpers.logVerbose 'match 12'
         updated = true
-        ctrlName = _.str.classify componentName
+        ctrlName = _str.classify componentName
         componentName = componentName.replace '{{', "'+"
         componentName = componentName.replace '}}', "+'"
         templateName = "modules/components/#{componentName}/#{componentName}.tpl.html"

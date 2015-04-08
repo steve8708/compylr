@@ -179,7 +179,6 @@ unescapeTripleBraces = function(str) {
 compile = function(options) {
   var beautified, file, filePath, i, interpolated, maxIters, updated;
   filePath = argv.file || options.file;
-  filePath = filePath != null ? filePath.replace(/^\//, '') : void 0;
   if (filePath) {
     helpers.logVerbose('filePath', filePath);
     file = fs.readFileSync(filePath, 'utf8');

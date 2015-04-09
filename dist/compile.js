@@ -179,7 +179,6 @@ unescapeTripleBraces = function(str) {
 compile = function(options) {
   var beautified, file, filePath, i, interpolated, maxIters, updated;
   filePath = argv.file || options.file;
-  filePath = filePath != null ? filePath.replace(/^\//, '') : void 0;
   if (filePath) {
     helpers.logVerbose('filePath', filePath);
     file = fs.readFileSync(filePath, 'utf8');
@@ -260,7 +259,7 @@ compile = function(options) {
       var ctrlName, templateName;
       helpers.logVerbose('match 12');
       updated = true;
-      ctrlName = _.str.classify(componentName);
+      ctrlName = _str.classify(componentName);
       componentName = componentName.replace('{{', "'+");
       componentName = componentName.replace('}}', "+'");
       templateName = "modules/components/" + componentName + "/" + componentName + ".tpl.html";

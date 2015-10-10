@@ -62,13 +62,15 @@ beautify = (str) ->
       modifier = '/' if modifier is '/#'
       "{{#{modifier}#{body}}}"
 
-  pretty = beautifyHtml str,
-    indent_size: 2
-    indent_inner_html: true
-    preserve_newlines: false
-
-  pretty
-
+  return str
+  # TODO: fix this, it's trying to tidy the JS within script tags
+  # and it's removing encoded chars like &lt; and &gt;
+  # pretty = htmltidy str,
+  #   indent_size: 2
+  #   indent_inner_html: true
+  #   preserve_newlines: false
+  #
+  # pretty
 
 # TODO: pretty format
 #   replace '\n' with '\n  ' where '  ' is 2 spaces * depth

@@ -66,7 +66,6 @@ htmlEscapeCurlyBraces = function(str) {
 };
 
 beautify = function(str) {
-  var pretty;
   str = str.replace(/\{\{(#|\/)([\s\S]+?)\}\}/g, function(match, type, body) {
     var modifier;
     modifier = type === '#' ? '' : '/';
@@ -78,12 +77,7 @@ beautify = function(str) {
     }
     return "{{" + modifier + body + "}}";
   });
-  pretty = beautifyHtml(str, {
-    indent_size: 2,
-    indent_inner_html: true,
-    preserve_newlines: false
-  });
-  return pretty;
+  return str;
 };
 
 getCloseTag = function(string) {

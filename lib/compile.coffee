@@ -89,9 +89,13 @@ getCloseTag = (string) ->
       after: string
     return out
 
+  # iterate through the characters in the string, look for opening and closing
+  # tags. if we find nested open tags, we increment the depth so we know
+  # when we find the real close tag for this element.
   for char, index in string
-    # Close tag
+    # found a close tag
     if char is '<' and string[index + 1] is '/'
+      # if there is no nesting, this is the close tag for the active element
       if not depth
         after = string.substr index
         close = after.match(/<\/.*?>/)[0]
@@ -102,15 +106,21 @@ getCloseTag = (string) ->
           after: afterWithoutTag
           before: open + '\n' + string.substr(0, index) + close
         )
+
+      # if there is nesting, we close out one level of nesting and keep looking
       else
         depth--
-    # Open tag
-    else if char is '<'
+
+    # found an open tag, we exclude script tags because there can't be any
+    # nesting with a script tag, and there are issues with > and < in javascript
+    # throwing off the nesting level.
+    else if char is '<' and tagName isnt 'script'
       selfClosing = false
       tag = string.substr(index).match(/\w+/)[0]
       # Check if self closing tag
       if tag and tag in selfClosingTags
         continue
+
       depth++
 
 # FIXME: this will break for pipes inside strings

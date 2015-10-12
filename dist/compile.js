@@ -66,6 +66,7 @@ htmlEscapeCurlyBraces = function(str) {
 };
 
 beautify = function(str) {
+  var pretty;
   str = str.replace(/\{\{(#|\/)([\s\S]+?)\}\}/g, function(match, type, body) {
     var modifier;
     modifier = type === '#' ? '' : '/';
@@ -77,7 +78,12 @@ beautify = function(str) {
     }
     return "{{" + modifier + body + "}}";
   });
-  return str;
+  pretty = beautifyHtml(str, {
+    indent_size: 2,
+    indent_inner_html: true,
+    preserve_newlines: false
+  });
+  return pretty;
 };
 
 getCloseTag = function(string) {
@@ -110,7 +116,7 @@ getCloseTag = function(string) {
       } else {
         depth--;
       }
-    } else if (char === '<') {
+    } else if (char === '<' && tagName !== 'script') {
       selfClosing = false;
       tag = string.substr(index).match(/\w+/)[0];
       if (tag && __indexOf.call(selfClosingTags, tag) >= 0) {

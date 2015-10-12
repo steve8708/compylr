@@ -1,9 +1,11 @@
-var helpers, _,
+var dasherize, helpers, _,
   __slice = [].slice;
 
 _ = require('lodash');
 
 helpers = require('./helpers');
+
+dasherize = require('underscore.string').dasherize;
 
 module.exports = function(handlebars) {
   handlebars || (handlebars = require('handlebars'));
@@ -25,7 +27,7 @@ module.exports = function(handlebars) {
     out = ';';
     for (key in value) {
       val = value[key];
-      out += "" + (_.str.dasherize(key)) + ": " + val + ";";
+      out += "" + (dasherize(key)) + ": " + val + ";";
     }
     return " " + out + " ";
   });

@@ -1,5 +1,6 @@
 _ = require 'lodash'
 helpers = require './helpers'
+dasherize = require('underscore.string').dasherize
 
 module.exports = (handlebars) ->
   handlebars or= require 'handlebars'
@@ -21,7 +22,7 @@ module.exports = (handlebars) ->
     value = helpers.safeEvalWithContext expression, @, true
     out = ';'
     for key, val of value
-      out += "#{_.str.dasherize key}: #{val};"
+      out += "#{dasherize key}: #{val};"
     " #{out} "
 
   handlebars.registerHelper "classExpression", (expression, options) ->

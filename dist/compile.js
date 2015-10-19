@@ -378,7 +378,7 @@ compile = function(options) {
     if (i++ > maxIters) {
       throw new Error('infinite update loop');
     }
-    interpolated = interpolated.replace(/\{\{([^#\/>_][\s\S]*?[^_])\}\}/g, function(match, body) {
+    interpolated = interpolated.replace(/\{\{([a-zA-Z]|[^#\/>_][\s\S]*?[^_])\}\}/g, function(match, body) {
       var isHelper, prefix, suffix, words, _ref;
       helpers.logVerbose('match 7');
       updated = true;

@@ -490,7 +490,7 @@ compile = (options) ->
 
       # {{interpolation}}, {{exression == true}} -
 
-      .replace(/\{\{([^#\/>_][\s\S]*?[^_])\}\}/g, (match, body) ->
+      .replace(/\{\{([a-zA-Z]|[^#\/>_][\s\S]*?[^_])\}\}/g, (match, body) ->
         helpers.logVerbose 'match 7'
         updated = true
         body = body.trim()

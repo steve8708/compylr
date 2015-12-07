@@ -283,11 +283,12 @@ compile = (options) ->
          # take out the extension and leading slash for handlebars
         includePath = includePath.replace('.tpl.html', '').replace /^\//, ''
         match = match.replace /\sng-include=/, ' data-ng-include='
+        span = not match.match /<head\s>/
         """
           #{match}
-          <span data-ng-non-bindable>
+          #{span and '<span data-ng-non-bindable>' or ''}
             {{> #{includePath}}}
-          </span>
+          #{span and '</span>' or ''}
         """
       )
 
@@ -296,11 +297,12 @@ compile = (options) ->
         helpers.logVerbose 'match 10'
         updated = true
         match = match.replace /\sng-include=/, ' data-ng-include='
+        span = not match.match /<head\s>/
         escapeDoubleBraces """
           #{match}
-          <span data-ng-non-bindable>
+          #{span and '<span data-ng-non-bindable>' or ''}
             {{dynamicTemplate "#{includePath}"}}
-          </span>
+          #{span and '</span>' or ''}
         """
       )
 

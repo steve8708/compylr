@@ -23,13 +23,13 @@ config = _.defaults {}, argv,
 
 # E.g. <div ng-repeat="foo in bar"></div>
 getRefNames = (str, options) ->
-  tags = str.match(/<.*?>/g)
+  tags = str.match /<.*?>/g
   map = {}
   return map unless tags
   tags.reverse()
   depth = 0
   for tag in tags
-    if tag.indexOf('</')
+    if tag.indexOf '</'
       depth--
       return map if depth < 0
     else
@@ -49,8 +49,8 @@ selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,
 
 htmlEscapeCurlyBraces = (str) ->
   str
-    .replace(/\{/g, '&#123;')
-    .replace(/\}/g, '&#125;')
+    .replace /\{/g, '&#123;'
+    .replace /\}/g, '&#125;'
 
 beautify = (str) ->
   str = str.replace /\{\{(#|\/)([\s\S]+?)\}\}/g, (match, type, body) ->
@@ -151,23 +151,23 @@ unescapeBasicAttributes = (str) ->
 
 escapeDoubleBraces = (str) ->
   str
-    .replace(/\{\{/g, '__{{__')
-    .replace(/\}\}/g, '__}}__')
+    .replace /\{\{/g, '__{{__'
+    .replace /\}\}/g, '__}}__'
 
 unescapeDoubleBraces = (str) ->
   str
-    .replace(/__\{\{__/g, '{{')
-    .replace(/__\}\}__/g, '}}')
+    .replace /__\{\{__/g, '{{'
+    .replace /__\}\}__/g, '}}'
 
 escapeTripleBraces = (str) ->
   str
-    .replace(/\{\{\{/g, '__[[[__')
-    .replace(/\}\}\}/g, '__]]]__')
+    .replace /\{\{\{/g, '__[[[__'
+    .replace /\}\}\}/g, '__]]]__'
 
 unescapeTripleBraces = (str) ->
   str
-    .replace(/__\[\[\[__/g, '{{{')
-    .replace(/__\]\]\]__/g, '}}}')
+    .replace /__\[\[\[__/g, '{{{'
+    .replace /__\]\]\]__/g, '}}}'
 
 
 # Compile
@@ -197,7 +197,7 @@ compile = (options) ->
       # ng-repeat
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\s(bo|ng)-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, (match, type, text, post) ->
+      .replace /<[^>]*?\s(bo|ng)-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, (match, type, text, post) ->
         helpers.logVerbose 'match 1'
         updated = true
         repeatExp = text
@@ -245,13 +245,12 @@ compile = (options) ->
           """
         else
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
-      )
 
 
       # ng-if, bo-if
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\s(?:ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
+      .replace /<[^>]*?\s(?:ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
         helpers.logVerbose 'match 2'
         updated = true
         if _.contains match.replace(post, ''), 'compylr-keep'
@@ -272,43 +271,42 @@ compile = (options) ->
           "{{##{tagName} #{varName}}}\n#{close.before.replace /\s(ng|bo)-if=/, " data-$1-if="}\n{{/#{tagName}}}\n#{close.after}"
         else
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
-      )
 
       # ng-include
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\sng-include="'([^']*?)'"[^>]*?>/, (match, includePath, post) ->
+      .replace /<[^>]*?\sng-include="'([^']*?)'"[^>]*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 3'
         updated = true
          # take out the extension and leading slash for handlebars
         includePath = includePath.replace('.tpl.html', '').replace /^\//, ''
         match = match.replace /\sng-include=/, ' data-ng-include='
+        span = not match.match /<head\s/
         """
           #{match}
-          <span data-ng-non-bindable>
+          #{span and '<span data-ng-non-bindable>' or ''}
             {{> #{includePath}}}
-          </span>
+          #{span and '</span>' or ''}
         """
-      )
 
       # ng-include expressions
-      .replace(/<[^>]*?\sng-include="(.*?\+.*?|[^']*?)"[^>]*?>/, (match, includePath, post) ->
+      .replace /<[^>]*?\sng-include="(.*?\+.*?|[^']*?)"[^>]*?>/, (match, includePath, post) ->
         helpers.logVerbose 'match 10'
         updated = true
         match = match.replace /\sng-include=/, ' data-ng-include='
+        span = not match.match /<head\s/
         escapeDoubleBraces """
           #{match}
-          <span data-ng-non-bindable>
+          #{span and '<span data-ng-non-bindable>' or ''}
             {{dynamicTemplate "#{includePath}"}}
-          </span>
+          #{span and '</span>' or ''}
         """
-      )
 
       # ng-src, ng-href, ng-value, bo-src, bo-href, bo-value
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
       # FIXME: this should replace ng-src with src, etc
-      .replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, (match, attrName, attrVal) ->
+      .replace /\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
         updated = true
 
@@ -318,7 +316,6 @@ compile = (options) ->
           match = match.replace attrVal, """{{expression "#{attrVal.split(' | ')[0].trim().replace /'/g, "\\'" }"}}"""
 
         match.replace attrName, attrName.replace /(ng|bo)-/, ''
-      )
 
 
       # component="foobar"
@@ -326,7 +323,7 @@ compile = (options) ->
       #
       # TODO: remove these hardcoded items for us and have a compylr.add regex, replace
       #
-      .replace(/\scomponent="([\s\S]*?)"/g, (match, componentName) ->
+      .replace /\scomponent="([\s\S]*?)"/g, (match, componentName) ->
         helpers.logVerbose 'match 12'
         updated = true
         ctrlName = _str.classify componentName
@@ -337,12 +334,11 @@ compile = (options) ->
         match = match.replace /\scomponent=/, ' data-component='
 
         """#{match} ng-include="'#{templateName}'" ng-controller="#{ctrlName}Ctrl" """
-      )
 
 
       # ng-class, ng-style, bo-class, bo-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      .replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
+      .replace /<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
         # TODO: modify class attributes based on object here
 
         helpers.logVerbose 'match 8'
@@ -363,13 +359,12 @@ compile = (options) ->
         match = match.replace new RegExp("\\s(ng|bo)-#{type}"), "data-$1-#{type}"
 
         match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
-      )
 
 
       # attr="{{interpolation}}"
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, (match, attrName, attrVal) ->
+      .replace /<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 5', attrName: attrName, attrVal: attrVal
         # Match without the final '>'
         trimmedMatch = match.substr 0, match.length - 1
@@ -392,7 +387,6 @@ compile = (options) ->
 
           trimmedMatch = trimmedMatch.replace attrVal, escapeDoubleBraces newAttrVal
           """#{trimmedMatch}>"""
-      )
 
 
       # translate
@@ -430,14 +424,13 @@ compile = (options) ->
       # ng-show, ng-hide, bo-show, bo-hide
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/\s((?:ng|bo)-show|(?:ng|bo)-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
+      .replace /\s((?:ng|bo)-show|(?:ng|bo)-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
         helpers.logVerbose 'match 6'
 
         updated = true
         hbsTagType = if _(showOrHide).contains '-show' then 'hbsShow' else 'hbsHide'
         match = match.replace ' ' + showOrHide, " data-#{showOrHide}"
         "#{match} {{#{hbsTagType} \"#{expression}\"}}"
-      )
 
       # ng-bind, ng-bind-html, bo-bind, bo-html
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -465,7 +458,7 @@ compile = (options) ->
       # locals
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace(/<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
+      .replace /<[^>]*?\slocals="([^"]*?)"[\s\S]*?>([\S\s]+)/g, (match, expression, post) ->
         helpers.logVerbose 'match 11'
         updated = true
 
@@ -476,7 +469,6 @@ compile = (options) ->
           """{{#locals "#{expression}"}}\n  #{close.before.replace /\slocals=/, ' data-locals='}\n{{/locals}}\n#{close.after}"""
         else
           throw new Error 'Parse error! Could not find close tag for locals directive\n\n' + match + '\n\n' + file
-      )
 
 
   i = 0
@@ -490,7 +482,7 @@ compile = (options) ->
 
       # {{interpolation}}, {{exression == true}} -
 
-      .replace(/\{\{([^#\/>_][\s\S]*?[^_])\}\}/g, (match, body) ->
+      .replace /\{\{([^#\/>_][\s\S]*?[^_])\}\}/g, (match, body) ->
         helpers.logVerbose 'match 7'
         updated = true
         body = body.trim()
@@ -506,7 +498,6 @@ compile = (options) ->
           escapeDoubleBraces """{{#{prefix}#{body}#{suffix}}}"""
         else
           escapeDoubleBraces match
-      )
 
   # Unescape and output
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

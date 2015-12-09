@@ -34,7 +34,7 @@ getRefNames = (str, options) ->
       return map if depth < 0
     else
       depth++
-      repeat = tag.match /\s(bo|ng)-repeat="(.*?)"/g
+      repeat = tag.match /\sng-repeat="(.*?)"/g
       continue unless repeat
       repeatText = RegExp.$1
       split = repeatText.split ' in '
@@ -134,10 +134,10 @@ escapeReplacement = (str) ->
   convertNgToDataNg str
 
 convertNgToDataNg = (str) ->
-  str.replace /\s(ng|bo)-/g, ' data-$1-'
+  str.replace /\sng-/g, ' data-ng-'
 
 convertDataNgToNg = (str) ->
-  str.replace /\sdata-(ng|bo)-/g, ' $1-'
+  str.replace /\sdata-ng-/g, ' ng-'
 
 unescapeReplacements = (str) ->
   str
@@ -197,7 +197,7 @@ compile = (options) ->
       # ng-repeat
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /<[^>]*?\s(bo|ng)-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, (match, type, text, post) ->
+      .replace /<[^>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, (match, text, post) ->
         helpers.logVerbose 'match 1'
         updated = true
         repeatExp = text
@@ -239,7 +239,7 @@ compile = (options) ->
         if close
           """
             {{#forEach #{repeatExp}}}
-              #{close.before.replace /\s(bo|ng)-repeat/, ' data-$1-repeat'}
+              #{close.before.replace /\sng-repeat/, ' data-ng-repeat'}
             {{/forEach}}
             #{close.after}
           """
@@ -247,10 +247,10 @@ compile = (options) ->
           throw new Error 'Parse error! Could not find close tag for ng-repeat'
 
 
-      # ng-if, bo-if
+      # ng-if
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /<[^>]*?\s(?:ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
+      .replace /<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/g, (match, varName, post) ->
         helpers.logVerbose 'match 2'
         updated = true
         if _.contains match.replace(post, ''), 'compylr-keep'
@@ -268,7 +268,7 @@ compile = (options) ->
         close = getCloseTag match
 
         if close
-          "{{##{tagName} #{varName}}}\n#{close.before.replace /\s(ng|bo)-if=/, " data-$1-if="}\n{{/#{tagName}}}\n#{close.after}"
+          "{{##{tagName} #{varName}}}\n#{close.before.replace /\sng-if=/, " data-ng-if="}\n{{/#{tagName}}}\n#{close.after}"
         else
           throw new Error 'Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file
 
@@ -302,20 +302,13 @@ compile = (options) ->
           #{span and '</span>' or ''}
         """
 
-      # ng-src, ng-href, ng-value, bo-src, bo-href, bo-value
+      # ng-src, ng-href, ng-value
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      # FIXME: this should replace ng-src with src, etc
-      .replace /\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, (match, attrName, attrVal) ->
+      .replace /\s(ng-(?:src|href|value))="([\s\S]*?)"/g, (match, attrName, attrVal) ->
         helpers.logVerbose 'match 4'
         updated = true
-
-        # bo-src and bo-href don't use interpolations and use expressions directly so we
-        # we need to wrap them
-        if _.contains attrName, 'bo-'
-          match = match.replace attrVal, """{{expression "#{attrVal.split(' | ')[0].trim().replace /'/g, "\\'" }"}}"""
-
-        match.replace attrName, attrName.replace /(ng|bo)-/, ''
+        match.replace attrName, attrName.replace /ng-/, ''
 
 
       # component="foobar"
@@ -336,9 +329,9 @@ compile = (options) ->
         """#{match} ng-include="'#{templateName}'" ng-controller="#{ctrlName}Ctrl" """
 
 
-      # ng-class, ng-style, bo-class, bo-style
+      # ng-class, ng-style
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      .replace /<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
+      .replace /<(\w+)[^>]*\s(ng-(?:class|style))\s*=\s*"([^>"]+)"[\s\S]*?>/, (match, tagName, attrName, attrVal) ->
         # TODO: modify class attributes based on object here
 
         helpers.logVerbose 'match 8'
@@ -356,7 +349,7 @@ compile = (options) ->
         typeExpressionStr = """{{#{type}Expression "#{attrVal}"}}"""
         if typeMatch
           match = match.replace typeMatch, ''
-        match = match.replace new RegExp("\\s(ng|bo)-#{type}"), "data-$1-#{type}"
+        match = match.replace "ng-#{type}", "data-ng-#{type}"
 
         match.replace "<#{tagName}", """<#{tagName} #{typeStrOpen} #{typeExpressionStr}" """
 
@@ -374,7 +367,7 @@ compile = (options) ->
           trimmedMatch = trimmedMatch.substr 0, match.length - 1
 
         trimmedMatch = trimmedMatch.replace "#{attrName}=", escapeBasicAttribute "#{attrName}="
-        if attrName.indexOf('data-(ng|bo)-attr-') is 0 or _.contains attrVal, '__{{__'
+        if attrName.indexOf('data-ng-attr-') is 0 or _.contains attrVal, '__{{__'
           return match
         else
           updated = true
@@ -421,21 +414,21 @@ compile = (options) ->
         escapeDoubleBraces """#{openTag}{{translate '#{ cleanedContents.trim() }' '#{cleanedValues}'}}#{closeTag}"""
 
 
-      # ng-show, ng-hide, bo-show, bo-hide
+      # ng-show, ng-hide
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /\s((?:ng|bo)-show|(?:ng|bo)-hide)\s*=\s*"([^"]+)"/g, (match, showOrHide, expression) ->
+      .replace /\sng-(show|hide)\s*=\s*"([^"]+)"/g, (match, type, expression) ->
         helpers.logVerbose 'match 6'
 
         updated = true
-        hbsTagType = if _(showOrHide).contains '-show' then 'hbsShow' else 'hbsHide'
-        match = match.replace ' ' + showOrHide, " data-#{showOrHide}"
+        hbsTagType = if type is 'show' then 'hbsShow' else 'hbsHide'
+        match = match.replace " ng-#{type}", " data-ng-#{type}"
         "#{match} {{#{hbsTagType} \"#{expression}\"}}"
 
-      # ng-bind, ng-bind-html, bo-bind, bo-html
+      # ng-bind, ng-bind-html
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      .replace /<[^>]*\s((?:ng|bo)-bind|ng-bind-html|bo-html)\s*=\s*"([^"]+?)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
+      .replace /<[^>]*\s(ng-bind(?:-html)?)\s*=\s*"([^"]+?)"[^>]*>[^<]*(<.*?>)/g, (match, type, expression, closeTag) ->
         helpers.logVerbose 'match 7'
         updated = true
         str = match.replace type, "data-#{type}"

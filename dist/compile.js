@@ -1,5 +1,5 @@
-var argv, beautify, beautifyHtml, compile, config, convertDataNgToNg, convertNgToDataNg, escapeBasicAttribute, escapeDoubleBraces, escapeReplacement, escapeTripleBraces, fs, getCloseTag, getRefNames, glob, helpers, htmlEscapeCurlyBraces, processFilters, selfClosingTags, stripComments, unescapeBasicAttributes, unescapeDoubleBraces, unescapeReplacements, unescapeTripleBraces, _, _str,
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var _, _str, argv, beautify, beautifyHtml, compile, config, convertDataNgToNg, convertNgToDataNg, escapeBasicAttribute, escapeDoubleBraces, escapeReplacement, escapeTripleBraces, fs, getCloseTag, getRefNames, glob, helpers, htmlEscapeCurlyBraces, processFilters, selfClosingTags, stripComments, unescapeBasicAttributes, unescapeDoubleBraces, unescapeReplacements, unescapeTripleBraces,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 argv = require('optimist').argv;
 
@@ -22,7 +22,7 @@ config = _.defaults({}, argv, {
 });
 
 getRefNames = function(str, options) {
-  var depth, map, repeat, repeatText, split, tag, tags, _i, _len;
+  var depth, j, len, map, repeat, repeatText, split, tag, tags;
   tags = str.match(/<.*?>/g);
   map = {};
   if (!tags) {
@@ -30,8 +30,8 @@ getRefNames = function(str, options) {
   }
   tags.reverse();
   depth = 0;
-  for (_i = 0, _len = tags.length; _i < _len; _i++) {
-    tag = tags[_i];
+  for (j = 0, len = tags.length; j < len; j++) {
+    tag = tags[j];
     if (tag.indexOf('</')) {
       depth--;
       if (depth < 0) {
@@ -39,7 +39,7 @@ getRefNames = function(str, options) {
       }
     } else {
       depth++;
-      repeat = tag.match(/\s(bo|ng)-repeat="(.*?)"/g);
+      repeat = tag.match(/\sng-repeat="(.*?)"/g);
       if (!repeat) {
         continue;
       }
@@ -58,15 +58,13 @@ stripComments = function(str) {
   return str.replace(/<!--[^\[]*?-->/g, '');
 };
 
-selfClosingTags = 'area, base, br, col, command, embed, hr, img, input,\
-  keygen, link, meta, param, source, track, wbr'.split(/,\s*/);
+selfClosingTags = 'area, base, br, col, command, embed, hr, img, input, keygen, link, meta, param, source, track, wbr'.split(/,\s*/);
 
 htmlEscapeCurlyBraces = function(str) {
   return str.replace(/\{/g, '&#123;').replace(/\}/g, '&#125;');
 };
 
 beautify = function(str) {
-  var pretty;
   str = str.replace(/\{\{(#|\/)([\s\S]+?)\}\}/g, function(match, type, body) {
     var modifier;
     modifier = type === '#' ? '' : '/';
@@ -78,30 +76,25 @@ beautify = function(str) {
     }
     return "{{" + modifier + body + "}}";
   });
-  pretty = beautifyHtml(str, {
-    indent_size: 2,
-    indent_inner_html: true,
-    preserve_newlines: false
-  });
-  return pretty;
+  return str;
 };
 
 getCloseTag = function(string) {
-  var after, afterWithTag, afterWithoutTag, char, close, depth, index, open, out, selfClosing, tag, tagName, _i, _len;
+  var after, afterWithTag, afterWithoutTag, char, close, depth, index, j, len, open, out, selfClosing, tag, tagName;
   string = string.trim();
   index = 0;
   depth = 0;
   open = string.match(/<[\s\S]*?>/)[0];
   tagName = string.match(/<\w+/)[0].substring(1);
   string = string.replace(open, '');
-  if (__indexOf.call(selfClosingTags, tagName) >= 0) {
+  if (indexOf.call(selfClosingTags, tagName) >= 0) {
     out = {
       before: open,
       after: string
     };
     return out;
   }
-  for (index = _i = 0, _len = string.length; _i < _len; index = ++_i) {
+  for (index = j = 0, len = string.length; j < len; index = ++j) {
     char = string[index];
     if (char === '<' && string[index + 1] === '/') {
       if (!depth) {
@@ -119,7 +112,7 @@ getCloseTag = function(string) {
     } else if (char === '<' && tagName !== 'script') {
       selfClosing = false;
       tag = string.substr(index).match(/\w+/)[0];
-      if (tag && __indexOf.call(selfClosingTags, tag) >= 0) {
+      if (tag && indexOf.call(selfClosingTags, tag) >= 0) {
         continue;
       }
       depth++;
@@ -141,11 +134,11 @@ escapeReplacement = function(str) {
 };
 
 convertNgToDataNg = function(str) {
-  return str.replace(/\s(ng|bo)-/g, ' data-$1-');
+  return str.replace(/\sng-/g, ' data-ng-');
 };
 
 convertDataNgToNg = function(str) {
-  return str.replace(/\sdata-(ng|bo)-/g, ' $1-');
+  return str.replace(/\sdata-ng-/g, ' ng-');
 };
 
 unescapeReplacements = function(str) {
@@ -195,7 +188,7 @@ compile = function(options) {
     if (i++ > maxIters) {
       throw new Error('infinite update loop');
     }
-    interpolated = interpolated.replace(/<[^>]*?\s(bo|ng)-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, type, text, post) {
+    interpolated = interpolated.replace(/<[^>]*?\sng-repeat="(.*?)"[\s\S]*?>([\S\s]+)/gi, function(match, text, post) {
       var close, expressionKeypath, propName, repeatExp, repeatExpSplit;
       helpers.logVerbose('match 1');
       updated = true;
@@ -212,11 +205,11 @@ compile = function(options) {
       close = getCloseTag(match);
       expressionKeypath = _.last(repeatExpSplit).slice(1, -1);
       if (close) {
-        return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\s(bo|ng)-repeat/, ' data-$1-repeat')) + "\n{{/forEach}}\n" + close.after;
+        return "{{#forEach " + repeatExp + "}}\n  " + (close.before.replace(/\sng-repeat/, ' data-ng-repeat')) + "\n{{/forEach}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-repeat');
       }
-    }).replace(/<[^>]*?\s(?:ng|bo)-if="(.*?)"[\s\S]*?>([\S\s]+)/g, function(match, varName, post) {
+    }).replace(/<[^>]*?\sng-if="(.*?)"[\s\S]*?>([\S\s]+)/g, function(match, varName, post) {
       var close, tagName;
       helpers.logVerbose('match 2');
       updated = true;
@@ -233,28 +226,29 @@ compile = function(options) {
       }
       close = getCloseTag(match);
       if (close) {
-        return "{{#" + tagName + " " + varName + "}}\n" + (close.before.replace(/\s(ng|bo)-if=/, " data-$1-if=")) + "\n{{/" + tagName + "}}\n" + close.after;
+        return "{{#" + tagName + " " + varName + "}}\n" + (close.before.replace(/\sng-if=/, " data-ng-if=")) + "\n{{/" + tagName + "}}\n" + close.after;
       } else {
         throw new Error('Parse error! Could not find close tag for ng-if\n\n' + match + '\n\n' + file);
       }
     }).replace(/<[^>]*?\sng-include="'([^']*?)'"[^>]*?>/, function(match, includePath, post) {
+      var span;
       helpers.logVerbose('match 3');
       updated = true;
       includePath = includePath.replace('.tpl.html', '').replace(/^\//, '');
       match = match.replace(/\sng-include=/, ' data-ng-include=');
-      return "" + match + "\n<span data-ng-non-bindable>\n  {{> " + includePath + "}}\n</span>";
+      span = !match.match(/<head\s/);
+      return match + "\n" + (span && '<span data-ng-non-bindable>' || '') + "\n  {{> " + includePath + "}}\n" + (span && '</span>' || '');
     }).replace(/<[^>]*?\sng-include="(.*?\+.*?|[^']*?)"[^>]*?>/, function(match, includePath, post) {
+      var span;
       helpers.logVerbose('match 10');
       updated = true;
       match = match.replace(/\sng-include=/, ' data-ng-include=');
-      return escapeDoubleBraces("" + match + "\n<span data-ng-non-bindable>\n  {{dynamicTemplate \"" + includePath + "\"}}\n</span>");
-    }).replace(/\s((?:ng|bo)-src|(?:ng|bo)-href|(?:ng|bo)-value)="([\s\S]*?)"/g, function(match, attrName, attrVal) {
+      span = !match.match(/<head\s/);
+      return escapeDoubleBraces(match + "\n" + (span && '<span data-ng-non-bindable>' || '') + "\n  {{dynamicTemplate \"" + includePath + "\"}}\n" + (span && '</span>' || ''));
+    }).replace(/\s(ng-(?:src|href|value))="([\s\S]*?)"/g, function(match, attrName, attrVal) {
       helpers.logVerbose('match 4');
       updated = true;
-      if (_.contains(attrName, 'bo-')) {
-        match = match.replace(attrVal, "{{expression \"" + (attrVal.split(' | ')[0].trim().replace(/'/g, "\\'")) + "\"}}");
-      }
-      return match.replace(attrName, attrName.replace(/(ng|bo)-/, ''));
+      return match.replace(attrName, attrName.replace(/ng-/, ''));
     }).replace(/\scomponent="([\s\S]*?)"/g, function(match, componentName) {
       var ctrlName, templateName;
       helpers.logVerbose('match 12');
@@ -264,8 +258,8 @@ compile = function(options) {
       componentName = componentName.replace('}}', "+'");
       templateName = "modules/components/" + componentName + "/" + componentName + ".tpl.html";
       match = match.replace(/\scomponent=/, ' data-component=');
-      return "" + match + " ng-include=\"'" + templateName + "'\" ng-controller=\"" + ctrlName + "Ctrl\" ";
-    }).replace(/<(\w+)[^>]*\s((?:ng|bo)-class|(?:ng|bo)-style)\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
+      return match + " ng-include=\"'" + templateName + "'\" ng-controller=\"" + ctrlName + "Ctrl\" ";
+    }).replace(/<(\w+)[^>]*\s(ng-(?:class|style))\s*=\s*"([^>"]+)"[\s\S]*?>/, function(match, tagName, attrName, attrVal) {
       var type, typeExpressionStr, typeMatch, typeStr, typeStrOpen;
       helpers.logVerbose('match 8');
       type = attrName.substr(3);
@@ -274,13 +268,13 @@ compile = function(options) {
       }
       updated = true;
       typeMatch = match.match(new RegExp("\\s" + type + "=\"([\\s\\S]*?)\""));
-      typeStr = typeMatch && typeMatch[0].substr(1) || ("" + type + "=\"\"");
+      typeStr = typeMatch && typeMatch[0].substr(1) || (type + "=\"\"");
       typeStrOpen = typeStr.substr(0, typeStr.length - 1);
       typeExpressionStr = "{{" + type + "Expression \"" + attrVal + "\"}}";
       if (typeMatch) {
         match = match.replace(typeMatch, '');
       }
-      match = match.replace(new RegExp("\\s(ng|bo)-" + type), "data-$1-" + type);
+      match = match.replace("ng-" + type, "data-ng-" + type);
       return match.replace("<" + tagName, "<" + tagName + " " + typeStrOpen + " " + typeExpressionStr + "\" ");
     }).replace(/<[^>]*?([\w\-]+)\s*=\s*"([^">_]*?\{\{[^">]+\}\}[^">_]*?)"[\s\S]*?>/g, function(match, attrName, attrVal) {
       var newAttrVal, trimmedMatch;
@@ -292,8 +286,8 @@ compile = function(options) {
       if (_str.endsWith(trimmedMatch, '/')) {
         trimmedMatch = trimmedMatch.substr(0, match.length - 1);
       }
-      trimmedMatch = trimmedMatch.replace("" + attrName + "=", escapeBasicAttribute("" + attrName + "="));
-      if (attrName.indexOf('data-(ng|bo)-attr-') === 0 || _.contains(attrVal, '__{{__')) {
+      trimmedMatch = trimmedMatch.replace(attrName + "=", escapeBasicAttribute(attrName + "="));
+      if (attrName.indexOf('data-ng-attr-') === 0 || _.contains(attrVal, '__{{__')) {
         return match;
       } else {
         updated = true;
@@ -306,7 +300,7 @@ compile = function(options) {
           }
         });
         trimmedMatch = trimmedMatch.replace(attrVal, escapeDoubleBraces(newAttrVal));
-        return "" + trimmedMatch + ">";
+        return trimmedMatch + ">";
       }
     }).replace(/(<[^>]*\stranslate[^>]*>)([\s\S]*?)(<.*?>)/g, function(match, openTag, contents, closeTag) {
       var cleanedContents, cleanedValues, cleanup, values, valuesRe;
@@ -331,15 +325,15 @@ compile = function(options) {
       updated = true;
       cleanedContents = cleanup(contents);
       openTag = openTag.replace(/translate([^a-z\-0-9])/i, "translate=\"" + (contents.trim()) + "\"$1");
-      return escapeDoubleBraces("" + openTag + "{{translate '" + (cleanedContents.trim()) + "' '" + cleanedValues + "'}}" + closeTag);
-    }).replace(/\s((?:ng|bo)-show|(?:ng|bo)-hide)\s*=\s*"([^"]+)"/g, function(match, showOrHide, expression) {
+      return escapeDoubleBraces(openTag + "{{translate '" + (cleanedContents.trim()) + "' '" + cleanedValues + "'}}" + closeTag);
+    }).replace(/\sng-(show|hide)\s*=\s*"([^"]+)"/g, function(match, type, expression) {
       var hbsTagType;
       helpers.logVerbose('match 6');
       updated = true;
-      hbsTagType = _(showOrHide).contains('-show') ? 'hbsShow' : 'hbsHide';
-      match = match.replace(' ' + showOrHide, " data-" + showOrHide);
-      return "" + match + " {{" + hbsTagType + " \"" + expression + "\"}}";
-    }).replace(/<[^>]*\s((?:ng|bo)-bind|ng-bind-html|bo-html)\s*=\s*"([^"]+?)"[^>]*>[^<]*(<.*?>)/g, function(match, type, expression, closeTag) {
+      hbsTagType = type === 'show' ? 'hbsShow' : 'hbsHide';
+      match = match.replace(" ng-" + type, " data-ng-" + type);
+      return match + " {{" + hbsTagType + " \"" + expression + "\"}}";
+    }).replace(/<[^>]*\s(ng-bind(?:-html)?)\s*=\s*"([^"]+?)"[^>]*>[^<]*(<.*?>)/g, function(match, type, expression, closeTag) {
       var expressionTag, str;
       helpers.logVerbose('match 7');
       updated = true;
@@ -379,12 +373,12 @@ compile = function(options) {
       throw new Error('infinite update loop');
     }
     interpolated = interpolated.replace(/\{\{([^#\/>_][\s\S]*?[^_])\}\}/g, function(match, body) {
-      var isHelper, prefix, suffix, words, _ref;
+      var isHelper, prefix, ref, suffix, words;
       helpers.logVerbose('match 7');
       updated = true;
       body = body.trim();
       words = body.match(/[\w\.]+/);
-      isHelper = (_ref = words[0]) === 'json' || _ref === 'expression' || _ref === 'hbsShow' || _ref === 'hbsHide' || _ref === 'classExpression' || _ref === 'styleExpression';
+      isHelper = (ref = words[0]) === 'json' || ref === 'expression' || ref === 'hbsShow' || ref === 'hbsHide' || ref === 'classExpression' || ref === 'styleExpression';
       if (!isHelper) {
         prefix = '';
         suffix = '';

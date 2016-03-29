@@ -1,5 +1,5 @@
-var dasherize, helpers, _,
-  __slice = [].slice;
+var _, dasherize, helpers,
+  slice = [].slice;
 
 _ = require('lodash');
 
@@ -10,8 +10,8 @@ dasherize = require('underscore.string').dasherize;
 module.exports = function(handlebars) {
   handlebars || (handlebars = require('handlebars'));
   handlebars.registerHelper('dynamicTemplate', function() {
-    var map, options, template, _i;
-    template = arguments[0], map = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), options = arguments[_i++];
+    var k, map, options, template;
+    template = arguments[0], map = 3 <= arguments.length ? slice.call(arguments, 1, k = arguments.length - 1) : (k = 1, []), options = arguments[k++];
     template = helpers.safeEvalWithContext(template, this) || '';
     template = template.replace('.tpl.html', '').replace(/^\//, '');
     return new handlebars.SafeString(handlebars.partials[template](this));
@@ -27,7 +27,7 @@ module.exports = function(handlebars) {
     out = ';';
     for (key in value) {
       val = value[key];
-      out += "" + (dasherize(key)) + ": " + val + ";";
+      out += (dasherize(key)) + ": " + val + ";";
     }
     return " " + out + " ";
   });
@@ -86,21 +86,21 @@ module.exports = function(handlebars) {
     }
   });
   handlebars.registerHelper("json", function() {
-    var args, obj, options, _i;
-    args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), options = arguments[_i++];
+    var args, k, obj, options;
+    args = 2 <= arguments.length ? slice.call(arguments, 0, k = arguments.length - 1) : (k = 0, []), options = arguments[k++];
     obj = args[0] || this;
     return new handlebars.SafeString(JSON.stringify(obj, null, 2));
   });
   handlebars.registerHelper("interpolatedScript", function(options) {
-    var key, scriptStr, value, _ref;
+    var key, ref, scriptStr, value;
     scriptStr = "<script";
-    _ref = options.hash;
-    for (key in _ref) {
-      value = _ref[key];
+    ref = options.hash;
+    for (key in ref) {
+      value = ref[key];
       scriptStr += " " + key + "=\"" + value + "\"";
     }
     scriptStr += '>';
-    return "" + scriptStr + " " + (options.fn(this)) + " </script>";
+    return scriptStr + " " + (options.fn(this)) + " </script>";
   });
   return handlebars.registerHelper("forEach", function(name, _in, contextExpression) {
     var context, ctx, data, fn, i, inverse, iterContext, iterCtx, j, key, nameSplit, objSize, options, ret, value;

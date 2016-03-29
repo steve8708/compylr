@@ -2,7 +2,7 @@
   "author": "Steve Sewell",
   "name": "compylr",
   "description": "Compile angular apps to run on your server",
-  "version": "0.1.121",
+  "version": "0.1.124",
   "bugs": "https://github.com/steve8708/compylr/issues",
   "main": "index.js",
   "repository": {
@@ -30,7 +30,7 @@
     "underscore.string": "~2.3.3"
   },
   "devDependencies": {
-    "coffee-script": "~1.6.3",
+    "coffee-script": "~1.10.0",
     "grunt": "~0.4.2",
     "grunt-bump": "0.0.13",
     "grunt-coffeelint": "0.0.8",
